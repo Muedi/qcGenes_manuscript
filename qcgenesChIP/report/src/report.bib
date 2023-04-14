@@ -1,0 +1,199 @@
+
+@article{wang_correcting_2017,
+	title = {Correcting nucleotide-specific biases in high-throughput sequencing data},
+	volume = {18},
+	issn = {1471-2105},
+	url = {https://doi.org/10.1186/s12859-017-1766-x},
+	doi = {10.1186/s12859-017-1766-x},
+	abstract = {High-throughput sequence ({HTS}) data exhibit position-specific nucleotide biases that obscure the intended signal and reduce the effectiveness of these data for downstream analyses. These biases are particularly evident in {HTS} assays for identifying regulatory regions in {DNA} ({DNase}-seq, {ChIP}-seq, {FAIRE}-seq, {ATAC}-seq). Biases may result from many experiment-specific factors, including selectivity of {DNA} restriction enzymes and fragmentation method, as well as sequencing technology-specific factors, such as choice of adapters/primers and sample amplification methods.},
+	pages = {357},
+	number = {1},
+	journaltitle = {{BMC} Bioinformatics},
+	author = {Wang, Jeremy R. and Quach, Bryan and Furey, Terrence S.},
+	date = {2017-08-01}
+}
+
+@article{ramachandran_bidchips_2015,
+	title = {{BIDCHIPS}: bias decomposition and removal from {ChIP}-seq data clarifies true binding signal and its functional correlates},
+	volume = {8},
+	issn = {1756-8935},
+	url = {https://doi.org/10.1186/s13072-015-0028-2},
+	doi = {10.1186/s13072-015-0028-2},
+	abstract = {Unraveling transcriptional regulatory networks is a central problem in molecular biology and, in this quest, chromatin immunoprecipitation and sequencing ({ChIP}-seq) technology has given us the unprecedented ability to identify sites of protein-{DNA} binding and histone modification genome wide. However, multiple systemic and procedural biases hinder harnessing the full potential of this technology. Previous studies have addressed this problem, but a thorough characterization of different, interacting biases on {ChIP}-seq signals is still lacking.},
+	pages = {33},
+	number = {1},
+	journaltitle = {Epigenetics \& Chromatin},
+	author = {Ramachandran, Parameswaran and Palidwor, Gareth A. and Perkins, Theodore J.},
+	date = {2015-09-17}
+}
+
+@article{park_widespread_2013,
+	title = {Widespread Misinterpretable {ChIP}-seq Bias in Yeast},
+	volume = {8},
+	issn = {1932-6203},
+	url = {https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0083506},
+	doi = {10.1371/journal.pone.0083506},
+	abstract = {Chromatin immunoprecipitation followed by sequencing ({ChIP}-seq) is widely used to detect genome-wide interactions between a protein of interest and {DNA} in vivo. Loci showing strong enrichment over adjacent background regions are typically considered to be sites of binding. Insufficient attention has been given to systematic artifacts inherent to the {ChIP}-seq procedure that might generate a misleading picture of protein binding to certain loci. We show here that unrelated transcription factors appear to consistently bind to the gene bodies of highly transcribed genes in yeast. Strikingly, several types of negative control experiments, including a protein that is not expected to bind chromatin, also showed similar patterns of strong binding within gene bodies. These false positive signals were evident across sequencing platforms and immunoprecipitation protocols, as well as in previously published datasets from other labs. We show that these false positive signals derive from high rates of transcription, and are inherent to the {ChIP} procedure, although they are exacerbated by sequencing library construction procedures. This expression bias is strong enough that a known transcriptional repressor like Tup1 can erroneously appear to be an activator. Another type of background bias stems from the inherent nucleosomal structure of chromatin, and can potentially make it seem like certain factors bind nucleosomes even when they don't. Our analysis suggests that a mock {ChIP} sample offers a better normalization control for the expression bias, whereas the {ChIP} input is more appropriate for the nucleosomal periodicity bias. While these controls alleviate the effect of the biases to some extent, they are unable to eliminate it completely. Caution is therefore warranted regarding the interpretation of data that seemingly show the association of various transcription and chromatin factors with highly transcribed genes in yeast.},
+	pages = {e83506},
+	number = {12},
+	journaltitle = {{PLOS} {ONE}},
+	author = {Park, Daechan and Lee, Yaelim and Bhupindersingh, Gurvani and Iyer, Vishwanath R.},
+	urldate = {2020-09-17},
+	date = {2013-12-09},
+	langid = {english},
+	note = {Publisher: Public Library of Science},
+	keywords = {Chromatin, {DNA} transcription, Gene expression, Gene prediction, Immunoprecipitation, {RNA} sequencing, Transcription factors, Yeast},
+	file = {Full Text PDF:files/275/Park et al. - 2013 - Widespread Misinterpretable ChIP-seq Bias in Yeast.pdf:application/pdf;Snapshot:files/276/article.html:text/html}
+}
+
+@article{teng_accounting_2017,
+	title = {Accounting for {GC}-content bias reduces systematic errors and batch effects in {ChIP}-seq data},
+	volume = {27},
+	issn = {1088-9051, 1549-5469},
+	url = {http://genome.cshlp.org/content/27/11/1930},
+	doi = {10.1101/gr.220673.117},
+	abstract = {The main application of {ChIP}-seq technology is the detection of genomic regions that bind to a protein of interest. A large part of functional genomics’ public catalogs is based on {ChIP}-seq data. These catalogs rely on peak calling algorithms that infer protein-binding sites by detecting genomic regions associated with more mapped reads (coverage) than expected by chance, as a result of the experimental protocol's lack of perfect specificity. We find that {GC}-content bias accounts for substantial variability in the observed coverage for {ChIP}-seq experiments and that this variability leads to false-positive peak calls. More concerning is that the {GC} effect varies across experiments, with the effect strong enough to result in a substantial number of peaks called differently when different laboratories perform experiments on the same cell line. However, accounting for {GC} content bias in {ChIP}-seq is challenging because the binding sites of interest tend to be more common in high {GC}-content regions, which confounds real biological signals with unwanted variability. To account for this challenge, we introduce a statistical approach that accounts for {GC} effects on both nonspecific noise and signal induced by the binding site. The method can be used to account for this bias in binding quantification as well to improve existing peak calling algorithms. We use this approach to show a reduction in false-positive peaks as well as improved consistency across laboratories.},
+	pages = {1930--1938},
+	number = {11},
+	journaltitle = {Genome Res.},
+	author = {Teng, Mingxiang and Irizarry, Rafael A.},
+	urldate = {2020-09-17},
+	date = {2017-01-11},
+	langid = {english},
+	pmid = {29025895},
+	note = {Company: Cold Spring Harbor Laboratory Press
+Distributor: Cold Spring Harbor Laboratory Press
+Institution: Cold Spring Harbor Laboratory Press
+Label: Cold Spring Harbor Laboratory Press
+Publisher: Cold Spring Harbor Lab},
+	file = {Full Text PDF:files/284/Teng and Irizarry - 2017 - Accounting for GC-content bias reduces systematic .pdf:application/pdf;Snapshot:files/285/1930.html:text/html}
+}
+
+@article{cheung_systematic_2011,
+	title = {Systematic bias in high-throughput sequencing data and its correction by {BEADS}},
+	volume = {39},
+	issn = {0305-1048},
+	url = {https://academic.oup.com/nar/article/39/15/e103/1024144},
+	doi = {10.1093/nar/gkr425},
+	abstract = {Abstract.  Genomic sequences obtained through high-throughput sequencing are not uniformly distributed across the genome. For example, sequencing data of total},
+	pages = {e103--e103},
+	number = {15},
+	journaltitle = {Nucleic Acids Res},
+	author = {Cheung, Ming-Sin and Down, Thomas A. and Latorre, Isabel and Ahringer, Julie},
+	urldate = {2020-09-17},
+	date = {2011-08-01},
+	langid = {english},
+	note = {Publisher: Oxford Academic},
+	file = {Full Text PDF:files/282/Cheung et al. - 2011 - Systematic bias in high-throughput sequencing data.pdf:application/pdf;Snapshot:files/283/1024144.html:text/html}
+}
+
+@article{chen_systematic_2012,
+	title = {Systematic evaluation of factors influencing {ChIP}-seq fidelity},
+	volume = {9},
+	rights = {2012 Nature Publishing Group, a division of Macmillan Publishers Limited. All Rights Reserved.},
+	issn = {1548-7105},
+	url = {https://www.nature.com/articles/nmeth.1985},
+	doi = {10.1038/nmeth.1985},
+	abstract = {The authors analyze how sequencing depth, choice of control sample, paired-end versus single-end reads and the selection of peak-calling algorithm influence the interpretation of chromatin immunoprecipitation–sequencing ({ChIP}-seq) experiments.},
+	pages = {609--614},
+	number = {6},
+	journaltitle = {Nature Methods},
+	author = {Chen, Yiwen and Negre, Nicolas and Li, Qunhua and Mieczkowska, Joanna O. and Slattery, Matthew and Liu, Tao and Zhang, Yong and Kim, Tae-Kyung and He, Housheng Hansen and Zieba, Jennifer and Ruan, Yijun and Bickel, Peter J. and Myers, Richard M. and Wold, Barbara J. and White, Kevin P. and Lieb, Jason D. and Liu, X. Shirley},
+	urldate = {2020-09-17},
+	date = {2012-06},
+	langid = {english},
+	note = {Number: 6
+Publisher: Nature Publishing Group},
+	file = {Full Text PDF:files/280/Chen et al. - 2012 - Systematic evaluation of factors influencing ChIP-.pdf:application/pdf;Snapshot:files/281/nmeth.html:text/html}
+}
+
+@article{albrecht_automated_2020,
+	title = {Automated quality control of next generation sequencing data using machine learning},
+	rights = {© 2020, Posted by Cold Spring Harbor Laboratory. This pre-print is available under a Creative Commons License (Attribution-{NonCommercial}-{NoDerivs} 4.0 International), {CC} {BY}-{NC}-{ND} 4.0, as described at http://creativecommons.org/licenses/by-nc-nd/4.0/},
+	url = {https://www.biorxiv.org/content/10.1101/768713v3},
+	doi = {10.1101/768713},
+	abstract = {{\textless}p{\textgreater}Controlling quality of next generation sequencing ({NGS}) data files is a necessary but complex task. To address this problem, we statistically characterized common {NGS} quality features and developed a novel quality control procedure involving tree-based and deep learning classification algorithms. Predictive models, validated on internal data and external disease diagnostic datasets, are to some extent generalizable to data from unseen species. The derived statistical guidelines and predictive models represent a valuable resource for users of {NGS} data to better understand quality issues and perform automatic quality control. Our guidelines and software are available at the following {URL}: https://github.com/salbrec/{seqQscorer}.{\textless}/p{\textgreater}},
+	pages = {768713},
+	journaltitle = {{bioRxiv}},
+	author = {Albrecht, Steffen and Andrade-Navarro, Miguel A. and Fontaine, Jean-Fred},
+	urldate = {2020-04-19},
+	date = {2020-03-23},
+	langid = {english},
+	note = {Publisher: Cold Spring Harbor Laboratory
+Section: New Results},
+	file = {Full Text PDF:files/232/Albrecht et al. - 2020 - Automated quality control of next generation seque.pdf:application/pdf;Snapshot:files/233/768713v3.html:text/html}
+}
+
+
+@article{quinlan_bedtools_2010,
+	title = {{BEDTools}: a flexible suite of utilities for comparing genomic features},
+	volume = {26},
+	issn = {1367-4803},
+	url = {https://academic.oup.com/bioinformatics/article/26/6/841/244688},
+	doi = {10.1093/bioinformatics/btq033},
+	shorttitle = {{BEDTools}},
+	abstract = {Abstract.  Motivation: Testing for correlations between different sets of genomic features is a fundamental task in genomics research. However, searching for ov},
+	pages = {841--842},
+	number = {6},
+	journaltitle = {Bioinformatics},
+	author = {Quinlan, Aaron R. and Hall, Ira M.},
+	urldate = {2020-09-17},
+	date = {2010-03-15},
+	langid = {english},
+	note = {Publisher: Oxford Academic},
+	file = {Full Text PDF:files/289/Quinlan and Hall - 2010 - BEDTools a flexible suite of utilities for compar.pdf:application/pdf;Snapshot:files/290/244688.html:text/html}
+}
+
+@article{yu_chipseeker_2015,
+	title = {{ChIPseeker}: an R/Bioconductor package for {ChIP} peak annotation, comparison and visualization},
+	volume = {31},
+	issn = {1367-4803},
+	url = {https://academic.oup.com/bioinformatics/article/31/14/2382/255379},
+	doi = {10.1093/bioinformatics/btv145},
+	shorttitle = {{ChIPseeker}},
+	abstract = {Abstract.  Summary: {ChIPseeker} is an R package for annotating {ChIP}-seq data analysis. It supports annotating {ChIP} peaks and provides functions to visualize {ChIP}},
+	pages = {2382--2383},
+	number = {14},
+	journaltitle = {Bioinformatics},
+	author = {Yu, Guangchuang and Wang, Li-Gen and He, Qing-Yu},
+	urldate = {2020-09-17},
+	date = {2015-07-15},
+	langid = {english},
+	note = {Publisher: Oxford Academic},
+	file = {Full Text PDF:files/292/Yu et al. - 2015 - ChIPseeker an RBioconductor package for ChIP pea.pdf:application/pdf;Snapshot:files/293/255379.html:text/html}
+}
+
+@article{korotkevich_fast_2019,
+	title = {Fast gene set enrichment analysis},
+	rights = {© 2019, Posted by Cold Spring Harbor Laboratory. This pre-print is available under a Creative Commons License (Attribution 4.0 International), {CC} {BY} 4.0, as described at http://creativecommons.org/licenses/by/4.0/},
+	url = {https://www.biorxiv.org/content/10.1101/060012v2},
+	doi = {10.1101/060012},
+	abstract = {{\textless}h3{\textgreater}Abstract{\textless}/h3{\textgreater} {\textless}p{\textgreater}Preranked gene set enrichment analysis ({GSEA}) is a widely used method for interpretation of gene expression data in terms of biological processes. Here we present {FGSEA} method that is able to estimate arbitrarily low {GSEA} P-values with a higher accuracy and much faster compared to other implementations. We also present a polynomial algorithm to calculate {GSEA} P-values exactly, which we use to practically confirm the accuracy of the method.{\textless}/p{\textgreater}},
+	pages = {060012},
+	journaltitle = {{bioRxiv}},
+	author = {Korotkevich, Gennady and Sukhov, Vladimir and Sergushichev, Alexey},
+	urldate = {2020-09-17},
+	date = {2019-10-22},
+	langid = {english},
+	note = {Publisher: Cold Spring Harbor Laboratory
+Section: New Results},
+	file = {Full Text PDF:files/295/Korotkevich et al. - 2019 - Fast gene set enrichment analysis.pdf:application/pdf;Snapshot:files/296/060012v2.html:text/html}
+}
+
+@article{koster_snakemakescalable_2012,
+	title = {Snakemake—a scalable bioinformatics workflow engine},
+	volume = {28},
+	issn = {1367-4803},
+	url = {https://academic.oup.com/bioinformatics/article/28/19/2520/290322},
+	doi = {10.1093/bioinformatics/bts480},
+	abstract = {Abstract.  Summary: Snakemake is a workflow engine that provides a readable Python-based workflow definition language and a powerful execution environment that},
+	pages = {2520--2522},
+	number = {19},
+	journaltitle = {Bioinformatics},
+	author = {Köster, Johannes and Rahmann, Sven},
+	urldate = {2020-09-17},
+	date = {2012-10-01},
+	langid = {english},
+	note = {Publisher: Oxford Academic},
+	file = {Full Text PDF:files/298/Köster and Rahmann - 2012 - Snakemake—a scalable bioinformatics workflow engin.pdf:application/pdf;Snapshot:files/299/290322.html:text/html}
+}

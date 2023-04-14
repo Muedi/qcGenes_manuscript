@@ -1,0 +1,12 @@
+name: qualityAnalysis
+channels:
+  - conda-forge
+  - bioconda
+  - r
+dependencies:
+  - r-tidyverse=1.2.1
+  - r-yaml=2.2.0
+  - bioconductor-ensdb.hsapiens.v86=2.99.0
+  - r-factoextra=1.0.7
+  - bioconductor-fgsea=1.12.0
+  - r-fpc=2.2_5

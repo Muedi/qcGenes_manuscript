@@ -1,0 +1,109 @@
+\begin{thebibliography}{10}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\expandafter\ifx\csname href\endcsname\relax
+  \def\href#1#2{#2} \def\path#1{#1}\fi
+
+\bibitem{chen_systematic_2012}
+Y.~Chen, N.~Negre, Q.~Li, J.~O. Mieczkowska, M.~Slattery, T.~Liu, Y.~Zhang,
+  T.-K. Kim, H.~H. He, J.~Zieba, Y.~Ruan, P.~J. Bickel, R.~M. Myers, B.~J.
+  Wold, K.~P. White, J.~D. Lieb, X.~S. Liu,
+  \href{https://www.nature.com/articles/nmeth.1985}{Systematic evaluation of
+  factors influencing {ChIP}-seq fidelity} 9~(6)  609--614, number: 6
+  Publisher: Nature Publishing Group.
+\newblock \href {http://dx.doi.org/10.1038/nmeth.1985}
+  {\path{doi:10.1038/nmeth.1985}}.
+\newline\urlprefix\url{https://www.nature.com/articles/nmeth.1985}
+
+\bibitem{cheung_systematic_2011}
+M.-S. Cheung, T.~A. Down, I.~Latorre, J.~Ahringer,
+  \href{https://academic.oup.com/nar/article/39/15/e103/1024144}{Systematic
+  bias in high-throughput sequencing data and its correction by {BEADS}}
+  39~(15)  e103--e103, publisher: Oxford Academic.
+\newblock \href {http://dx.doi.org/10.1093/nar/gkr425}
+  {\path{doi:10.1093/nar/gkr425}}.
+\newline\urlprefix\url{https://academic.oup.com/nar/article/39/15/e103/1024144}
+
+\bibitem{park_widespread_2013}
+D.~Park, Y.~Lee, G.~Bhupindersingh, V.~R. Iyer,
+  \href{https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0083506}{Widespread
+  misinterpretable {ChIP}-seq bias in yeast} 8~(12)  e83506, publisher: Public
+  Library of Science.
+\newblock \href {http://dx.doi.org/10.1371/journal.pone.0083506}
+  {\path{doi:10.1371/journal.pone.0083506}}.
+\newline\urlprefix\url{https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0083506}
+
+\bibitem{ramachandran_bidchips_2015}
+P.~Ramachandran, G.~A. Palidwor, T.~J. Perkins,
+  \href{https://doi.org/10.1186/s13072-015-0028-2}{{BIDCHIPS}: bias
+  decomposition and removal from {ChIP}-seq data clarifies true binding signal
+  and its functional correlates} 8~(1)  33.
+\newblock \href {http://dx.doi.org/10.1186/s13072-015-0028-2}
+  {\path{doi:10.1186/s13072-015-0028-2}}.
+\newline\urlprefix\url{https://doi.org/10.1186/s13072-015-0028-2}
+
+\bibitem{teng_accounting_2017}
+M.~Teng, R.~A. Irizarry,
+  \href{http://genome.cshlp.org/content/27/11/1930}{Accounting for {GC}-content
+  bias reduces systematic errors and batch effects in {ChIP}-seq data} 27~(11)
+  1930--1938, company: Cold Spring Harbor Laboratory Press Distributor: Cold
+  Spring Harbor Laboratory Press Institution: Cold Spring Harbor Laboratory
+  Press Label: Cold Spring Harbor Laboratory Press Publisher: Cold Spring
+  Harbor Lab.
+\newblock \href {http://dx.doi.org/10.1101/gr.220673.117}
+  {\path{doi:10.1101/gr.220673.117}}.
+\newline\urlprefix\url{http://genome.cshlp.org/content/27/11/1930}
+
+\bibitem{wang_correcting_2017}
+J.~R. Wang, B.~Quach, T.~S. Furey,
+  \href{https://doi.org/10.1186/s12859-017-1766-x}{Correcting
+  nucleotide-specific biases in high-throughput sequencing data} 18~(1)  357.
+\newblock \href {http://dx.doi.org/10.1186/s12859-017-1766-x}
+  {\path{doi:10.1186/s12859-017-1766-x}}.
+\newline\urlprefix\url{https://doi.org/10.1186/s12859-017-1766-x}
+
+\bibitem{albrecht_automated_2020}
+S.~Albrecht, M.~A. Andrade-Navarro, J.-F. Fontaine,
+  \href{https://www.biorxiv.org/content/10.1101/768713v3}{Automated quality
+  control of next generation sequencing data using machine learning}
+  768713Publisher: Cold Spring Harbor Laboratory Section: New Results.
+\newblock \href {http://dx.doi.org/10.1101/768713} {\path{doi:10.1101/768713}}.
+\newline\urlprefix\url{https://www.biorxiv.org/content/10.1101/768713v3}
+
+\bibitem{koster_snakemakescalable_2012}
+J.~Köster, S.~Rahmann,
+  \href{https://academic.oup.com/bioinformatics/article/28/19/2520/290322}{Snakemake—a
+  scalable bioinformatics workflow engine} 28~(19)  2520--2522, publisher:
+  Oxford Academic.
+\newblock \href {http://dx.doi.org/10.1093/bioinformatics/bts480}
+  {\path{doi:10.1093/bioinformatics/bts480}}.
+\newline\urlprefix\url{https://academic.oup.com/bioinformatics/article/28/19/2520/290322}
+
+\bibitem{quinlan_bedtools_2010}
+A.~R. Quinlan, I.~M. Hall,
+  \href{https://academic.oup.com/bioinformatics/article/26/6/841/244688}{{BEDTools}:
+  a flexible suite of utilities for comparing genomic features} 26~(6)
+  841--842, publisher: Oxford Academic.
+\newblock \href {http://dx.doi.org/10.1093/bioinformatics/btq033}
+  {\path{doi:10.1093/bioinformatics/btq033}}.
+\newline\urlprefix\url{https://academic.oup.com/bioinformatics/article/26/6/841/244688}
+
+\bibitem{yu_chipseeker_2015}
+G.~Yu, L.-G. Wang, Q.-Y. He,
+  \href{https://academic.oup.com/bioinformatics/article/31/14/2382/255379}{{ChIPseeker}:
+  an r/bioconductor package for {ChIP} peak annotation, comparison and
+  visualization} 31~(14)  2382--2383, publisher: Oxford Academic.
+\newblock \href {http://dx.doi.org/10.1093/bioinformatics/btv145}
+  {\path{doi:10.1093/bioinformatics/btv145}}.
+\newline\urlprefix\url{https://academic.oup.com/bioinformatics/article/31/14/2382/255379}
+
+\bibitem{korotkevich_fast_2019}
+G.~Korotkevich, V.~Sukhov, A.~Sergushichev,
+  \href{https://www.biorxiv.org/content/10.1101/060012v2}{Fast gene set
+  enrichment analysis}  060012Publisher: Cold Spring Harbor Laboratory Section:
+  New Results.
+\newblock \href {http://dx.doi.org/10.1101/060012} {\path{doi:10.1101/060012}}.
+\newline\urlprefix\url{https://www.biorxiv.org/content/10.1101/060012v2}
+
+\end{thebibliography}

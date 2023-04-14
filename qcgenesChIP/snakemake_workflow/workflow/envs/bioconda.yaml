@@ -1,0 +1,18 @@
+channels:
+  - bioconda
+dependencies:
+  - bedtools=2.29.2
+  - bioconductor-chippeakanno=3.20.0
+  - bioconductor-chipseeker=1.22.0
+  - bioconductor-txdb.hsapiens.ucsc.hg38.knowngene=3.10.0
+  - bioconductor-org.Hs.eg.db
+  - bowtie2=2.3.5.1
+  - fastqc=0.11.9
+  - samtools=1.9
+  - sra-tools=2.10.3
+  - mysql=5.7.24
+  - pandas=1.0.4
+  - scipy=1.4.0
+  - matplotlib=3.2.1
+  - seaborn=0.10.0
+  - plotnine=0.7.0

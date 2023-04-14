@@ -1,0 +1,3 @@
+AttributeError in line 255 of /mnt/scratch1/projects/manuscript/qcgenesChIP/snakemake_workflow/Snakefile:
+invalid name for input, output, wildcard, params or log: count is reserved for internal use
+  File "/mnt/scratch1/projects/manuscript/qcgenesChIP/snakemake_workflow/Snakefile", line 255, in <module>

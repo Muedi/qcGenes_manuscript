@@ -1,0 +1,10 @@
+name: qualityAnalysis
+channels:
+  - bioconda
+  - r
+dependencies:
+  - r-tidyverse  
+  - bioconductor-fgsea=1.14
+  - bioconductor-chipseeker
+  - bioconductor-txdb.hsapiens.ucsc.hg38.knowngene
+  - bioconductor-org.Hs.eg.db

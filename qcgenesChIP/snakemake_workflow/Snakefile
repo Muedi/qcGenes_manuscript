@@ -1,0 +1,300 @@
+import pandas as pd
+
+configfile: "config/config.yaml"
+
+meta_data = pd.read_csv("config/metadata/MetaRunTable.csv")
+
+all_geo_ids = meta_data["geo_id"].unique()
+
+rule all:
+    input:
+        expand("output/plots/{geo_id}/quality_vs_mean_enrichment_of_bin_max.png", geo_id=all_geo_ids),
+        expand("output/plots/disease_vs_quality_{geo_id}.png", geo_id=all_geo_ids),
+        "output/positively_correlated_pathways.png",
+        "output/negatively_correlated_pathways.png",
+        "output/positively_correlated_pathways.csv",
+        "output/negatively_correlated_pathways.csv",
+        "output/positively_correlated_genes.csv",
+        "output/negatively_correlated_genes.csv"
+
+rule downloadSample:
+    output:
+        "data/datasets/{geo_id}/{sra_run_id}.fastq.gz"
+    log:
+        "log/datasets/{geo_id}/{sra_run_id}_downloadSample.log"
+    params:
+        max_reads=config["MAX_READS"]
+    conda:
+        "workflow/envs/bioconda.yaml"
+    shell:
+        "mkdir -p data/datasets/{wildcards.geo_id} && "
+        "fastq-dump {wildcards.sra_run_id} -X {params.max_reads} --gzip --outdir data/datasets/{wildcards.geo_id} > {log}"
+
+rule fastqc:
+    input:
+        rules.downloadSample.output
+    output:
+        "output/qualityFeatures/{geo_id}/fastqc/{sra_run_id}_fastqc/summary.txt"
+    params:
+        outdir="output/qualityFeatures/{geo_id}/fastqc/"
+    log:
+        "log/datasets/{geo_id}/{sra_run_id}_fastqc.log"
+    conda:
+        "workflow/envs/bioconda.yaml"
+    shell:
+        "mkdir -p {params.outdir} && fastqc -q {input} --outdir {params.outdir} --extract > {log}"
+
+rule bowtie2:
+    input:
+        rules.downloadSample.output
+    output:
+        sam="data/datasets/{geo_id}/bowtie2/{sra_run_id}.sam",
+        txt="output/qualityFeatures/{geo_id}/bowtie2/{sra_run_id}.bowtie2.txt"
+    params:
+        outdir="data/datasets/{geo_id}/bowtie2/",
+        idx=config["BOWTIE_IDX"],
+        tmp_txt="output/qualityFeatures/{geo_id}/bowtie2/{sra_run_id}.bowtie2.txt.tmp"
+    log:
+        "log/datasets/{geo_id}/{sra_run_id}_bowtie2.log"
+    conda:
+        "workflow/envs/bioconda.yaml"
+    shell:
+        "mkdir -p {params.outdir} && "
+        "bowtie2 -x {params.idx} {input} -S {output.sam} --mm -q 2> {params.tmp_txt} > {log} && "
+        "grep -v Warning {params.tmp_txt} > {output.txt}"
+
+rule samtools:
+    input:
+        rules.bowtie2.output.sam
+    output:
+        "data/datasets/{geo_id}/bowtie2/{sra_run_id}.bam"
+    log:
+        "log/datasets/{geo_id}/{sra_run_id}_samtools.log"
+    conda:
+        "workflow/envs/bioconda.yaml"
+    shell:
+        "samtools view -b {input} | samtools sort -o {output} > {log} && "
+        "rm {input}"
+
+rule annotate_reads:
+    input:
+        rules.samtools.output
+    output:
+        ann="output/qualityFeatures/{geo_id}/reads_anno/{sra_run_id}.readsannot.txt",
+        tss="output/qualityFeatures/{geo_id}/tss_anno/{sra_run_id}.tss.txt"
+    log:
+        "log/datasets/{geo_id}/{sra_run_id}_annotation.log"
+    conda:
+        "workflow/envs/bioconda.yaml"
+    params:
+        script=config["WRAPPER_SCRIPT_READS_ALL_ANNO_PY"],
+        species=config["SPECIES_COMMON_NAME"]
+    shell:
+        "python {params.script} {input} {params.species} {output.ann} {output.tss} > {log} 2>&1 &&"
+        "rm -f Rplots.pdf"
+
+rule scorer:
+    input:
+        raw=rules.fastqc.output,
+        map=rules.bowtie2.output.txt,
+        loc=rules.annotate_reads.output.ann,
+        tss=rules.annotate_reads.output.tss
+    output:
+        "output/qualityFeatures/{geo_id}/scores/{sra_run_id}.score.txt"
+    log:
+        "log/datasets/{geo_id}/{sra_run_id}.scorer.log"
+    conda:
+        "workflow/envs/seqQscorer.yaml"
+    params:
+        species=config["SPECIES_COMMON_NAME"]
+    shell:
+        "python lib/seqQscorer.git/seqQscorer.py --spec {params.species} --assay ChIP-seq --rt single-ended --raw {input.raw} --map {input.map} --loc {input.loc} --tss {input.tss} 2> {log} | "
+        "grep probability | grep -v summary > {output} 2>> {log}"
+
+""" 
+
+# These functions were written to keep control and sample files seperate
+
+def get_all_aggregate_scores_sample_files(wildcards):
+    paths = []
+    gi = wildcards.geo_id
+    sra_runs = meta_data.loc[(meta_data["geo_id"] == gi) & (meta_data["is_sample"].eq(True)), "Run"]
+    for sr in sra_runs:
+        paths.append("output/qualityFeatures/{}/scores/{}.score.txt".format(gi, sr))
+    return paths
+
+rule aggregate_scores_samples_only:
+    input:
+        get_all_aggregate_scores_sample_files
+    output:
+        "output/scores/{geo_id}.scores.txt"
+    log:
+        "log/datasets/{geo_id}.agg_scores.log"
+    shell:               
+        "cat {input} > {output} 2> {log}" 
+        
+"""
+
+def get_all_aggregate_scores_files(wildcards):
+    paths = []
+    gi = wildcards.geo_id
+    sra_runs = meta_data.loc[(meta_data["geo_id"] == gi) & (meta_data["is_sample"].eq(True)), "Run"]
+    for sr in sra_runs:
+        paths.append("output/qualityFeatures/{}/scores/{}.score.txt".format(gi, sr))
+    return paths
+
+rule aggregate_scores:
+    input:
+        get_all_aggregate_scores_files
+    output:
+        "output/scores/{geo_id}.scores.txt"
+    log:
+        "log/datasets/{geo_id}.agg_scores.log"
+    shell:          
+        "cat {input} > {output} 2> {log}"
+
+
+""" 
+
+# These functions were written to keep control and sample files seperate and to be able to use proteins with different peak widths
+
+def get_path_to_control_files_as_string(wildcards):
+    out_string = ""
+    controls = eval(meta_data.loc[meta_data["Run"] == wildcards.sra_run_id, "controls"].iloc[0])
+    for control_id in controls:
+        out_string += "data/datasets/{}/bowtie2/{}.bam".format(wildcards.geo_id, str(control_id)) + " "
+    return out_string
+
+def get_path_to_control_files_as_list(wildcards):
+    out_list = []
+    controls = eval(meta_data.loc[meta_data["Run"] == wildcards.sra_run_id, "controls"].iloc[0])
+    for control_id in controls:
+        out_list.append("data/datasets/{}/bowtie2/{}.bam".format(wildcards.geo_id, str(control_id)))
+    return out_list
+
+def get_peak_width_parameter(wildcards):
+    if meta_data.loc[(meta_data["Run"] == wildcards.sra_run_id), "peak_width"].eq("broad").iloc[0]:
+        return "--broad"
+    else:
+        return ""
+
+def get_peak_width(wildcards):
+    return meta_data.loc[(meta_data["Run"] == wildcards.sra_run_id), "peak_width"].iloc[0] 
+    
+"""
+
+rule call_peaks:
+    input:
+        rules.samtools.output,
+        #get_path_to_control_files_as_list
+    output:
+        "output/macs2/{geo_id}/{sra_run_id}_peaks.bed"
+    params:
+        outdir="output/macs2/{geo_id}/",
+        #controls=get_path_to_control_files_as_string,
+        #width_param=get_peak_width_parameter,
+        #width=get_peak_width,
+    log:
+        "log/datasets/{geo_id}/{sra_run_id}.call_peaks.log"
+    conda:
+        "workflow/envs/macs2.yaml"
+    shell:
+        "mkdir -p {params.outdir} && "
+        "macs2 callpeak -t {input} -f BAM -n {wildcards.sra_run_id} --outdir {params.outdir} --verbose 1 > {log} && "
+        "mv {params.outdir}{wildcards.sra_run_id}_peaks.narrowPeak {output}"
+
+
+rule windows_along_genome:
+    output:
+        "data/ref/GRCh38.99/hg38_bins.bed"
+    conda:
+        "workflow/envs/bioconda.yaml"
+    shell:
+        "mysql --user=genome --host=genome-mysql.cse.ucsc.edu -A " 
+        "-e 'select chrom, size from hg38.chromInfo' | head -n 25 | tail -n 24 | "
+        "bedtools makewindows -g stdin -w 1000 > {output}"
+
+rule bin_peaks:
+    input:
+        peaks=rules.call_peaks.output,
+        bins=rules.windows_along_genome.output
+    output:
+        "output/bins/{geo_id}/{sra_run_id}_binned.bed"
+    conda:
+        "workflow/envs/bioconda.yaml"
+    params:
+        temp="output/bins/{geo_id}/{sra_run_id}_temp_count.bed",
+        temp_count="output/bins/{geo_id}/{sra_run_id}_temp.bed"
+    shell:
+        "[ -s {input.peaks} ] && (bedtools intersect -a {input.bins} -b {input.peaks} -loj | "
+        "bedtools groupby -g 1-3 -c 8 -o min,max,mean,median,stdev,sum > {params.temp} 2>/dev/null && "
+        "bedtools coverage -a {input.bins} -b {input.peaks} | cut -f 4 > {params.temp_count} &&"
+        "paste {params.temp} {params.temp_count} > {output}) && rm -rf {params} "
+        "|| echo "" > {output} && exit 0 "
+
+def get_aggregate_binned_peaks_files(wildcards):
+    paths = []
+    sra_runs = meta_data.loc[(meta_data["geo_id"] == wildcards.geo_id) & (meta_data["is_sample"].eq(True)), "Run"]
+    for sr in sra_runs:
+        paths.append("output/bins/{}/{}_binned.bed".format(wildcards.geo_id, sr))
+    return paths
+
+rule aggregate_binned_peaks:
+    input:
+        files=get_aggregate_binned_peaks_files,
+        scores=rules.aggregate_scores.output
+    output:
+        min="output/bins/{geo_id}/peak_min.csv",
+        max="output/bins/{geo_id}/peak_max.csv",
+        mean="output/bins/{geo_id}/peak_mean.csv",
+        count="output/bins/{geo_id}/peak_count.csv"
+
+    conda:
+        "workflow/envs/bioconda.yaml"
+    shell:
+        "python workflow/scripts/aggregate_binned_peaks.py {input.files} {input.scores} {output}"
+
+rule plot_peaks_vs_quality:
+    input:
+        peaks=rules.aggregate_binned_peaks.output
+    output:
+        peak_min="output/plots/{geo_id}/quality_vs_mean_enrichment_of_bin_max.png",
+        peak_max="output/plots/{geo_id}/quality_vs_mean_enrichment_of_bin_mean.png",
+        peak_mean="output/plots/{geo_id}/quality_vs_mean_enrichment_of_bin_min.png",
+        peak_sum="output/plots/{geo_id}/quality_vs_total_peak_count.png"
+    conda:
+        "workflow/envs/bioconda.yaml"
+    shell:
+        "python workflow/scripts/quality_vs_peaks.py {input} {wildcards.geo_id}"
+
+rule make_metadata:
+    output:
+        "config/metadata/{geo_id}_metaTable.csv"
+    shell:
+        "python makeMetaTable_{wildcards.geo_id}.py"
+        
+rule plot_disease_vs_quality:
+    input:
+        scores=rules.aggregate_scores.output,
+        metadata=rules.make_metadata.output
+    output:
+        "output/plots/disease_vs_quality_{geo_id}.png"
+    conda:
+        "workflow/envs/bioconda.yaml"
+    shell:
+        "Rscript workflow/scripts/disease_vs_quality.r {input.metadata} {input.scores} {wildcards.geo_id}"
+
+rule gsea_analysis:
+    input:
+        expand("output/bins/{geo_id}/peak_max.csv", geo_id = all_geo_ids)
+    output:
+        "output/positively_correlated_pathways.png",
+        "output/negatively_correlated_pathways.png",
+        "output/positively_correlated_pathways.csv",
+        "output/negatively_correlated_pathways.csv",
+        "output/positively_correlated_genes.csv",
+        "output/negatively_correlated_genes.csv"
+    conda:
+        "workflow/envs/gseaAnalysis.yaml"
+    shell:
+        "Rscript workflow/scripts/gsea_analysis_of_correlated_peaks.r {input}"
