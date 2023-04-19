@@ -108,7 +108,7 @@ rule scorer:
     params:
         species=config["SPECIES_COMMON_NAME"]
     shell:
-        "python lib/seqQscorer.git/seqQscorer.py --spec {params.species} --assay ChIP-seq --rt single-ended --raw {input.raw} --map {input.map} --loc {input.loc} --tss {input.tss} 2> {log} | "
+        "python /mnt/scratch1/projects/qcGenes.git/lib/seqQscorer.git/seqQscorer.py --spec {params.species} --assay ChIP-seq --rt single-ended --raw {input.raw} --map {input.map} --loc {input.loc} --tss {input.tss} 2> {log} | "
         "grep probability | grep -v summary > {output} 2>> {log}"
 
 """ 
@@ -247,7 +247,7 @@ rule aggregate_binned_peaks:
         min="output/bins/{geo_id}/peak_min.csv",
         max="output/bins/{geo_id}/peak_max.csv",
         mean="output/bins/{geo_id}/peak_mean.csv",
-        count="output/bins/{geo_id}/peak_count.csv"
+        peakcount="output/bins/{geo_id}/peak_count.csv"
 
     conda:
         "workflow/envs/bioconda.yaml"
@@ -294,7 +294,9 @@ rule gsea_analysis:
         "output/negatively_correlated_pathways.csv",
         "output/positively_correlated_genes.csv",
         "output/negatively_correlated_genes.csv"
+    log:
+        "log/gsea.log"
     conda:
         "workflow/envs/gseaAnalysis.yaml"
     shell:
-        "Rscript workflow/scripts/gsea_analysis_of_correlated_peaks.r {input}"
+        "Rscript workflow/scripts/gsea_analysis_of_correlated_peaks.r {input} &> {log}"
