@@ -11,11 +11,12 @@ config.data <- yaml.load_file(config.path)
 pathways.curated <- gmtPathways(config.data$MSIGDB_PATH) #  "/mnt/scratch1/projects/qcGenes.git/data/ref/msigdb/c2.all.v7.4.symbols.gmt")
 txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
 CORR_THRESHOLD = 0.3
-GSEA.INPUT.GENES = config.path$GSEA_INPUT_GENES
+GSEA.INPUT.GENES = config.data$GSEA_INPUT_GENES
 gsea.pathway.perc.cutoff <- config.data$GSEA_PATHWAY_REPRESENTATION_PERCENTAGE_CUTOFF
 gsea.input.perc.cutoff <- config.data$GSEA_INPUTGENES_REPRESENTATION_PERCENTAGE_CUTOFF
 gsea.table.cutoff <- config.data$GSEA_TABLE_PADJ_CUTOFF
-plot.enrich.cutoff <- config.data$GSEA_PLOT_PADJ_CUTOFF2
+gsea.plot.cutoff <- config.data$GSEA_PLOT_PADJ_CUTOFF2
+top_n_to_plot<-40
 argv <- commandArgs(trailingOnly=TRUE)
 
 # GSEA Analysis Function ------------------------------------------------------------------------
@@ -114,8 +115,8 @@ correlated_pathways <- function(threshold, label){
       geom_col(aes(fill=-log10(padj))) +
       coord_flip() +
       labs(x="Top pathways", y="Fold change",
-           title=paste(plot.title),
-           subtitle=paste(plot.subtitle)
+           title=paste("Curated pathways enrichment"),
+           subtitle=paste0(label, " correlated genes")
            ) +
       # theme_minimal(base_size = 10)
     theme_minimal()
