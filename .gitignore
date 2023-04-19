@@ -1,6 +1,7 @@
-qcgenesChIP/report/
-qcgenesChIP/log/
-qcgenesChIP/.snakemake/
-.R*
-qcgenesChIP/data/
+qcgenesChIP/snakemake_workflow/report/
+qcgenesChIP/snakemake_workflow/output/
+qcgenesChIP/snakemake_workflow/log/
+qcgenesChIP/snakemake_workflow/.snakemake/
+qcgenesChIP/snakemake_workflow/.R*
+qcgenesChIP/snakemake_workflow/data/
 
