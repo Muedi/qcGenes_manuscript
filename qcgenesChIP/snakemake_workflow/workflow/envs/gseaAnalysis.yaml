@@ -1,10 +1,12 @@
-name: qualityAnalysis
+#name: qualityAnalysis
 channels:
   - bioconda
   - r
+  - conda-forge
 dependencies:
-  - r-tidyverse  
-  - bioconductor-fgsea=1.14
+  - r-tidyverse
+  - r-yaml
+  - bioconductor-fgsea
   - bioconductor-chipseeker
   - bioconductor-txdb.hsapiens.ucsc.hg38.knowngene
   - bioconductor-org.Hs.eg.db

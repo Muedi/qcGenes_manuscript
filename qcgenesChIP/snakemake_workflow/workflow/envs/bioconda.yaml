@@ -1,5 +1,6 @@
 channels:
   - bioconda
+  - conda-forge
 dependencies:
   - bedtools=2.29.2
   - bioconductor-chippeakanno=3.20.0
