@@ -1,1 +1,6 @@
 qcgenesChIP/report/
+qcgenesChIP/log/
+qcgenesChIP/.snakemake/
+.R*
+qcgenesChIP/data/
+
