@@ -10,7 +10,7 @@ config.path <- file.path(".", "config", "config.yaml")
 config.data <- yaml.load_file(config.path)
 pathways.curated <- gmtPathways(config.data$MSIGDB_PATH) #  "/mnt/scratch1/projects/qcGenes.git/data/ref/msigdb/c2.all.v7.4.symbols.gmt")
 txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
-CORR_THRESHOLD = 0.3
+CORR_THRESHOLD <- 0.2
 GSEA.INPUT.GENES = config.data$GSEA_INPUT_GENES
 gsea.pathway.perc.cutoff <- config.data$GSEA_PATHWAY_REPRESENTATION_PERCENTAGE_CUTOFF
 gsea.input.perc.cutoff <- config.data$GSEA_INPUTGENES_REPRESENTATION_PERCENTAGE_CUTOFF

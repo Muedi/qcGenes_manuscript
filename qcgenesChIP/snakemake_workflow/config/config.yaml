@@ -27,10 +27,10 @@ BOWTIE_IDX: /mnt/scratch1/projects/qcGenes.git/data/ref/bowtie2/GRCh38_noalt_as
 
 
 # USE MSIGDB DATA URLS FROM https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.1/
-MSIGDB_PATH: /mnt/scratch1/projects/qcGenes.git/data/ref/msigdb/c2.all.v7.4.symbols.gmt
-MSIGDB_URL: https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.4/c2.all.v7.4.symbols.gmt
-MSIGDB_POSITIONAL_PATH: /mnt/scratch1/projects/qcGenes.git/data/ref/msigdb/c1.all.v7.4.symbols.gmt
-MSIGDB_POSITIONAL_URL: https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.4/c1.all.v7.4.symbols.gmt
+MSIGDB_PATH: /mnt/scratch1/projects/qcGenes.git/data/ref/msigdb/c2.cp.v7.4.symbols.gmt
+MSIGDB_URL: https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.4/c2.cp.v7.4.symbols.gmt
+MSIGDB_POSITIONAL_PATH: /mnt/scratch1/projects/qcGenes.git/data/ref/msigdb/c1.cp.v7.4.symbols.gmt
+MSIGDB_POSITIONAL_URL: https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.4/c1.cp.v7.4.symbols.gmt
 
 # =============================================================================
 # SEQQSCORER
