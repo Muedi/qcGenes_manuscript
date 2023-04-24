@@ -299,4 +299,4 @@ rule gsea_analysis:
     conda:
         "workflow/envs/gseaAnalysis.yaml"
     shell:
-        "Rscript workflow/scripts/gsea_analysis_of_correlated_peaks.r {input} &> {log}"
+        "Rscript workflow/scripts/gsea_analysis_of_correlated_peaks.r {input} > {log} 2>&1"
