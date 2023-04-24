@@ -6,3 +6,8 @@ qcgenesChIP/snakemake_workflow/.R*
 qcgenesChIP/snakemake_workflow/data/
 qcgenesChIP/report/
 qcGenesChIP/report2/
+qcGenes/output/
+qcGenes/report/
+qcGenes/data/
+qcGenes/ref/
+
