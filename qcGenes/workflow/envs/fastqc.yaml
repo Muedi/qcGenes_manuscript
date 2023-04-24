@@ -1,0 +1,7 @@
+name: fastqc
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - fastqc=0.11.9
+  - unzip=6.0

@@ -1,0 +1,66 @@
+# =============================================================================
+# REFERENCES
+# =============================================================================
+GENOM_PATH: data/ref/GRCh38.99/Homo_sapiens.GRCh38.dna_sm.alt.fa.gz
+ANNOT_PATH: data/ref/GRCh38.99/Homo_sapiens.GRCh38.99.gtf.gz
+TRANS_PATH: data/ref/GRCh38.99/Homo_sapiens.GRCh38.cdna.all.fa.gz
+ENSID_PATH: data/ref/annotation/Biomart_GRCh38_p13_tx2gene2name.tsv.gz # to get manually (see README file)
+
+GENOM_URL: ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna_sm.alt.fa.gz
+ANNOT_URL: ftp://ftp.ensembl.org/pub/release-99/gtf/homo_sapiens/Homo_sapiens.GRCh38.99.gtf.gz
+TRANS_URL: ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
+
+
+GS2D_PATH: data/ref/gs2d/20180416_gene2mesh.tsv
+GS2D_URL: http://cbdm-01.zdv.uni-mainz.de/~jfontain/downloads/20180416_gene2mesh.tsv
+
+BOWTIE_IDX_DIR: data/ref/bowtie2
+BOWTIE_IDX_PATH: data/ref/bowtie2/hg19.zip
+BOWTIE_IDX_FILE1: data/ref/bowtie2/hg19.1.bt2
+BOWTIE_IDX_URL: https://genome-idx.s3.amazonaws.com/bt/hg19.zip
+BOWTIE_IDX: data/ref/bowtie2/hg19
+
+PICARD_DIR: data/ref/picard
+PICARD_REFFLAT_PATH: data/ref/picard/refFlat.txt.gz # GZIP FILE
+PICARD_REFFLAT_FILE: data/ref/picard/refFlat.txt    # TXT FILE
+PICARD_REFFLAT_URL: http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/refFlat.txt.gz
+
+# FOR HUMAN USE MSIGDB DATA URLS FROM https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.1/
+# FOR MOUSE AND OTHER SPECIES SEE MANUAL DOWNLOAD FROM http://ge-lab.org
+MSIGDB_PATH: data/ref/msigdb/c2.cp.kegg.v7.1.symbols.gmt
+MSIGDB_URL: https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.1/c2.cp.kegg.v7.1.symbols.gmt
+MSIGDB_POSITIONAL_PATH: data/ref/msigdb/c1.all.v7.1.symbols.gmt
+MSIGDB_POSITIONAL_URL: https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.1/c1.all.v7.1.symbols.gmt
+
+# =============================================================================
+# SEQQSCORER
+# =============================================================================
+SPECIES_COMMON_NAME: human
+
+WRAPPER_SCRIPT_READS_ALL_ANNO_PY: workflow/scripts/wrapper_annotation.py
+WRAPPER_SCRIPT_READS_ALL_ANNO_ANN_R: workflow/scripts/readsAnno.R
+WRAPPER_SCRIPT_READS_ALL_ANNO_TSS_R: workflow/scripts/readsAnnoTSS.R
+WRAPPER_SCRIPT_READS_ALL_ANNO_ANN_R_NAME: readsAnno.R
+WRAPPER_SCRIPT_READS_ALL_ANNO_TSS_R_NAME: readsAnnoTSS.R
+
+WRAPPER_SCRIPT_READS_ANNO_PY: lib/seqQscorer.git/example_dataset/reads_annotation/wrapper_reads_annotation.py
+WRAPPER_SCRIPT_READS_ANNO_R: lib/seqQscorer.git/example_dataset/reads_annotation/readsAnno.R
+WRAPPER_SCRIPT_READS_ANNO_R_NAME: readsAnno.R
+
+WRAPPER_SCRIPT_TSS_ANNO_PY: lib/seqQscorer.git/example_dataset/tss_annotation/wrapper_tss_annotation.py
+WRAPPER_SCRIPT_TSS_ANNO_R: lib/seqQscorer.git/example_dataset/tss_annotation/readsAnnoTSS.R
+WRAPPER_SCRIPT_TSS_ANNO_R_NAME: readsAnnoTSS.R
+
+# =============================================================================
+# VARIABLES
+# =============================================================================
+MAX_READS: 2000000 # Max number of reads to download in each FASTQ file
+MAX_THREADS: 4
+BOWTIE2_THREADS: 1
+
+GSEA_TABLE_PADJ_CUTOFF: 0.5
+GSEA_PLOT_PADJ_CUTOFF2: 0.15
+
+MAX_DATASET_P_VS_GROUP_CORRELATION: 0.5
+MIN_DATASET_N_DEG: 20
+

@@ -1,0 +1,9 @@
+name: linux
+channels:
+  - conda-forge
+dependencies:
+  - git=2.26.2
+  - wget=1.20.1
+  - sed=4.7
+  - tar=1.32
+# cat, rm, ln, and cp: not in anaconda but should be available by default

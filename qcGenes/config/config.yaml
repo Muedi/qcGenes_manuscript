@@ -1,0 +1,113 @@
+# =============================================================================
+# VARIABLES
+# =============================================================================
+
+# PERFORMANCE
+MAX_READS: 10000000        # Max number of reads from fastq file to download
+MAX_THREADS: 1             # Set to 1 for Rasflow which does not run Salmon anymore
+RASFLOW_THREADS: 1         # Set to 1 for Rasflow which does not run Salmon anymore
+SALMON_THREADS: 8          # Number of threads to quantify reads of a sample by Salmon tool (too many Salmon instances could fill up the RAM)
+SALMON_INDEX_THREADS: 8    # Number of threads to create transcriptome index
+SALMON_MAX_READS: 1000000  # Number of reads from fastq file to use for the expression analysis; no limit if -1
+BOWTIE2_THREADS: 4         # Number of threads to create bam file for the qc procedure
+BOWTIE2_MAX_READS: 1000000 # Number of reads from fastq file to use to create bam file for the qc procedure; no limit if -1
+
+# GROUPS OF DATASETS
+MAX_DATASET_P_VS_GROUP_CORRELATION: 0.3 # QUALITY BIAS FOR A DATASET IS THE SAME AS: CORRELATION COEFF BETWEEN QUALITY PROBABILITIES AND DIAGNOSIS GROUP OF THE BIOLOGICAL SAMPLES
+BIAS_LOW_CUTOFF: 0.18                    # DATASETS WITH QUALITY BIAS BELOW THIS VALUE ARE CONSIDERED OF LOW BIAS
+BIAS_HIGH_CUTOFF: 0.3                   # DATASETS WITH QUALITY BIAS ABOVE THIS VALUE ARE CONSIDERED OF HIGH BIAS
+MIN_DATASET_N_DEG: 50                   # MIN NUMBER OF DIFFERENTIAL GENES FOR A DATASET TO BE SELECTED FOR SOME ANALYSES
+MIN_SAMPLES: 8                         # MIN NUMBER OF BIOLOGICAL SAMPLES FOR A DATASET TO BE SELECTED FOR SOME ANALYSES
+N_SAMPLES_MEDIUM: 20                    # DATASETS WITH BIAS BELOW THIS VALUE ARE CONSIDERED OF LOW BIAS (MEDIUM BIAS IF ABOVE THIS VALUE AND BELOW N_SAMPLES_BIG)
+N_SAMPLES_BIG: 30                       # DATASETS WITH BIAS ABOVE THIS VALUE ARE CONSIDERED OF HIGH BIAS
+
+# GENE SET ENRICHMENT ANALYSIS (GSEA)
+GSEA_INPUT_GENES: 500                                  # NUMBER OF GENES IN FOREGROUND SET FOR GSEA
+GSEA_PATHWAY_REPRESENTATION_PERCENTAGE_CUTOFF: 0.00001 # 0.1 for a min of 10% of the pathway genes
+GSEA_INPUTGENES_REPRESENTATION_PERCENTAGE_CUTOFF: 0.05 # 0.1 for a min of 10% of the input genes
+GSEA_TABLE_PADJ_CUTOFF: 0.05
+GSEA_PLOT_PADJ_CUTOFF2: 0.05
+
+
+# =============================================================================
+# PATHS AND URLS FILE NAMES CONSISTENT BETWEEN URLS AND PATHS)
+# =============================================================================
+
+# GENOMES
+GENOM_PATH: ../qcGenes.git/data/ref/GRCh38.101/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+ANNOT_PATH: ../qcGenes.git/data/ref/GRCh38.101/Homo_sapiens.GRCh38.101.gtf.gz
+ANNOT_PATH_UNZIPPED: ../qcGenes.git/data/ref/GRCh38.101/Homo_sapiens.GRCh38.101.gtf
+TRANS_PATH: ../qcGenes.git/data/ref/GRCh38.101/Homo_sapiens.GRCh38.cdna.all.fa.gz
+GENTROME_PATH: ../qcGenes.git/data/ref/GRCh38.101/Homo_sapiens.GRCh38.gentrome.fa.gz
+ENSID_PATH: ../qcGenes.git/data/ref/GRCh38.101/Homo_sapiens.GRCh38.101.gene2tx.tsv.gz
+ENSIDVER_PATH: ../qcGenes.git/data/ref/GRCh38.101/Homo_sapiens.GRCh38.101.gene2tx.ver.tsv
+SALMON_INDEX_DIR: ../qcGenes.git/data/ref/GRCh38.101/salmonIndex
+
+GENOM_URL: ftp://ftp.ensembl.org/pub/release-101/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+ANNOT_URL: ftp://ftp.ensembl.org/pub/release-101/gtf/homo_sapiens/Homo_sapiens.GRCh38.101.gtf.gz
+TRANS_URL: ftp://ftp.ensembl.org/pub/release-101/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
+
+# GS2D
+GS2D_PATH: ../qcGenes.git/data/ref/gs2d/20180416_gene2mesh.tsv
+GS2D_URL: http://cbdm-01.zdv.uni-mainz.de/~jfontain/downloads/20180416_gene2mesh.tsv
+GS2D_MSIGDB_PATH: ../qcGenes.git/data/ref/msigdb/20180416_gene2mesh.gmt
+
+# HUMAN BOWTIE INDEX CONFIG
+BOWTIE_IDX_DIR: ../qcGenes.git/data/ref/bowtie2
+BOWTIE_IDX_PATH: ../qcGenes.git/data/ref/bowtie2/GRCh38_noalt_as.zip
+BOWTIE_IDX_FILE1: ../qcGenes.git/data/ref/bowtie2/GRCh38_noalt_as.1.bt2
+BOWTIE_IDX_URL: https://genome-idx.s3.amazonaws.com/bt/GRCh38_noalt_as.zip
+BOWTIE_IDX: ../qcGenes.git/data/ref/bowtie2/GRCh38_noalt_as
+
+# MOUSE BOWTIE INDEX CONFIG
+# BOWTIE_IDX_DIR: ../qcGenes.git/data/ref/bowtie2
+# BOWTIE_IDX_PATH: ../qcGenes.git/data/ref/bowtie2/mm10.zip
+# BOWTIE_IDX_FILE1: ../qcGenes.git/data/ref/bowtie2/mm10.1.bt2
+# BOWTIE_IDX_URL: https://genome-idx.s3.amazonaws.com/bt/mm10.zip
+# BOWTIE_IDX: ../qcGenes.git/data/ref/bowtie2/mm10
+
+# PICARD
+PICARD_DIR: ../qcGenes.git/data/ref/picard
+PICARD_REFFLAT_PATH: ../qcGenes.git/data/ref/picard/refFlat.txt.gz # GZIP FILE
+PICARD_REFFLAT_FILE: ../qcGenes.git/data/ref/picard/refFlat.txt    # TXT FILE
+PICARD_REFFLAT_URL: http://hgdownload.cse.ucsc.edu/goldenPath/hg38/database/refFlat.txt.gz
+
+# MSIGDB
+# FOR HUMAN, USE MSIGDB DATA URLS FROM "https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.4/" OR NEWER VERSIONS
+# FOR MOUSE: TEST FILES FROM https://bioinf.wehi.edu.au/MSigDB/
+# FOR OTHER ORGANISMS: NOT SUPPORTED
+MSIGDB_HALLMARK_PATH: ../qcGenes.git/data/ref/msigdb/h.all.v7.4.symbols.gmt
+MSIGDB_HALLMARK_URL: https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.4/h.all.v7.4.symbols.gmt
+MSIGDB_POSITIONAL_PATH: ../qcGenes.git/data/ref/msigdb/c1.all.v7.4.symbols.gmt
+MSIGDB_POSITIONAL_URL: https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.4/c1.all.v7.4.symbols.gmt
+MSIGDB_CURATED_PATH: ../qcGenes.git/data/ref/msigdb/c2.all.v7.4.symbols.gmt
+MSIGDB_CURATED_URL: https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.4/c2.all.v7.4.symbols.gmt
+MSIGDB_CURATED_CP_PATH: ../qcGenes.git/data/ref/msigdb/c2.cp.v7.4.symbols.gmt
+MSIGDB_CURATED_CP_URL: https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.4/c2.cp.v7.4.symbols.gmt
+MSIGDB_REGULATORY_PATH: ../qcGenes.git/data/ref/msigdb/c3.all.v7.4.symbols.gmt
+MSIGDB_REGULATORY_URL: https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.4/c3.all.v7.4.symbols.gmt
+MSIGDB_CELLS_PATH: ../qcGenes.git/data/ref/msigdb/c8.all.v7.4.symbols.gmt
+MSIGDB_CELLS_URL: https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.4/c8.all.v7.4.symbols.gmt
+
+
+# =============================================================================
+# SEQQSCORER (DO NOT CHANGE)
+# =============================================================================
+SPECIES_COMMON_NAME: human
+
+WRAPPER_SCRIPT_READS_ALL_ANNO_PY: workflow/scripts/wrapper_annotation.py
+WRAPPER_SCRIPT_READS_ALL_ANNO_ANN_R: workflow/scripts/readsAnno.R
+WRAPPER_SCRIPT_READS_ALL_ANNO_TSS_R: workflow/scripts/readsAnnoTSS.R
+WRAPPER_SCRIPT_READS_ALL_ANNO_ANN_R_NAME: readsAnno.R
+WRAPPER_SCRIPT_READS_ALL_ANNO_TSS_R_NAME: readsAnnoTSS.R
+
+WRAPPER_SCRIPT_NOISEQ: workflow/scripts/noiseq_for_rasflow_counts.r
+WRAPPER_SCRIPT_NOISEQ_NAME: noiseq_for_rasflow_counts.r
+
+WRAPPER_SCRIPT_READS_ANNO_PY: lib/seqQscorer.git/example_dataset/reads_annotation/wrapper_reads_annotation.py
+WRAPPER_SCRIPT_READS_ANNO_R: lib/seqQscorer.git/example_dataset/reads_annotation/readsAnno.R
+WRAPPER_SCRIPT_READS_ANNO_R_NAME: readsAnno.R
+
+WRAPPER_SCRIPT_TSS_ANNO_PY: lib/seqQscorer.git/example_dataset/tss_annotation/wrapper_tss_annotation.py
+WRAPPER_SCRIPT_TSS_ANNO_R: lib/seqQscorer.git/example_dataset/tss_annotation/readsAnnoTSS.R
+WRAPPER_SCRIPT_TSS_ANNO_R_NAME: readsAnnoTSS.R

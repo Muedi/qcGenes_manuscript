@@ -1,0 +1,82 @@
+# =============================================================================
+# REFERENCES
+# =============================================================================
+GENOM_PATH: data/ref/GRCm38.101/Mus_musculus.GRCm38.dna.primary_assembly.fa.gz
+ANNOT_PATH: data/ref/GRCm38.101/Mus_musculus.GRCm38.101.gtf.gz
+TRANS_PATH: data/ref/GRCm38.101/Mus_musculus.GRCm38.cdna.all.fa.gz
+ENSID_PATH: data/ref/annotation/Biomart_GRCm38_p6_tx2gene2name.tsv.gz # to get manually (see README file)
+
+GENOM_URL: http://ftp.ensembl.org/pub/release-101/fasta/mus_musculus/dna/Mus_musculus.GRCm38.dna.primary_assembly.fa.gz
+ANNOT_URL: http://ftp.ensembl.org/pub/release-101/gtf/mus_musculus/Mus_musculus.GRCm38.101.gtf.gz
+TRANS_URL: http://ftp.ensembl.org/pub/release-101/fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz
+
+
+GS2D_PATH: data/ref/gs2d/20180416_gene2mesh.tsv
+GS2D_URL: http://cbdm-01.zdv.uni-mainz.de/~jfontain/downloads/20180416_gene2mesh.tsv
+
+BOWTIE_IDX_DIR: data/ref/bowtie2
+BOWTIE_IDX_PATH: data/ref/bowtie2/mm10.zip
+BOWTIE_IDX_FILE1: data/ref/bowtie2/mm10.1.bt2
+BOWTIE_IDX_URL: https://genome-idx.s3.amazonaws.com/bt/mm10.zip
+BOWTIE_IDX: data/ref/bowtie2/mm10
+
+PICARD_DIR: data/ref/picard
+PICARD_REFFLAT_PATH: data/ref/picard/refFlat.txt.gz # GZIP FILE
+PICARD_REFFLAT_FILE: data/ref/picard/refFlat.txt    # TXT FILE
+PICARD_REFFLAT_URL: http://hgdownload.cse.ucsc.edu/goldenPath/mm10/database/refFlat.txt.gz
+
+# FOR HUMAN USE MSIGDB DATA URLS FROM https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.1/
+# FOR MOUSE AND OTHER SPECIES SEE MANUAL DOWNLOAD FROM http://ge-lab.org
+
+#GSEA .gmt format in gene symbol == http://ge-lab.org/gskb/2-MousePath/MousePath_All_gmt-Format.gmt
+#GMT format in Mouse Genome informatics(MGI) ID == http://ge-lab.org/gskb/2-MousePath/mGSKB_MGI.gmt
+#GMT format in Entrez ID == http://ge-lab.org/gskb/2-MousePath/mGSKB_Entrez.gmt
+#GMT format in Ensembl ID == http://ge-lab.org/gskb/2-MousePath/mGSKB_Ensembl.gmt
+
+#Mouse Gene sets in .gmt format by categories:
+#Co-expression == http://ge-lab.org/gskb/2-MousePath/MousePath_Co-expression_gmt.gmt 
+#Gene Ontology == http://ge-lab.org/gskb/2-MousePath/MousePath_GO_gmt.gmt 
+#Cuated Pathway == http://ge-lab.org/gskb/2-MousePath/MousePath_Pathway_gmt.gmt 
+#Metabolic == http://ge-lab.org/gskb/2-MousePath/MousePath_Metabolic_gmt.gmt 
+#TF targets == http://ge-lab.org/gskb/2-MousePath/MousePath_TF_gmt.gmt 
+#miRNA targets == http://ge-lab.org/gskb/2-MousePath/MousePath_miRNA_gmt.gmt 
+#Location == http://ge-lab.org/gskb/2-MousePath/MousePath_Location_gmt.gmt 
+#Others == http://ge-lab.org/gskb/2-MousePath/MousePath_Other_gmt.gmt 
+
+MSIGDB_PATH: data/ref/msigdb/MousePath_Pathway_gmt.gmt
+MSIGDB_URL: http://ge-lab.org/gskb/2-MousePath/MousePath_Pathway_gmt.gmt
+MSIGDB_POSITIONAL_PATH: data/ref/msigdb/MousePath_Location_gmt.gmt
+MSIGDB_POSITIONAL_URL: http://ge-lab.org/gskb/2-MousePath/MousePath_Location_gmt.gmt
+
+# =============================================================================
+# SEQQSCORER
+# =============================================================================
+SPECIES_COMMON_NAME: mouse
+
+WRAPPER_SCRIPT_READS_ALL_ANNO_PY: workflow/scripts/wrapper_annotation.py
+WRAPPER_SCRIPT_READS_ALL_ANNO_ANN_R: workflow/scripts/readsAnno.R
+WRAPPER_SCRIPT_READS_ALL_ANNO_TSS_R: workflow/scripts/readsAnnoTSS.R
+WRAPPER_SCRIPT_READS_ALL_ANNO_ANN_R_NAME: readsAnno.R
+WRAPPER_SCRIPT_READS_ALL_ANNO_TSS_R_NAME: readsAnnoTSS.R
+
+WRAPPER_SCRIPT_READS_ANNO_PY: lib/seqQscorer.git/example_dataset/reads_annotation/wrapper_reads_annotation.py
+WRAPPER_SCRIPT_READS_ANNO_R: lib/seqQscorer.git/example_dataset/reads_annotation/readsAnno.R
+WRAPPER_SCRIPT_READS_ANNO_R_NAME: readsAnno.R
+
+WRAPPER_SCRIPT_TSS_ANNO_PY: lib/seqQscorer.git/example_dataset/tss_annotation/wrapper_tss_annotation.py
+WRAPPER_SCRIPT_TSS_ANNO_R: lib/seqQscorer.git/example_dataset/tss_annotation/readsAnnoTSS.R
+WRAPPER_SCRIPT_TSS_ANNO_R_NAME: readsAnnoTSS.R
+
+# =============================================================================
+# VARIABLES
+# =============================================================================
+MAX_READS: 2000000 # Max number of reads to download in each FASTQ file
+MAX_THREADS: 4
+BOWTIE2_THREADS: 1
+
+GSEA_TABLE_PADJ_CUTOFF: 0.5
+GSEA_PLOT_PADJ_CUTOFF2: 0.15
+
+MAX_DATASET_P_VS_GROUP_CORRELATION: 0.5
+MIN_DATASET_N_DEG: 20
+

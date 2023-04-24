@@ -1,0 +1,8 @@
+name: salmon
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - salmon=1.6.0
+  - seqtk=1.3

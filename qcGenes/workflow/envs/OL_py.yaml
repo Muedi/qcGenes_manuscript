@@ -1,0 +1,22 @@
+name: mesh_comp
+channels:
+  - conda-forge
+  - r
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.9
+  - pandas
+  - numpy
+  - matplotlib=3.3.4
+  - seaborn=0.11.1
+  - matplotlib-venn
+  - pyyaml
+  - upsetplot
+  - r-tidyverse
+  - r-complexupset
+  - r-ggpmisc
+  - r-ggpubr
+  - bioconductor-org.hs.eg.db
+  - pip:
+    - gtfparse==1.3

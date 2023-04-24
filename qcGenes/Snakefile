@@ -1,0 +1,55 @@
+# =============================================================================
+# Snakemake workflow to study RNA-Seq genes impacted by experimental quality
+# =============================================================================
+
+import pandas as pd
+import numpy as np
+import glob
+from os import path
+
+configfile: "config/config.yaml"
+
+# ------------------------------------------------------------------------------
+# DATA (synonymous: GEO_Series and dataid; sample and Run)
+# ------------------------------------------------------------------------------
+
+DATASETS = pd.read_csv("config/metadata/Datasets.csv")[["GEO_Series", "select", "batches"]]
+SAMPLES  = pd.read_csv("config/metadata/Mega_SraRunTable.csv")[["GEO_Series", "Run", "Selected", "BatchAnalysisSelection"]].merge(DATASETS, how="inner", on="GEO_Series")
+
+SAMPLES_MAIN_TABLE   = SAMPLES[SAMPLES.select.eq(1) & SAMPLES.Selected.eq(1)][["GEO_Series", "Run"]]
+SAMPLES_MAIN_RUN_COL = SAMPLES[SAMPLES.select.eq(1) & SAMPLES.Selected.eq(1)]["Run"]
+SAMPLES_MAIN_GEO_COL = SAMPLES[SAMPLES.select.eq(1) & SAMPLES.Selected.eq(1)]["GEO_Series"]
+
+SAMPLES_BATCH_TABLE   = SAMPLES[SAMPLES.batches.eq(1) & SAMPLES.BatchAnalysisSelection.eq(1)][["GEO_Series", "Run"]]
+SAMPLES_BATCH_RUN_COL = SAMPLES[SAMPLES.batches.eq(1) & SAMPLES.BatchAnalysisSelection.eq(1)]["Run"]
+SAMPLES_BATCH_GEO_COL = SAMPLES[SAMPLES.batches.eq(1) & SAMPLES.BatchAnalysisSelection.eq(1)]["GEO_Series"]
+
+DATAIDS_MAIN  = DATASETS[DATASETS.select.eq(1)]["GEO_Series"]
+DATAIDS_BATCH = DATASETS[DATASETS.batches.eq(1)]["GEO_Series"]
+
+SAMPLES_ALL_TABLE   = SAMPLES[ (SAMPLES.select.eq(1)|SAMPLES.batches.eq(1)) & (SAMPLES.Selected.eq(1)|SAMPLES.BatchAnalysisSelection.eq(1))][["GEO_Series", "Run"]]
+SAMPLES_ALL_RUN_COL = SAMPLES[ (SAMPLES.select.eq(1)|SAMPLES.batches.eq(1)) & (SAMPLES.Selected.eq(1)|SAMPLES.BatchAnalysisSelection.eq(1))]["Run"]
+SAMPLES_ALL_GEO_COL = SAMPLES[ (SAMPLES.select.eq(1)|SAMPLES.batches.eq(1)) & (SAMPLES.Selected.eq(1)|SAMPLES.BatchAnalysisSelection.eq(1))]["GEO_Series"]
+
+
+# ------------------------------------------------------------------------------
+# QUALITY GENES
+# ------------------------------------------------------------------------------
+
+rule all:
+    input:
+#        "output/summary.html", 
+        "output/draft.html"
+
+
+# ------------------------------------------------------------------------------
+# LOAD RULES
+# ------------------------------------------------------------------------------
+
+include: "workflow/rules/common.smk"
+include: "workflow/rules/downloadRefFiles.smk"
+include: "workflow/rules/downloadDatasets.smk"
+include: "workflow/rules/qualityFeatures.smk"
+include: "workflow/rules/expressionAnalysis.smk"
+include: "workflow/rules/qualityAnalysis.smk"
+

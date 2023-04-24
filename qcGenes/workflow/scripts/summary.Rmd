@@ -1,0 +1,259 @@
+---
+title: "qcGenes Summary"
+author: "JF Fontaine"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    theme: united
+    toc: true
+    toc_depth: 2
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    number_sections: true
+    fig_width: 7
+    fig_height: 6
+    fig_caption: yes
+  pdf_document:
+    toc: true
+    number_sections: true
+    extra_dependencies:
+    - grffile
+---
+
+```{r include=FALSE}
+library(tidyverse)
+library(yaml)
+library(knitr)
+options(readr.num_columns = 0)
+```
+
+```{r include=FALSE}
+config.path                   <- file.path("..", "..", "config", "config.yaml")
+config.data                   <- yaml.load_file(config.path)
+
+datasets.stats.path         <- file.path("..", "..", "output", "main", "qualityCorGenes", "datasets.stats.tsv")
+datasets.stats              <- read_tsv(datasets.stats.path)
+datasets.total.n            <- dim(datasets.stats)[1]
+datasets.selected.n         <- sum(datasets.stats$selected)
+datasets.selected.quality.n <- sum(datasets.stats$p_group_cor<config.data$MAX_DATASET_P_VS_GROUP_CORRELATION)
+datasets.selected.deg.n     <- sum(datasets.stats$deg>config.data$MIN_DATASET_N_DEG)
+
+datasets.dunn.pos <- sum((datasets.stats$dunn_noout-datasets.stats$dunn_all)>0 & datasets.stats$selected==TRUE)
+datasets.gamma.pos <- sum((datasets.stats$pgamma_noout-datasets.stats$pgamma_all)>0 & datasets.stats$selected==TRUE)
+```
+
+<!-- ======================================================================= -->
+# Introduction
+<!-- ======================================================================= -->
+
+<!-- ----------------------------------------------------------------------- -->
+## Objective
+<!-- ----------------------------------------------------------------------- -->
+
+* Evaluate impact of low quality samples in the analysis of NGS datasets
+* Use many datasets to identify recurrent patterns, such as:
+  * signal (e.g. genes or peaks) biased by quality in several independant datasets
+  * boost in samples clustering after removal of lowest quality samples
+
+<!-- ----------------------------------------------------------------------- -->
+## Datasets processing
+<!-- ----------------------------------------------------------------------- -->
+
+**`r datasets.total.n` datasets** from GEO (GSExxxx) were selected with the following criteria:
+
+* assay: single-end RNA-seq
+* samples: human tissue
+* design: control vs disease; >10 samples
+* availability: GEO+SRA
+* disease: known genes in the literrature (GS2D)
+
+Processing tools:
+
+* Low-quality probabilities of samples (P<sub>low</sub>): SeqQscorer (fastqc, bowtie2, chippeakanno, and chipseeker)
+* Differential genes: RASflow (salmon, DESeq2) 
+
+
+<!-- ======================================================================= -->
+# Results
+<!-- ======================================================================= -->
+
+<!-- ----------------------------------------------------------------------- -->
+## Low-quality probability (P<sub>low</sub>)
+<!-- ----------------------------------------------------------------------- -->
+
+Derived by machine learning on multiple quality features, Low-quality 
+probabilities are expected to be complex as they do not correlate with a single 
+feature (see seqQscorer manuscript). The higher the probability, the lower the 
+expected quality.
+
+* probabilities should not systematically correlate with data size 
+* probabilities could catch batch-processing effect
+
+<details>
+  <summary><font color="#FF0000">Click for Answer</font></summary>
+
+### P<sub>low</sub> and data size
+
+**If not systematicly correlated with data size, P<sub>low</sub> would be confirmed to be complex.**
+
+![*p: low-quality probabilities; bases: data size in bases (nucleotides); bases: data size in bytes; cor: correlation coefficient; ctrl: in control samples; treat: in treated/disease samples*](../../output/main/qualityCorGenes/cor.size.png)
+
+### P<sub>low</sub> and batch effect
+
+Batch effect is known to be associated with differences in quality. 
+**If P<sub>low</sub> is associated with batch effect, it would be a validation**.
+It may be used to identify batches or to enable identification of within-batch outliers.
+
+```{r echo=FALSE, out.width="50%", out.extra='style="background-color: #BBBBBB; padding:2px; display: inline-block;"'}
+#myimages <- c("../../output/batched/qualityVsExp/GSE163214/GSE163214.batch.png",
+#              "../../output/batched/qualityVsExp/GSE173078/GSE173078.batch.png",
+#              "../../output/batched/qualityVsExp/GSE81871/GSE81871.batch.png",
+#              "../../output/batched/qualityVsExp/GSE82177/GSE82177.batch.png",
+#              "../../output/batched/qualityVsExp/GSE120099/GSE120099.batch.png")
+#include_graphics(myimages)
+```
+</details> 
+
+<!-- ----------------------------------------------------------------------- -->
+## Datasets quality
+<!-- ----------------------------------------------------------------------- -->
+
+**`r datasets.selected.n` (`r round(100*(datasets.selected.n)/datasets.total.n, 0)`%) datasets were selected** for further analysis based on:
+
+* Minimal number of significant differential genes = `r config.data$MIN_DATASET_N_DEG`
+* Maxmimal correlation coefficient of quality vs sample groups = `r config.data$MAX_DATASET_P_VS_GROUP_CORRELATION`
+
+**`r datasets.total.n-datasets.selected.n` datasets were excluded**:
+
+* `r datasets.total.n-datasets.selected.deg.n` with very low number of signigicant differential genes: impossible to use for testing clustering boost
+* `r datasets.total.n-datasets.selected.quality.n` with high association of sample groups with P<sub>low</sub>: impossible to differentiate disease-relevant and quality-biased genes
+
+**Notably, `r round(100*(datasets.total.n-datasets.selected.quality.n)/datasets.total.n, 2)`% (n=`r datasets.total.n-datasets.selected.quality.n`) of the datasets in the literature are unreliable** and unlikely to be debiased by correction methods (Soneson et al. PLoS One 2014)
+
+
+![*color: dataset selection; bar annotation: # significant differential genes*](../../output/main/qualityCorGenes/cor.group.png)
+
+
+<!-- ----------------------------------------------------------------------- -->
+## Quality-filtering and clustering
+<!-- ----------------------------------------------------------------------- -->
+
+**P<sub>low</sub>** is used to identify low-quality samples in datasets, i.e. 
+outliers. Clustering of the samples by group (control or treatment/disease) is 
+compared before and after removal of outliers. 
+**Dunn index and Pearson/Normalised Gamma index** 
+are used to evaluate clustering of samples by groups on a PCA. 
+
+**For both index: the higher the index, the better the clustering**.
+
+### Clustering evaluation across selected datasets
+
+Clustering evaluation improvement is derived by substracting the clustering index 
+from PCA after and before outlier removal. 
+
+* **Positive difference denotes better clustering after outlier removal**
+* **Recurrence in multiple datasets would demonstrate a notable impact of quality on gene-expression**
+
+Datasets with positive difference out of `r datasets.selected.n` selected datasets:
+
+* Dunn index:  `r datasets.dunn.pos`  (`r round(100*(datasets.dunn.pos/datasets.selected.n), 0)`%)
+* Gamma index:  `r datasets.gamma.pos`  (`r round(100*(datasets.gamma.pos/datasets.selected.n), 0)`%)
+
+**Based on the Dunn index, ML-based outlier-filtering improves samples clustering in `r round(100*(datasets.dunn.pos/datasets.selected.n), 0)`% (n=`r datasets.dunn.pos`) of the datasets.**
+
+![*diff: difference; dunn: Dunn index; pgamma: Normalised or Pearson's gamma index*](../../output/main/qualityCorGenes/pca/pca.indices.png)
+
+<!--
+### Examples
+
+#### A good example
+
+Increase of Dunn or Normalised Gamma index after outlier removal 
+denotes better samples clustering. 
+**Samples far apart from their cluster could be identified.**
+
+![*Left: identified outlier samples are annotated with their ID and low-quality probability; Right: samples remaining after outlier removal are all annotated*](../../output/main/qualityVsExp/GSE163908/GSE163908.pca001.png)
+
+#### An average example
+
+Small increase of Dunn and small decrease of Normalised Gamma index after outlier removal.
+**Samples at the periphery of their cluster and samples hard to classify could be identified.** 
+
+![*Left: identified outlier samples are annotated with their ID and low-quality probability; Right: samples remaining after outlier removal are all annotated*](../../output/main/qualityVsExp/GSE100925/GSE100925.pca001.png)
+-->
+
+<!-- ----------------------------------------------------------------------- -->
+## Quality-biased genes recurrence
+<!-- ----------------------------------------------------------------------- -->
+    
+Quality-biased genes have their expression correlating with low-quality 
+probabilities across the samples in a dataset. 
+
+* **Recurrence in multiple datasets would demonstrate a systemic bias**
+* **Gene functions, enriched for those genes, may point to biological events**
+
+### Distributions
+
+* **Positive correlations: the higher the gene expression, the lower the quality**
+* **Negative correlations: the higher the gene expression, the higher the quality**
+
+```{r echo=FALSE, out.width="50%"}
+myimages <- c("../../output/main/qualityCorGenes/pos.cor.all.genes.png",
+              "../../output/main/qualityCorGenes/neg.cor.all.genes.png")
+include_graphics(myimages)
+```
+
+
+### Positive correlations
+
+![](../../output/main/qualityCorGenes/pos.cor.genes.noBias.png)
+
+![](../../output/main/qualityCorGenes/fgsea/fgsea.pos.cure.gsea.plot.png)
+
+### Negative correlations
+
+![](../../output/main/qualityCorGenes/neg.cor.genes.noBias.png)
+
+![](../../output/main/qualityCorGenes/fgsea/fgsea.neg.cure.gsea.plot.png)
+
+
+```{r eval=FALSE, include=FALSE, out.width="50%"}
+# myimages <- c("output/main/qualityCorGenes/neg.cor.genes.png",
+#                    "output/main/qualityCorGenes/neg.path.gsea.plot.png")
+# include_graphics(myimages)
+```
+
+
+<!-- ----------------------------------------------------------------------- -->
+## Quality-biased and significant genes
+<!-- ----------------------------------------------------------------------- -->
+
+Genes were analyzed for differential expression or relevance in the literature. 
+We can compare differential and literature FDRs to gene-quality correlations by 
+linear regression. A high coefficient in absolute value for a linear regression 
+would indicate a bias.
+
+Questions:
+
+* Is the DEA method robust against low quality?
+  * If so, **coefficients would be lower in the set of significantly differential genes**
+  * compare ALL and DIF (ALL_ALL - DIF_ALL; ALL_NEG - DIF_NEG; ALL_POS - DIF_POS)
+* Are genes that are relevant to treatment or diseases quality-biased?
+  * If so, **coefficients would be lower in the set of known genes**
+  * compare ALL and DIF (ALL_ALL - DIS_ALL; ALL_NEG - DIS_NEG; ALL_POS - DIS_POS)
+* Is the literature (known genes) biased by historical low-quality data?
+
+### Linear regressions
+
+![*Linear regression coefficient of gene-quality correlation (Rqe) vs false discovery rates (FDR). Rqe (gene-quality correlation): correlation coefficient of gene expression vs P<sub>low</sub> across samples; FDRde: FDR of differential expression analysis; FDRtm: FDR of text-mining analysis automatically deriving known disease genes; POS: genes with positive Rqe; NEG: genes with negative Rqe; ALL: all genes*](../../output/main/qualityCorGenes/cor.q.fdr.png)
+
+
+* Large coefficients (in absolute values) would indicate highly biased differential expression analysis (allgenes or difgenes) or literature-derived genes (disgenes)
+* For negatively quality-correlated genes, negative linear regression with FDR coefficient denotes bias
+
+<!-- ----------------------------------------------------------------------- -->
+# Outlook
+<!-- ----------------------------------------------------------------------- -->
+
+Investigate trimming, batch correction, and alternate dea method (e.g. EdgeR).

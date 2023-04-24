@@ -1,0 +1,2853 @@
+disease	genes	Dataset / Notes	Search details	Search details URL	Single-end candidate datasets (* n<50)	Pair-end candidate datasets	Candidate list update
+Genetic Predisposition to Disease	7147	too general					
+Neoplasms	3456	too general					
+Breast Neoplasms	3409	GSE100925					
+Disease Progression	2341	too general					
+Lung Neoplasms	2323	GSE106899					
+Neoplasm Invasiveness	2206	too general					
+Liver Neoplasms	1915						
+Prostatic Neoplasms	1888						
+Disease Models, Animal	1847	irrelevant					
+Adenocarcinoma	1814						
+Carcinoma, Hepatocellular	1790	GSE82177, GSE25599			GSE82177, GSE25599, GSE132812, GSE111389	GSE136711, GSE138485	2020.05.27
+Cell Transformation, Neoplastic	1654	too general					
+Colorectal Neoplasms	1555						
+Carcinoma, Squamous Cell	1547						
+Neoplasm Metastasis	1536	too general					
+Inflammation	1493	too general					
+Diabetes Mellitus, Type 2	1320	GSE92724					
+Stomach Neoplasms	1318						
+HIV Infections	1283						
+Ovarian Neoplasms	1198						
+Carcinoma, Non-Small-Cell Lung	1119						
+Alzheimer Disease	1110	GSE125583					
+Colonic Neoplasms	1077						
+Lymphatic Metastasis	1066						
+Disease	1051	too general					
+Pancreatic Neoplasms	1038						
+Carcinoma	1018	too general					
+Brain Neoplasms	975						
+Melanoma	974						
+Obesity	906	GSE108643					
+Neuroblastoma	834						
+Neovascularization, Pathologic	825						
+Cardiovascular Diseases	761						
+Esophageal Neoplasms	744						
+Arthritis, Rheumatoid	738						
+Neoplasm Recurrence, Local	738	too general					
+Skin Neoplasms	727						
+Glioma	720						
+Glioblastoma	695						
+Parkinson Disease	682						
+Coronary Artery Disease	662						
+Carcinogenesis	660						
+Syndrome	644	too general					
+Urinary Bladder Neoplasms	644						
+Kidney Neoplasms	635						
+Uterine Cervical Neoplasms	600						
+Amyotrophic Lateral Sclerosis	595	GSE76220, GSE121519(PE)			GSE76220	GSE124439, GSE121519, GSE115259, GSE67196	2020.04.15
+Hypertension	594						
+Multiple Sclerosis	554	GSE123496					
+Atherosclerosis	549						
+Carcinoma, Renal Cell	548						
+Chronic Disease	543						
+Asthma	520	GSE85567, GSE63744			GSE106388, GSE115770, GSE96783, GSE97668*, GSE85567*, GSE75011*, GSE63744**, GSE38003*, GSE55320	GSE101720, GSE61141	2020.04.16
+Leukemia, Myeloid, Acute	516						
+Lupus Erythematosus, Systemic	497						
+Head and Neck Neoplasms	494						
+Acute Disease	492						
+Bone Neoplasms	481						
+Insulin Resistance	481						
+Mouth Neoplasms	481						
+Osteosarcoma	476						
+Recurrence	466						
+Translocation, Genetic	459						
+Thyroid Neoplasms	439	GSE63511	"(""thyroid neoplasms""[MeSH Terms] OR (""thyroid neoplasms""[MeSH Terms] OR thyroid cancer[All Fields])) AND (""Homo sapiens""[Organism] AND ""Expression profiling by high throughput sequencing""[Filter]) AND (""10""[n_samples] : ""10000""[n_samples])"	https://www.ncbi.nlm.nih.gov/gds?term=%28%22thyroid%20neoplasms%22%5BMeSH%20Terms%5D%20OR%20%28%22thyroid%20neoplasms%22%5BMeSH%20Terms%5D%20OR%20thyroid%20cancer%5BAll%20Fields%5D%29%29%20AND%20%28%22Homo%20sapiens%22%5BOrganism%5D%20AND%20%22Expression%20profiling%20by%20high%20throughput%20sequencing%22%5BFilter%5D%29%20AND%20%28%2210%22%5Bn_samples%5D%20%3A%20%2210000%22%5Bn_samples%5D%29&cmd=DetailsSearch			
+Diabetes Mellitus, Type 1	438						
+Multiple Myeloma	435						
+Myocardial Infarction	431	GSE116250					
+Crohn Disease	427	GSE99816, GSE66207(PE)			GSE99816*, GSE117993, GSE117875*, GSE101794, GSE95437, GSE83687, GSE57945	GSE112057, GSE66207*	2020.04.15
+Leukemia	418						
+Endometrial Neoplasms	410						
+Pre-Eclampsia	409						
+Leukemia, Lymphocytic, Chronic, B-Cell	396						
+Adenoma	394						
+Liver Cirrhosis	391						
+Intellectual Disability	384						
+Pulmonary Disease, Chronic Obstructive	377						
+Stroke	370						
+Chromosome Aberrations	369						
+Colitis, Ulcerative	367						
+Hypoxia	357						
+Diabetes Mellitus	354						
+Genomic Instability	352						
+Chromosome Deletion	350						
+Precursor Cell Lymphoblastic Leukemia-Lymphoma	345						
+Abnormalities, Multiple	339						
+Carcinoma, Ductal, Breast	337						
+Carcinoma, Pancreatic Ductal	333						
+Coronary Disease	324						
+Autoimmune Diseases	313						
+Psoriasis	299	GSE142582, GSE147339(PE)			GSE142582*, GSE123785*, GSE123786, GSE114286, GSE107871	GSE147339, GSE139341, GSE121212, GSE117405, GSE103489	2020.04.16
+Kidney Failure, Chronic	291						
+Fibrosis	290						
+Neurodegenerative Diseases	290						
+Brain Ischemia	281						
+Leukemia, Myelogenous, Chronic, BCR-ABL Positive	275						
+Metabolic Syndrome	275						
+Neoplasms, Glandular and Epithelial	274						
+Endometriosis	272						
+Nasopharyngeal Neoplasms	272						
+Carcinoma, Papillary	263						
+Heart Failure	262	GSE116250, GSE120852, GSE104423 				GSE108157, GSE55296, GSE48166, GSE133054 (human and mouse), GSE135055, GSE141910 (366 samples)	2020.05.27
+Tobacco Use Disorder	260						
+Leukemia, Myeloid	256						
+Hepatitis C, Chronic	255						
+Inflammatory Bowel Diseases	253						
+Diabetic Nephropathies	248						
+Precancerous Conditions	246						
+Williams Syndrome	244						
+Hepatitis C	231						
+Osteoarthritis	231						
+Body Weight	229						
+Kidney Diseases	227						
+Respiratory Syncytial Virus Infections	225						
+Lymphoma, Large B-Cell, Diffuse	217						
+Helicobacter Infections	216						
+Lymphoma, B-Cell	216						
+Disease Susceptibility	215						
+Premature Birth	209						
+Polycystic Ovary Syndrome	208						
+Bronchiolitis, Viral	207						
+Cleft Palate	203						
+Fetal Membranes, Premature Rupture	201						
+Chorioamnionitis	200						
+Astrocytoma	199						
+Lymphoma, Non-Hodgkin	199						
+Laryngeal Neoplasms	198						
+Sepsis	198						
+Epilepsy	195						
+Triple Negative Breast Neoplasms	188						
+Alcoholism	187						
+Thrombosis	187						
+Neoplasms, Experimental	183						
+Cleft Lip	182						
+Cholangiocarcinoma	181						
+Bile Duct Neoplasms	179						
+Hyperplasia	178						
+Myelodysplastic Syndromes	177						
+Papillomavirus Infections	176						
+Carcinoma, Transitional Cell	174						
+Infertility, Male	173						
+Lymphoma	173						
+Edema	167						
+Down Syndrome	166						
+Carotid Artery Diseases	165						
+Fatty Liver	165	GSE126848					
+Scleroderma, Systemic	163						
+Dermatitis, Atopic	162						
+Acquired Immunodeficiency Syndrome	161						
+Osteoporosis	161						
+Hepatitis B, Chronic	159						
+Hodgkin Disease	159						
+Nerve Degeneration	159						
+Proteinuria	159						
+Uterine Neoplasms	155						
+Birth Weight	154						
+Macular Degeneration	151						
+Necrosis	151						
+Cystic Fibrosis	147						
+Heart Defects, Congenital	146						
+Hypersensitivity	145						
+Arteriosclerosis	143						
+Hepatitis B	141						
+Hypertension, Pulmonary	140						
+Calcinosis	138						
+Hyperglycemia	137						
+Celiac Disease	136						
+Renal Insufficiency, Chronic	136						
+Cell Transformation, Viral	134						
+Atrial Fibrillation	133						
+Cystadenocarcinoma, Serous	133						
+Graft vs Host Disease	132						
+Plaque, Atherosclerotic	132						
+Postoperative Complications	132						
+Abortion, Habitual	131						
+Rectal Neoplasms	131						
+Huntington Disease	130						
+Ischemia	130						
+Acute Coronary Syndrome	129						
+Carcinoma, Small Cell	129						
+Prostatic Hyperplasia	129						
+Tuberculosis, Pulmonary	129						
+Sarcoma	128						
+Mesothelioma	127						
+Diabetic Retinopathy	126						
+Epstein-Barr Virus Infections	125						
+Liver Diseases	125						
+Pulmonary Fibrosis	125						
+Carcinoma, Basal Cell	123						
+Non-alcoholic Fatty Liver Disease	123	GSE126848					
+Cardiomyopathy, Dilated	121						
+Osteoarthritis, Knee	121						
+Retinitis Pigmentosa	121						
+Spondylitis, Ankylosing	121						
+Nasal Polyps	120						
+Albuminuria	119						
+Gastrointestinal Neoplasms	119						
+Overweight	119						
+Fetal Growth Retardation	118						
+Graves Disease	118						
+Hematologic Neoplasms	118						
+Meningioma	118						
+Pituitary Neoplasms	118						
+Cervical Intraepithelial Neoplasia	117						
+Tuberculosis	117	GSE122619, GSE84445					
+Hearing Loss, Sensorineural	116						
+Leukemia, Promyelocytic, Acute	116						
+Myocardial Ischemia	116						
+Genetic Diseases, X-Linked	115						
+Pregnancy Complications	115						
+Cataract	114						
+Chromosomal Instability	114						
+Testicular Neoplasms	113						
+Behcet Syndrome	112						
+Hypercholesterolemia	112						
+Microsatellite Instability	112						
+Adenocarcinoma, Mucinous	111						
+Infertility, Female	111						
+Genetic Diseases, Inborn	110						
+Diabetes Complications	108						
+Diabetic Angiopathies	106						
+Medulloblastoma	105						
+Small Cell Lung Carcinoma	105						
+AIDS Dementia Complex	104						
+Weight Loss	104						
+Dyslipidemias	103						
+Gallbladder Neoplasms	102						
+Glomerulonephritis, IGA	102						
+Growth Disorders	102						
+Metabolism, Inborn Errors	101						
+Reperfusion Injury	101						
+Salivary Gland Neoplasms	101						
+Burkitt Lymphoma	100						
+Mitochondrial Diseases	100						
+Carcinoma, Endometrioid	99						
+Diabetes, Gestational	99						
+Fanconi Anemia	99						
+Glucose Intolerance	99						
+Obesity, Morbid	98						
+Pain	98						
+Abortion, Spontaneous	96						
+Diabetes Mellitus, Experimental	96						
+Muscular Diseases	96						
+Cardiomyopathies	95						
+Cytomegalovirus Infections	95						
+Migraine Disorders	95						
+Hypersensitivity, Immediate	94						
+Soft Tissue Neoplasms	94						
+Carcinoma, Lobular	93						
+Deafness	93						
+Sarcoma, Ewing	93						
+Virus Diseases	93						
+Anemia, Sickle Cell	92						
+Cardiomegaly	92						
+Hypertrophy	92						
+Infection	92						
+Seizures	92						
+Sjogren's Syndrome	92						
+Immunologic Deficiency Syndromes	91						
+Pneumonia	91						
+Barrett Esophagus	89						
+Hearing Loss	89						
+Neoplastic Cells, Circulating	89						
+Carcinoma in Situ	88						
+Lupus Nephritis	88						
+Meningeal Neoplasms	87						
+Periodontitis	87						
+Weight Gain	87						
+Atrophy	86						
+Skin Diseases	86						
+Hyperlipidemias	85						
+Mammary Neoplasms, Experimental	85						
+Microcephaly	85						
+Neoplasms, Hormone-Dependent	85						
+Arrhythmias, Cardiac	84						
+Postmortem Changes	84						
+Dementia	83						
+Leukemia-Lymphoma, Adult T-Cell	83						
+Rhinitis	83						
+Acute Kidney Injury	82						
+Pancreatitis	82						
+Retinal Degeneration	82						
+Glaucoma, Open-Angle	81						
+Sinusitis	81						
+Adenocarcinoma, Clear Cell	80						
+Colitis	80						
+Eye Abnormalities	80						
+Fractures, Bone	80						
+Gastritis	80						
+Leiomyoma	80						
+Vascular Diseases	80						
+Primary Ovarian Insufficiency	79						
+Aneuploidy	78						
+Arthritis, Juvenile	78						
+Hypertrophy, Left Ventricular	78						
+Neoplasms, Germ Cell and Embryonal	78						
+Peritoneal Neoplasms	78						
+Sarcoma, Kaposi	78						
+Metaplasia	77						
+Obstetric Labor, Premature	77						
+Bone Resorption	76						
+Dwarfism	76						
+Lymphoma, T-Cell	76						
+Lymphoproliferative Disorders	76						
+Nervous System Diseases	76						
+Azoospermia	75						
+Facies	75						
+Lung Diseases	75						
+Precursor T-Cell Lymphoblastic Leukemia-Lymphoma	75						
+Occupational Diseases	74						
+Venous Thrombosis	74						
+Carcinoma, Intraductal, Noninfiltrating	73						
+Muscular Dystrophies	73						
+Adrenal Gland Neoplasms	72						
+Anemia	72						
+Aortic Aneurysm, Abdominal	72						
+Chondrosarcoma	72						
+Heart Diseases	72						
+Leukemia, Erythroblastic, Acute	72						
+Malaria, Falciparum	72						
+Neuroendocrine Tumors	72						
+Retinal Diseases	72						
+Tongue Neoplasms	72						
+Venous Thromboembolism	72						
+Brain Diseases	71						
+Idiopathic Pulmonary Fibrosis	71	GSE73189					
+Neutropenia	71						
+Retinoblastoma	71						
+Bacterial Infections	70						
+Carotid Stenosis	70						
+Thrombocytopenia	70						
+Cerebral Infarction	68						
+Craniofacial Abnormalities	68						
+Bronchial Hyperreactivity	67						
+Hemorrhage	67						
+Melanoma, Experimental	67						
+Multiple Sclerosis, Relapsing-Remitting	67						
+Ventricular Remodeling	67						
+Amino Acid Metabolism, Inborn Errors	66						
+Chromosome Breakage	66						
+Lymphoma, Follicular	66						
+Oligospermia	66						
+Vitiligo	66						
+Carcinoma, Large Cell	65						
+Death, Sudden, Cardiac	65						
+Hypertriglyceridemia	65						
+Osteoporosis, Postmenopausal	65						
+Arthritis	64						
+Pleural Neoplasms	64						
+Renal Insufficiency	64						
+Central Nervous System Neoplasms	63						
+Fibrosarcoma	63						
+Rhabdomyosarcoma	63						
+Ataxia	62						
+Charcot-Marie-Tooth Disease	62						
+Myeloproliferative Disorders	62						
+Influenza, Human	61						
+Liver Cirrhosis, Biliary	61						
+Mucocutaneous Lymph Node Syndrome	61						
+Muscle Hypotonia	61						
+Myopia	61						
+Precursor B-Cell Lymphoblastic Leukemia-Lymphoma	61						
+Shock, Septic	61						
+Adenocarcinoma, Follicular	60						
+Chemical and Drug Induced Liver Injury	60						
+Intestinal Neoplasms	60						
+Limb Deformities, Congenital	60						
+Neoplasms, Second Primary	60						
+Brain Injuries	59						
+Cardiomyopathy, Hypertrophic	59						
+Gastrointestinal Stromal Tumors	59						
+Purpura, Thrombocytopenic, Idiopathic	59						
+Spinocerebellar Ataxias	59						
+Substance-Related Disorders	59						
+Thrombophilia	59						
+Drug-Related Side Effects and Adverse Reactions	58						
+Hand Deformities, Congenital	58						
+Hypothyroidism	58						
+Osteochondrodysplasias	58						
+Chronic Periodontitis	57						
+Muscular Atrophy, Spinal	57						
+Nephrotic Syndrome	57						
+Plaque, Amyloid	57						
+Vasculitis	57						
+Wilms Tumor	57						
+Cerebral Hemorrhage	56						
+Infant, Premature, Diseases	56						
+Carcinoma, Adenoid Cystic	55						
+Angina Pectoris	54						
+Coronary Stenosis	54						
+Hashimoto Disease	54						
+Herpes Simplex	54						
+Prostatic Neoplasms, Castration-Resistant	54						
+Rhinitis, Allergic, Seasonal	54						
+Adrenal Cortex Neoplasms	53						
+Anemia, Aplastic	53						
+Cerebellar Neoplasms	53						
+Hematologic Diseases	53						
+Mammary Neoplasms, Animal	53						
+Arthritis, Psoriatic	52						
+Hyperinsulinism	52						
+Intervertebral Disc Degeneration	52						
+Mental Retardation, X-Linked	52						
+Parkinsonian Disorders	52						
+Pheochromocytoma	52						
+Respiratory Distress Syndrome, Adult	52						
+Sarcoidosis	52						
+Sleep Apnea, Obstructive	52						
+Ventricular Dysfunction, Left	52						
+Adenomatous Polyposis Coli	51						
+Carcinoma, Neuroendocrine	51						
+Encephalomyelitis, Autoimmune, Experimental	51						
+Hyperlipoproteinemia Type II	51						
+Glomerulonephritis	50						
+Lymphoma, Mantle-Cell	50						
+Myasthenia Gravis	50						
+Diarrhea	49						
+Cerebrovascular Disorders	48						
+Rhinitis, Allergic, Perennial	48						
+Critical Illness	47						
+Kidney Diseases, Cystic	47						
+Long QT Syndrome	47						
+Pancreatitis, Chronic	47						
+Polyploidy	47						
+Blast Crisis	46						
+Cerebellar Ataxia	46						
+Glaucoma	46						
+Neoplasm, Residual	46						
+Neoplasms, Multiple Primary	46						
+Spastic Paraplegia, Hereditary	46						
+Amyloidosis	45						
+Carcinoma, Medullary	45						
+Choriocarcinoma	45						
+Epilepsy, Temporal Lobe	45						
+Liver Neoplasms, Experimental	45						
+Malaria	45						
+Puberty, Precocious	45						
+Thromboembolism	45						
+Angina, Unstable	44						
+Coronary Restenosis	44						
+Hypoglycemia	44						
+Scoliosis	44						
+Wounds and Injuries	44						
+Aortic Valve Stenosis	43						
+beta-Thalassemia	43						
+Lymphoma, B-Cell, Marginal Zone	43						
+Muscle Weakness	43						
+Ectodermal Dysplasia	42						
+Escherichia coli Infections	42						
+Leprosy	42						
+Vascular Calcification	42						
+Colorectal Neoplasms, Hereditary Nonpolyposis	41						
+Diseases in Twins	41						
+Intervertebral Disc Displacement	41						
+Irritable Bowel Syndrome	41						
+Peripheral Nervous System Diseases	41						
+Prenatal Exposure Delayed Effects	41						
+Thyroiditis, Autoimmune	41						
+Colonic Polyps	40						
+Dental Caries	40						
+Fetal Diseases	40						
+Hemochromatosis	40						
+Hemolysis	40						
+Intracranial Aneurysm	40						
+Leukemia, T-Cell	40						
+Neoplasms, Squamous Cell	40						
+Acute Lung Injury	39						
+Dengue	39						
+Frontotemporal Dementia	39						
+Frontotemporal Lobar Degeneration	39						
+Glomerulosclerosis, Focal Segmental	39						
+Hypogonadism	39						
+Pharyngeal Neoplasms	39						
+Pleural Effusion, Malignant	39						
+Polycystic Kidney, Autosomal Dominant	39						
+Subarachnoid Hemorrhage	39						
+Sudden Infant Death	39						
+Congenital Abnormalities	38						
+Lung Diseases, Interstitial	38						
+Neural Tube Defects	38						
+Arthritis, Experimental	37						
+Bone Diseases, Metabolic	37						
+Choroidal Neovascularization	37						
+Gout	37						
+Lymphoma, T-Cell, Cutaneous	37						
+Memory Disorders	37						
+Muscular Dystrophies, Limb-Girdle	37						
+Severe Combined Immunodeficiency	37						
+Dermatomyositis	36						
+Fever	36						
+Osteolysis	36						
+Protein Aggregation, Pathological	36						
+Staphylococcal Infections	36						
+Urologic Neoplasms	36						
+Drug Hypersensitivity	35						
+Encephalitis	35						
+Gastritis, Atrophic	35						
+Muscular Atrophy	35						
+Pregnancy Complications, Infectious	35						
+Prostatic Intraepithelial Neoplasia	35						
+Seminoma	35						
+Uveal Neoplasms	35						
+Cerebral Palsy	34						
+Eosinophilia	34						
+Eye Diseases, Hereditary	34						
+HTLV-I Infections	34						
+Lichen Planus, Oral	34						
+Metabolic Diseases	34						
+Myotonic Dystrophy	34						
+Neoplastic Syndromes, Hereditary	34						
+Nevus	34						
+Peripheral Vascular Diseases	34						
+Pleural Effusion	34						
+Primary Myelofibrosis	34						
+Respiratory Tract Infections	34						
+Sarcoma, Synovial	34						
+Thinness	34						
+Uremia	34						
+Aggressive Periodontitis	33						
+Alopecia	33						
+Cocaine-Related Disorders	33						
+Constriction, Pathologic	33						
+Diabetic Neuropathies	33						
+Hepatoblastoma	33						
+Rhinitis, Allergic	33						
+Xeroderma Pigmentosum	33						
+Cholangitis, Sclerosing	32						
+Chromosome Disorders	32						
+Demyelinating Diseases	32						
+Granulosa Cell Tumor	32						
+Hepatitis, Autoimmune	32						
+Heroin Dependence	32						
+Hirschsprung Disease	32						
+Hyperoxia	32						
+Ichthyosis	32						
+Keloid	32						
+Neoplasms, Radiation-Induced	32						
+Neurofibromatosis 1	32						
+Obesity, Abdominal	32						
+Pemphigus	32						
+Peptic Ulcer	32						
+Pseudomonas Infections	32						
+Pulmonary Embolism	32						
+Thymus Neoplasms	32						
+Trisomy	32						
+Asymptomatic Diseases	31						
+Carcinoid Tumor	31						
+Essential Hypertension	31						
+Familial Mediterranean Fever	31						
+Graves Ophthalmopathy	31						
+Hemophilia A	31						
+Hyperhomocysteinemia	31						
+Insulinoma	31						
+Iron Overload	31						
+Leigh Disease	31						
+Lewy Body Disease	31						
+Myositis, Inclusion Body	31						
+Oligodendroglioma	31						
+Oropharyngeal Neoplasms	31						
+Wiskott-Aldrich Syndrome	31						
+Acromegaly	30						
+Aortic Aneurysm, Thoracic	30						
+Bronchopulmonary Dysplasia	30						
+Coinfection	30						
+HIV Seropositivity	30						
+Hypertension, Pregnancy-Induced	30						
+Kartagener Syndrome	30						
+Lymphoma, Large-Cell, Anaplastic	30						
+Motor Neuron Disease	30						
+Movement Disorders	30						
+Peripheral Arterial Disease	30						
+Peritonitis	30						
+Prediabetic State	30						
+Purpura, Schoenlein-Henoch	30						
+Sarcoidosis, Pulmonary	30						
+Simian Acquired Immunodeficiency Syndrome	30						
+Teratoma	30						
+Thymoma	30						
+Thyroid Diseases	30						
+Ameloblastoma	29						
+Bardet-Biedl Syndrome	29						
+Cholestasis, Intrahepatic	29						
+Dystonia	29						
+Gallstones	29						
+Gastroesophageal Reflux	29						
+Hepatitis	29						
+Leukoplakia, Oral	29						
+Liver Cirrhosis, Alcoholic	29						
+Periodontal Attachment Loss	29						
+Spinocerebellar Degenerations	29						
+Tumor Virus Infections	29						
+Vulvar Neoplasms	29						
+Arthrogryposis	28						
+Ataxia Telangiectasia	28						
+Cholestasis	28						
+Common Variable Immunodeficiency	28						
+Endometrial Hyperplasia	28						
+Gastrointestinal Diseases	28						
+Hemolytic-Uremic Syndrome	28						
+Micronuclei, Chromosome-Defective	28						
+Microphthalmos	28						
+Multiple Organ Failure	28						
+Multiple System Atrophy	28						
+Polycythemia Vera	28						
+Pregnancy Complications, Hematologic	28						
+Respiratory Hypersensitivity	28						
+Spasms, Infantile	28						
+Spinal Dysraphism	28						
+Substance Withdrawal Syndrome	28						
+Tooth Abnormalities	28						
+Vitreoretinopathy, Proliferative	28						
+Antiphospholipid Syndrome	27						
+Aortic Diseases	27						
+Arterial Occlusive Diseases	27						
+Bone Diseases	27						
+Craniosynostoses	27						
+Ehlers-Danlos Syndrome	27						
+Femur Head Necrosis	27						
+Hair Diseases	27						
+Leiomyosarcoma	27						
+Lipodystrophy	27						
+Neurilemmoma	27						
+Salmonella Infections	27						
+Sclerosis	27						
+Seizures, Febrile	27						
+Sleep Wake Disorders	27						
+Systemic Inflammatory Response Syndrome	27						
+Vascular Remodeling	27						
+Viremia	27						
+Airway Remodeling	26						
+Bone Diseases, Developmental	26						
+Cadaver	26						
+Chromosome Inversion	26						
+Cicatrix, Hypertrophic	26						
+Disorders of Sex Development	26						
+Duodenal Ulcer	26						
+Foot Deformities, Congenital	26						
+Osteoarthritis, Hip	26						
+Ovarian Diseases	26						
+Retinal Neoplasms	26						
+Spinal Cord Injuries	26						
+Streptococcal Infections	26						
+Tourette Syndrome	26						
+Vitamin D Deficiency	26						
+Acute-Phase Reaction	25						
+Adenoma, Pleomorphic	25						
+Agammaglobulinemia	25						
+Aneurysm, Dissecting	25						
+Blood Coagulation Disorders	25						
+Brugada Syndrome	25						
+Carcinoma, Ductal	25						
+Corneal Dystrophies, Hereditary	25						
+Herpesviridae Infections	25						
+Hyperandrogenism	25						
+Jaw Neoplasms	25						
+Leukemia, B-Cell	25						
+Liver Diseases, Alcoholic	25						
+Myocardial Reperfusion Injury	25						
+Opioid-Related Disorders	25						
+Pediatric Obesity	25						
+Periodontal Diseases	25						
+Respiratory Sounds	25						
+Rheumatic Heart Disease	25						
+Thrombocythemia, Essential	25						
+Urticaria	25						
+Uveomeningoencephalitic Syndrome	25						
+Acidosis	24						
+Adrenal Hyperplasia, Congenital	24						
+Adrenocortical Adenoma	24						
+Breast Neoplasms, Male	24						
+Carbohydrate Metabolism, Inborn Errors	24						
+Chlamydia Infections	24						
+Ciliary Motility Disorders	24						
+Cysts	24						
+Dementia, Vascular	24						
+Dyskinesia, Drug-Induced	24						
+Fibromyalgia	24						
+Heart Valve Diseases	24						
+Ischemic Attack, Transient	24						
+Leukoencephalopathies	24						
+Lipid Metabolism, Inborn Errors	24						
+Migraine with Aura	24						
+Mycosis Fungoides	24						
+Nerve Sheath Neoplasms	24						
+Neuronal Ceroid-Lipofuscinoses	24						
+Pain, Postoperative	24						
+Pregnancy Complications, Cardiovascular	24						
+Severe Acute Respiratory Syndrome	24						
+Skin Abnormalities	24						
+Tachycardia, Ventricular	24						
+Amenorrhea	23						
+Anemia, Hemolytic	23						
+Anemia, Iron-Deficiency	23						
+Anodontia	23						
+Biliary Tract Neoplasms	23						
+Burns	23						
+Carcinoma, Merkel Cell	23						
+Carcinoma, Mucoepidermoid	23						
+Cerebellar Diseases	23						
+Community-Acquired Infections	23						
+Dermatitis	23						
+Dystonic Disorders	23						
+Eye Diseases	23						
+Guillain-Barre Syndrome	23						
+Hypopharyngeal Neoplasms	23						
+Keratoconus	23						
+Keratoderma, Palmoplantar	23						
+Leishmaniasis, Cutaneous	23						
+Liver Failure, Acute	23						
+Nervous System Malformations	23						
+Nose Neoplasms	23						
+Radiation Injuries	23						
+Severe Dengue	23						
+Sex Chromosome Aberrations	23						
+Syndactyly	23						
+Synovitis	23						
+Tauopathies	23						
+Urogenital Abnormalities	23						
+Alopecia Areata	22						
+Altitude Sickness	22						
+Alveolar Bone Loss	22						
+Amphetamine-Related Disorders	22						
+Angina, Stable	22						
+Ascites	22						
+Bacteremia	22						
+Blindness	22						
+Bloom Syndrome	22						
+Cachexia	22						
+Carcinoma, Signet Ring Cell	22						
+Cockayne Syndrome	22						
+Congenital Hypothyroidism	22						
+Connective Tissue Diseases	22						
+DiGeorge Syndrome	22						
+Familial Primary Pulmonary Hypertension	22						
+Glaucoma, Angle-Closure	22						
+Hemangioma	22						
+Hypoxia-Ischemia, Brain	22						
+Intracranial Hemorrhages	22						
+Low Back Pain	22						
+Noonan Syndrome	22						
+Odontogenic Tumors	22						
+Osteitis Deformans	22						
+Pancreatitis, Alcoholic	22						
+Pemphigoid, Bullous	22						
+Polycystic Kidney Diseases	22						
+Polyps	22						
+Prader-Willi Syndrome	22						
+Progeria	22						
+Proteostasis Deficiencies	22						
+Pulmonary Emphysema	22						
+Remission, Spontaneous	22						
+Skin Diseases, Genetic	22						
+Stomach Ulcer	22						
+Uveitis	22						
+Basal Ganglia Diseases	21						
+Carcinoma, Adenosquamous	21						
+Chagas Disease	21						
+Congenital Disorders of Glycosylation	21						
+Dyspepsia	21						
+Eczema	21						
+Epilepsies, Partial	21						
+Epilepsy, Generalized	21						
+Fatigue	21						
+Fatigue Syndrome, Chronic	21						
+Gaucher Disease	21						
+Goiter, Nodular	21						
+Hearing Loss, Noise-Induced	21						
+Hyperuricemia	21						
+Hypopituitarism	21						
+Liposarcoma	21						
+Malaria, Cerebral	21						
+Myopathies, Structural, Congenital	21						
+Neuromyelitis Optica	21						
+Psychoses, Substance-Induced	21						
+Sezary Syndrome	21						
+Thyroid Nodule	21						
+Adenocarcinoma, Papillary	20						
+Adrenocortical Carcinoma	20						
+alpha-Thalassemia	20						
+Asthenozoospermia	20						
+Cardiomyopathy, Hypertrophic, Familial	20						
+Cerebral Amyloid Angiopathy	20						
+Cicatrix	20						
+Coloboma	20						
+Epilepsies, Myoclonic	20						
+Hereditary Sensory and Motor Neuropathy	20						
+Heredodegenerative Disorders, Nervous System	20						
+Kidney Calculi	20						
+Leber Congenital Amaurosis	20						
+Leishmaniasis, Visceral	20						
+Leukemia, Myelomonocytic, Chronic	20						
+Lysosomal Storage Diseases	20						
+Multiple Sclerosis, Chronic Progressive	20						
+Peroxisomal Disorders	20						
+Retinal Dystrophies	20						
+Silicosis	20						
+Urinary Tract Infections	20						
+von Hippel-Lindau Disease	20						
+Zellweger Syndrome	20						
+Adenoma, Oxyphilic	19						
+Brain Infarction	19						
+Bulimia	19						
+Disease Resistance	19						
+Enterocolitis, Necrotizing	19						
+Enterovirus Infections	19						
+Fetal Death	19						
+Fibroadenoma	19						
+Fragile X Syndrome	19						
+HELLP Syndrome	19						
+Hemoglobinuria, Paroxysmal	19						
+Hemorrhagic Disorders	19						
+Hypertension, Renal	19						
+Malformations of Cortical Development	19						
+Meningococcal Infections	19						
+Mycobacterium Infections	19						
+Narcolepsy	19						
+Oral Submucous Fibrosis	19						
+Periodontal Pocket	19						
+Picornaviridae Infections	19						
+Pneumonia, Bacterial	19						
+Puberty, Delayed	19						
+Respiratory Distress Syndrome, Newborn	19						
+Spinal Fractures	19						
+Stevens-Johnson Syndrome	19						
+Tuberous Sclerosis	19						
+Vesico-Ureteral Reflux	19						
+Addison Disease	18						
+Adrenal Insufficiency	18						
+AIDS-Related Opportunistic Infections	18						
+Amelogenesis Imperfecta	18						
+Biliary Atresia	18						
+Central Nervous System Diseases	18						
+Delayed Graft Function	18						
+Digestive System Neoplasms	18						
+Essential Tremor	18						
+Food Hypersensitivity	18						
+Genital Neoplasms, Female	18						
+Hereditary Central Nervous System Demyelinating Diseases	18						
+Hermanski-Pudlak Syndrome	18						
+Hypertension, Portal	18						
+Infant, Newborn, Diseases	18						
+Infertility	18						
+Intracranial Arteriosclerosis	18						
+Joint Diseases	18						
+Leukemia, Monocytic, Acute	18						
+Liver Failure	18						
+Malnutrition	18						
+Migraine without Aura	18						
+Muscular Dystrophy, Duchenne	18						
+Myositis	18						
+Neoplasms, Cystic, Mucinous, and Serous	18						
+Nevus, Pigmented	18						
+Night Blindness	18						
+Parathyroid Neoplasms	18						
+Peutz-Jeghers Syndrome	18						
+Polydactyly	18						
+Pterygium	18						
+Retinal Detachment	18						
+Rhabdoid Tumor	18						
+Uterine Diseases	18						
+Varicose Veins	18						
+Acidosis, Lactic	17						
+Adenomatous Polyps	17						
+Anemia, Diamond-Blackfan	17						
+Aortic Aneurysm	17						
+Arrhythmogenic Right Ventricular Dysplasia	17						
+Bronchiolitis Obliterans	17						
+Carcinoma, Embryonal	17						
+Carcinoma, Papillary, Follicular	17						
+Chagas Cardiomyopathy	17						
+Cocarcinogenesis	17						
+Color Vision Defects	17						
+Coronary Thrombosis	17						
+Dyslexia	17						
+Fibroma	17						
+Glycogen Storage Disease	17						
+Hip Fractures	17						
+Language Development Disorders	17						
+Lung Injury	17						
+Lymphoma, T-Cell, Peripheral	17						
+Malabsorption Syndromes	17						
+Marfan Syndrome	17						
+Moyamoya Disease	17						
+Optic Atrophy	17						
+Optic Atrophy, Hereditary, Leber	17						
+Osteogenesis Imperfecta	17						
+Paraganglioma	17						
+Paranasal Sinus Neoplasms	17						
+Pneumococcal Infections	17						
+Rheumatic Diseases	17						
+Sleep Deprivation	17						
+Arsenic Poisoning	16						
+Corneal Diseases	16						
+Cryoglobulinemia	16						
+Cushing Syndrome	16						
+Ductus Arteriosus, Patent	16						
+Gliosis	16						
+Hyperalgesia	16						
+Hypercalcemia	16						
+Hyperlipidemia, Familial Combined	16						
+Hyperthyroidism	16						
+Hypospadias	16						
+Leukemia, Megakaryoblastic, Acute	16						
+Leukopenia	16						
+Lipoma	16						
+Lymphedema	16						
+Lymphopenia	16						
+Photosensitivity Disorders	16						
+Polycythemia	16						
+Pregnancy in Diabetics	16						
+Prolactinoma	16						
+Pulmonary Edema	16						
+Restless Legs Syndrome	16						
+Retinal Neovascularization	16						
+Tetralogy of Fallot	16						
+Ureteral Obstruction	16						
+Werner Syndrome	16						
+Acne Vulgaris	15						
+Adenocarcinoma, Bronchiolo-Alveolar	15						
+Anemia, Sideroblastic	15						
+Anti-Neutrophil Cytoplasmic Antibody-Associated Vasculitis	15						
+Bone Marrow Diseases	15						
+Brain Diseases, Metabolic, Inborn	15						
+Bronchiolitis	15						
+Candidiasis	15						
+Carcinosarcoma	15						
+Cryptorchidism	15						
+Disseminated Intravascular Coagulation	15						
+Endotoxemia	15						
+Epilepsy, Absence	15						
+Exfoliation Syndrome	15						
+Granulomatosis with Polyangiitis	15						
+Heart Septal Defects, Atrial	15						
+Holoprosencephaly	15						
+Iron Metabolism Disorders	15						
+Marijuana Abuse	15						
+Micrognathism	15						
+Ossification, Heterotopic	15						
+Otitis Media	15						
+Phyllodes Tumor	15						
+Respiratory Insufficiency	15						
+Retinopathy of Prematurity	15						
+Rhabdomyosarcoma, Embryonal	15						
+Splenomegaly	15						
+Usher Syndromes	15						
+Ventricular Fibrillation	15						
+Agenesis of Corpus Callosum	14						
+Angelman Syndrome	14						
+Aspergillosis	14						
+Blepharoptosis	14						
+Blister	14						
+Carotid Artery Injuries	14						
+Cholelithiasis	14						
+Clubfoot	14						
+Common Bile Duct Neoplasms	14						
+Death, Sudden	14						
+Dermatitis, Allergic Contact	14						
+Emphysema	14						
+Encephalitis, Viral	14						
+Encephalocele	14						
+Ependymoma	14						
+Epidermolysis Bullosa	14						
+Erythema	14						
+Esophagitis	14						
+Eye Neoplasms	14						
+Glomerulonephritis, Membranous	14						
+Graft Occlusion, Vascular	14						
+Granuloma	14						
+Hallucinations	14						
+Hepatolenticular Degeneration	14						
+Hereditary Sensory and Autonomic Neuropathies	14						
+Hirsutism	14						
+Hyperbilirubinemia	14						
+Hypercalciuria	14						
+Hyperparathyroidism, Primary	14						
+Hypotrichosis	14						
+Intracranial Arteriovenous Malformations	14						
+Kallmann Syndrome	14						
+Keratosis	14						
+Learning Disorders	14						
+Machado-Joseph Disease	14						
+Myasthenic Syndromes, Congenital	14						
+Myoclonic Epilepsies, Progressive	14						
+Nephritis	14						
+Nephrocalcinosis	14						
+Nephrolithiasis	14						
+Nephrosis, Lipoid	14						
+Ovarian Cysts	14						
+Polymyositis	14						
+Pruritus	14						
+Pseudohypoaldosteronism	14						
+Pyelonephritis	14						
+Rett Syndrome	14						
+Scleroderma, Diffuse	14						
+Starvation	14						
+Tendinopathy	14						
+Thalassemia	14						
+Vitamin B 12 Deficiency	14						
+Waldenstrom Macroglobulinemia	14						
+Wet Macular Degeneration	14						
+Acrocephalosyndactylia	13						
+Albinism, Oculocutaneous	13						
+Alcohol-Related Disorders	13						
+Anemia, Hemolytic, Congenital	13						
+Aneurysm, Ruptured	13						
+Beckwith-Wiedemann Syndrome	13						
+Blood Platelet Disorders	13						
+Chordoma	13						
+Communicable Diseases	13						
+Distal Myopathies	13						
+Gastrointestinal Hemorrhage	13						
+Geographic Atrophy	13						
+Giant Cell Arteritis	13						
+Gingivitis	13						
+Goiter	13						
+Gram-Negative Bacterial Infections	13						
+Hamartoma	13						
+Heart Septal Defects, Ventricular	13						
+Hemangiosarcoma	13						
+Hydrocephalus	13						
+Hyperaldosteronism	13						
+Hyperphagia	13						
+Ichthyosiform Erythroderma, Congenital	13						
+Immune System Diseases	13						
+Intestinal Diseases	13						
+Joint Instability	13						
+Lymphohistiocytosis, Hemophagocytic	13						
+Lymphoma, Extranodal NK-T-Cell	13						
+Mitochondrial Encephalomyopathies	13						
+Mucolipidoses	13						
+Multiple Trauma	13						
+Myopathies, Nemaline	13						
+Nails, Malformed	13						
+Neoplasms, Basal Cell	13						
+Neurofibromatosis 2	13						
+Neurotoxicity Syndromes	13						
+Ocular Motility Disorders	13						
+Osteopetrosis	13						
+Parasitemia	13						
+Philadelphia Chromosome	13						
+Pigmentation Disorders	13						
+Rhabdomyosarcoma, Alveolar	13						
+Stomatitis, Aphthous	13						
+Takayasu Arteritis	13						
+Temporomandibular Joint Disorders	13						
+Activated Protein C Resistance	12						
+Amyloidosis, Familial	12						
+Apraxias	12						
+Bacteroidaceae Infections	12						
+Bartter Syndrome	12						
+Bone Marrow Neoplasms	12						
+Carcinoma, Lewis Lung	12						
+Chest Pain	12						
+Chronic Pain	12						
+Constipation	12						
+Contracture	12						
+Creutzfeldt-Jakob Syndrome	12						
+Cytochrome-c Oxidase Deficiency	12						
+Drug Eruptions	12						
+Dupuytren Contracture	12						
+Dyskeratosis Congenita	12						
+Exostoses, Multiple Hereditary	12						
+Giant Cell Tumor of Bone	12						
+Gonadal Dysgenesis, 46,XY	12						
+Growth Hormone-Secreting Pituitary Adenoma	12						
+Heart Block	12						
+Hemoglobinopathies	12						
+Hip Dislocation, Congenital	12						
+Hyperammonemia	12						
+Hyperparathyroidism	12						
+Intestinal Polyps	12						
+Leukemia, Myelomonocytic, Acute	12						
+Lymphoma, Primary Effusion	12						
+Mastocytosis, Systemic	12						
+Meniere Disease	12						
+Mitochondrial Myopathies	12						
+Multiple Endocrine Neoplasia Type 1	12						
+Myocarditis	12						
+Osteomyelitis	12						
+Osteonecrosis	12						
+Ovarian Hyperstimulation Syndrome	12						
+Pancreatic Diseases	12						
+Papilloma	12						
+Polyendocrinopathies, Autoimmune	12						
+Polyomavirus Infections	12						
+Sleep Initiation and Maintenance Disorders	12						
+Spinal Diseases	12						
+Supranuclear Palsy, Progressive	12						
+Vision Disorders	12						
+46, XY Disorders of Sex Development	11						
+Adenoma, Liver Cell	11						
+Aging, Premature	11						
+AIDS-Associated Nephropathy	11						
+Anterior Cruciate Ligament Injuries	11						
+Arthritis, Reactive	11						
+Atypical Hemolytic Uremic Syndrome	11						
+Choroid Diseases	11						
+Chromosome Duplication	11						
+Diabetic Foot	11						
+Dilatation, Pathologic	11						
+Dystonia Musculorum Deformans	11						
+Endocrine System Diseases	11						
+Esophagitis, Peptic	11						
+Exanthema	11						
+Failure to Thrive	11						
+Folic Acid Deficiency	11						
+Glucose Metabolism Disorders	11						
+Hematuria	11						
+Hydatidiform Mole	11						
+Hypokalemia	11						
+Infarction, Middle Cerebral Artery	11						
+Intracranial Thrombosis	11						
+Keratitis	11						
+Leukemia, Lymphoid	11						
+Leukemia, Myelomonocytic, Juvenile	11						
+Lymphangioleiomyomatosis	11						
+Mandibulofacial Dysostosis	11						
+Mediastinal Neoplasms	11						
+Muscular Dystrophy, Animal	11						
+Mycoses	11						
+Myopia, Degenerative	11						
+Nephritis, Hereditary	11						
+Nephritis, Interstitial	11						
+Neuralgia	11						
+Niemann-Pick Diseases	11						
+Oculocerebrorenal Syndrome	11						
+Odontogenic Cysts	11						
+Ossification of Posterior Longitudinal Ligament	11						
+Otorhinolaryngologic Neoplasms	11						
+Otosclerosis	11						
+Penile Neoplasms	11						
+Pregnancy, Ectopic	11						
+Prosthesis Failure	11						
+Respirovirus Infections	11						
+Retinal Vein Occlusion	11						
+Sebaceous Gland Neoplasms	11						
+Syncope, Vasovagal	11						
+Thyroid Carcinoma, Anaplastic	11						
+Turner Syndrome	11						
+Uveitis, Anterior	11						
+Vascular Malformations	11						
+von Willebrand Diseases	11						
+Abdominal Neoplasms	10						
+Adrenoleukodystrophy	10						
+Amnesia	10						
+Brachydactyly	10						
+Brain Edema	10						
+Carcinoma, Acinar Cell	10						
+Chorea	10						
+Chromosome Fragility	10						
+Dysmenorrhea	10						
+Fibromatosis, Aggressive	10						
+Friedreich Ataxia	10						
+Fuchs' Endothelial Dystrophy	10						
+Granulomatous Disease, Chronic	10						
+Hemangioblastoma	10						
+Hemophilia B	10						
+Hemorrhagic Fever with Renal Syndrome	10						
+Histiocytoma, Benign Fibrous	10						
+Histiocytosis, Langerhans-Cell	10						
+Hot Flashes	10						
+Hydrops Fetalis	10						
+Hyperparathyroidism, Secondary	10						
+Hypertelorism	10						
+Hypocalcemia	10						
+Hypoparathyroidism	10						
+Hypophosphatemia	10						
+Hypotension, Orthostatic	10						
+IgA Deficiency	10						
+Leptospirosis	10						
+Leukemia, Hairy Cell	10						
+Megalencephaly	10						
+Monosomy	10						
+Nausea	10						
+Neoplasms, Unknown Primary	10						
+Neuroectodermal Tumors, Primitive	10						
+Neuroma, Acoustic	10						
+Neuromuscular Diseases	10						
+Ocular Hypertension	10						
+Optic Atrophies, Hereditary	10						
+Osteoporotic Fractures	10						
+Papilloma, Inverted	10						
+Paraneoplastic Syndromes	10						
+Paraparesis, Tropical Spastic	10						
+Paraproteinemias	10						
+Pneumonia, Mycoplasma	10						
+Purine-Pyrimidine Metabolism, Inborn Errors	10						
+Respiratory Tract Diseases	10						
+Retroviridae Infections	10						
+Rhabdomyolysis	10						
+Sarcoma, Endometrial Stromal	10						
+Spondylarthropathies	10						
+Thyrotoxicosis	10						
+Tremor	10						
+Ureteral Neoplasms	10						
+Urinary Calculi	10						
+Vaccinia	10						
+Vomiting	10						
+Waardenburg Syndrome	10						
+46, XX Disorders of Sex Development	9						
+Adenomyosis	9						
+Anemia, Megaloblastic	9						
+Anophthalmos	9						
+Arthralgia	9						
+Asphyxia Neonatorum	9						
+Atrioventricular Block	9						
+Candidiasis, Chronic Mucocutaneous	9						
+Cardiac Output, Low	9						
+Channelopathies	9						
+Choristoma	9						
+Coronary Vasospasm	9						
+Cough	9						
+Cutis Laxa	9						
+Cystadenoma, Serous	9						
+Dental Plaque	9						
+Dry Eye Syndromes	9						
+Dwarfism, Pituitary	9						
+Embryo Loss	9						
+Fabry Disease	9						
+Gait Disorders, Neurologic	9						
+Gonadoblastoma	9						
+Heart Arrest	9						
+Hereditary Autoinflammatory Diseases	9						
+Hyperlipoproteinemias	9						
+Job Syndrome	9						
+Meningitis, Bacterial	9						
+Monoclonal Gammopathy of Undetermined Significance	9						
+Musculoskeletal Diseases	9						
+Mycobacterium avium-intracellulare Infection	9						
+Mycobacterium Infections, Nontuberculous	9						
+Neointima	9						
+Olfaction Disorders	9						
+Paraganglioma, Extra-Adrenal	9						
+Paraplegia	9						
+Parotid Neoplasms	9						
+Pelvic Organ Prolapse	9						
+Phenylketonurias	9						
+Pituitary ACTH Hypersecretion	9						
+Placenta Diseases	9						
+Porphyrias	9						
+Primate Diseases	9						
+Pseudoxanthoma Elasticum	9						
+Psychomotor Disorders	9						
+Renal Tubular Transport, Inborn Errors	9						
+Rheumatic Fever	9						
+Schistosomiasis mansoni	9						
+Speech Disorders	9						
+Spinal Muscular Atrophies of Childhood	9						
+Substance Abuse, Intravenous	9						
+Synostosis	9						
+Thrombocytosis	9						
+Tissue Adhesions	9						
+Toxoplasmosis	9						
+Tuberculosis, Pleural	9						
+Urolithiasis	9						
+Uterine Prolapse	9						
+Vaginosis, Bacterial	9						
+Vestibular Diseases	9						
+Abdominal Pain	8						
+alpha 1-Antitrypsin Deficiency	8						
+Alphavirus Infections	8						
+Anemia, Hemolytic, Autoimmune	8						
+Angioedemas, Hereditary	8						
+Anorexia	8						
+Bradycardia	8						
+Breast Diseases	8						
+Bronchiectasis	8						
+Cholesteatoma, Middle Ear	8						
+Corneal Opacity	8						
+Depression, Postpartum	8						
+Diabetic Cardiomyopathies	8						
+Duodenal Neoplasms	8						
+Dyskinesias	8						
+Dysostoses	8						
+Ellis-Van Creveld Syndrome	8						
+Erectile Dysfunction	8						
+Familial Hypophosphatemic Rickets	8						
+Gram-Positive Bacterial Infections	8						
+Heart Neoplasms	8						
+Hemiplegia	8						
+Hydronephrosis	8						
+Hypereosinophilic Syndrome	8						
+Hypergammaglobulinemia	8						
+Hyperpigmentation	8						
+Hypopigmentation	8						
+Hypotension	8						
+Ichthyosis, Lamellar	8						
+Immunoblastic Lymphadenopathy	8						
+Infectious Mononucleosis	8						
+Keratoacanthoma	8						
+Keratosis, Actinic	8						
+Lafora Disease	8						
+Language Disorders	8						
+Leukocytosis	8						
+Low Tension Glaucoma	8						
+Macular Edema	8						
+Malaria, Vivax	8						
+Measles	8						
+Metal Metabolism, Inborn Errors	8						
+Multiple Endocrine Neoplasia Type 2a	8						
+Muscular Dystrophy, Emery-Dreifuss	8						
+Muscular Dystrophy, Facioscapulohumeral	8						
+Musculoskeletal Abnormalities	8						
+Myoclonic Epilepsy, Juvenile	8						
+Myoclonus	8						
+Myoepithelioma	8						
+Neoplasms, Complex and Mixed	8						
+Nystagmus, Pathologic	8						
+Ophthalmoplegia, Chronic Progressive External	8						
+Optic Neuritis	8						
+Osteomalacia	8						
+Pneumoconiosis	8						
+Polyneuropathies	8						
+Protein C Deficiency	8						
+Radiation Pneumonitis	8						
+Refractive Errors	8						
+Retinal Drusen	8						
+RNA Virus Infections	8						
+Sarcoma, Clear Cell	8						
+Spherocytosis, Hereditary	8						
+Spinal Neoplasms	8						
+Stomach Diseases	8						
+Subacute Sclerosing Panencephalitis	8						
+Syncope	8						
+Tooth Loss	8						
+Transfusion Reaction	8						
+Tuberculosis, Meningeal	8						
+Uniparental Disomy	8						
+Varicose Ulcer	8						
+Adenoviridae Infections	7						
+Adrenal Gland Diseases	7						
+Albinism	7						
+Alveolitis, Extrinsic Allergic	7						
+Anaphylaxis	7						
+Anemia, Dyserythropoietic, Congenital	7						
+Anemia, Hemolytic, Congenital Nonspherocytic	7						
+Angiomyolipoma	7						
+Anus Neoplasms	7						
+Autoimmune Diseases of the Nervous System	7						
+Autonomic Nervous System Diseases	7						
+Bernard-Soulier Syndrome	7						
+Berylliosis	7						
+Blood Coagulation Disorders, Inherited	7						
+Brain Stem Neoplasms	7						
+Cafe-au-Lait Spots	7						
+Chronic Kidney Disease-Mineral and Bone Disorder	7						
+Congenital Hyperinsulinism	7						
+Coronary Aneurysm	7						
+Cystadenocarcinoma, Mucinous	7						
+Cystadenocarcinoma, Papillary	7						
+Cystadenoma, Mucinous	7						
+Cystinuria	7						
+Dental Enamel Hypoplasia	7						
+DNA Repair-Deficiency Disorders	7						
+Elliptocytosis, Hereditary	7						
+Endocrine Gland Neoplasms	7						
+Eosinophilic Esophagitis	7						
+Epilepsy, Benign Neonatal	7						
+Epilepsy, Frontal Lobe	7						
+Erythema Nodosum	7						
+Exocrine Pancreatic Insufficiency	7						
+Focal Nodular Hyperplasia	7						
+Gastroenteritis	7						
+Gigantism	7						
+Glucosephosphate Dehydrogenase Deficiency	7						
+Gonadal Dysgenesis	7						
+Gynecomastia	7						
+Hamartoma Syndrome, Multiple	7						
+Homocystinuria	7						
+Hyperkalemia	7						
+Hyponatremia	7						
+Lichen Planus	7						
+Lip Neoplasms	7						
+Lupus Erythematosus, Cutaneous	7						
+Lyme Disease	7						
+Meningitis, Meningococcal	7						
+Mevalonate Kinase Deficiency	7						
+Mitral Valve Prolapse	7						
+Muscle Spasticity	7						
+Myxoma	7						
+Niemann-Pick Disease, Type C	7						
+Ophthalmoplegia	7						
+Opportunistic Infections	7						
+Optic Nerve Diseases	7						
+Orthomyxoviridae Infections	7						
+Osteosclerosis	7						
+Pancreatitis, Acute Necrotizing	7						
+Paralysis	7						
+Parkinson Disease, Secondary	7						
+Pelvic Pain	7						
+Periapical Periodontitis	7						
+Peritoneal Diseases	7						
+Pituitary Diseases	7						
+Plasmacytoma	7						
+Polyradiculoneuropathy, Chronic Inflammatory Demyelinating	7						
+Postoperative Nausea and Vomiting	7						
+Pregnancy Complications, Neoplastic	7						
+Pregnancy Complications, Parasitic	7						
+Prion Diseases	7						
+Protein S Deficiency	7						
+Puerperal Disorders	7						
+Pulmonary Alveolar Proteinosis	7						
+Rhabdoviridae Infections	7						
+Rupture	7						
+Sarcopenia	7						
+Schistosomiasis	7						
+Scleroderma, Localized	7						
+Septo-Optic Dysplasia	7						
+Sleep Apnea Syndromes	7						
+Smith-Magenis Syndrome	7						
+Sunburn	7						
+Tachycardia	7						
+Telangiectasia, Hereditary Hemorrhagic	7						
+Trypanosomiasis, African	7						
+Urinary Incontinence, Stress	7						
+Varicocele	7						
+Vasospasm, Intracranial	7						
+Virilism	7						
+Walker-Warburg Syndrome	7						
+West Nile Fever	7						
+Abruptio Placentae	6						
+Acanthosis Nigricans	6						
+ACTH-Secreting Pituitary Adenoma	6						
+Alcohol Withdrawal Delirium	6						
+Amyloid Neuropathies, Familial	6						
+Anemia, Refractory	6						
+Aneurysm	6						
+Aniridia	6						
+Anti-Glomerular Basement Membrane Disease	6						
+Aspergillosis, Allergic Bronchopulmonary	6						
+Asthma, Aspirin-Induced	6						
+Basal Cell Nevus Syndrome	6						
+Blepharophimosis	6						
+Blood Loss, Surgical	6						
+Bowen's Disease	6						
+Branchio-Oto-Renal Syndrome	6						
+Bronchitis	6						
+Brucellosis	6						
+Carcinoma, Verrucous	6						
+Cardiomyopathy, Restrictive	6						
+Central Nervous System Vascular Malformations	6						
+Chlamydophila Infections	6						
+Cholecystitis	6						
+Choroideremia	6						
+Chronobiology Disorders	6						
+Collagen Diseases	6						
+Condylomata Acuminata	6						
+Conjunctival Neoplasms	6						
+Craniofacial Dysostosis	6						
+Cystitis	6						
+De Lange Syndrome	6						
+Delirium	6						
+Dermatofibrosarcoma	6						
+Eclampsia	6						
+Encephalitis, Tick-Borne	6						
+Epidermolysis Bullosa, Junctional	6						
+Factor V Deficiency	6						
+Gastrinoma	6						
+Genital Diseases, Female	6						
+Gestational Trophoblastic Disease	6						
+Gilbert Disease	6						
+Gingival Hemorrhage	6						
+Gonorrhea	6						
+Hearing Loss, Sudden	6						
+Heart Septal Defects	6						
+Hemangioma, Cavernous, Central Nervous System	6						
+Hepatic Encephalopathy	6						
+Hepatic Veno-Occlusive Disease	6						
+Hereditary Breast and Ovarian Cancer Syndrome	6						
+HIV-Associated Lipodystrophy Syndrome	6						
+Hyperkinesis	6						
+Hyperlipoproteinemia Type I	6						
+Hypobetalipoproteinemias	6						
+Hypolipoproteinemias	6						
+Hypoplastic Left Heart Syndrome	6						
+Intracranial Embolism	6						
+Latent Tuberculosis	6						
+Leukemia, Experimental	6						
+Leukemia, Myeloid, Chronic-Phase	6						
+Lissencephaly	6						
+Listeriosis	6						
+Loeys-Dietz Syndrome	6						
+Lung Diseases, Fungal	6						
+Lung Diseases, Obstructive	6						
+Magnesium Deficiency	6						
+Mandibular Neoplasms	6						
+Melanosis	6						
+Meningomyelocele	6						
+Menopause, Premature	6						
+Multiple Endocrine Neoplasia	6						
+Muscle Neoplasms	6						
+Nail Diseases	6						
+Nevus, Epithelioid and Spindle Cell	6						
+Optic Neuropathy, Ischemic	6						
+Orofaciodigital Syndromes	6						
+Paget Disease, Extramammary	6						
+Pancytopenia	6						
+Peri-Implantitis	6						
+Peripheral Nervous System Neoplasms	6						
+Polycystic Kidney, Autosomal Recessive	6						
+Polymyalgia Rheumatica	6						
+Postoperative Hemorrhage	6						
+Presbycusis	6						
+Q Fever	6						
+Scleroderma, Limited	6						
+Sex Cord-Gonadal Stromal Tumors	6						
+Shock	6						
+Sick Sinus Syndrome	6						
+Situs Inversus	6						
+Sleep Disorders, Circadian Rhythm	6						
+Smooth Muscle Tumor	6						
+Spinal Stenosis	6						
+Spondylarthritis	6						
+Squamous Intraepithelial Lesions of the Cervix	6						
+Still's Disease, Adult-Onset	6						
+Supratentorial Neoplasms	6						
+TDP-43 Proteinopathies	6						
+Thromboangiitis Obliterans	6						
+Thrombophlebitis	6						
+Thyroid Hormone Resistance Syndrome	6						
+Torsades de Pointes	6						
+Trachoma	6						
+Typhoid Fever	6						
+Uterine Cervical Dysplasia	6						
+Vesicular Stomatitis	6						
+Vitamin K Deficiency	6						
+WAGR Syndrome	6						
+Xanthomatosis	6						
+Acantholysis	5						
+Acidosis, Renal Tubular	5						
+Alcoholic Intoxication	5						
+Androgen-Insensitivity Syndrome	5						
+Angioedema	5						
+Angiofibroma	5						
+Anthracosis	5						
+Antithrombin III Deficiency	5						
+Aphasia, Primary Progressive	5						
+Appendiceal Neoplasms	5						
+Arteriovenous Malformations	5						
+Autoimmune Lymphoproliferative Syndrome	5						
+Balkan Nephropathy	5						
+Budd-Chiari Syndrome	5						
+Cardiac Conduction System Disease	5						
+Cardiotoxicity	5						
+Cataplexy	5						
+Cerebral Arterial Diseases	5						
+Cheilitis	5						
+Choroid Plexus Neoplasms	5						
+Ciliopathies	5						
+Classical Lissencephalies and Subcortical Band Heterotopias	5						
+Coagulation Protein Disorders	5						
+Congenital Microtia	5						
+Corneal Neovascularization	5						
+Coronavirus Infections	5						
+Craniopharyngioma	5						
+Cross Infection	5						
+Cyanosis	5						
+Cystitis, Interstitial	5						
+Deficiency Diseases	5						
+Dentigerous Cyst	5						
+Dentinogenesis Imperfecta	5						
+Dermatitis, Contact	5						
+Diarrhea, Infantile	5						
+Diffuse Cerebral Sclerosis of Schilder	5						
+Disorders of Excessive Somnolence	5						
+Duane Retraction Syndrome	5						
+Dysplastic Nevus Syndrome	5						
+Dyspnea	5						
+Endodermal Sinus Tumor	5						
+Epidermolysis Bullosa Dystrophica	5						
+Epidermolysis Bullosa Simplex	5						
+Epiretinal Membrane	5						
+Esophageal Achalasia	5						
+Esophageal Atresia	5						
+Eyelid Neoplasms	5						
+Fallopian Tube Neoplasms	5						
+Fanconi Syndrome	5						
+Fatty Liver, Alcoholic	5						
+Femoral Neck Fractures	5						
+Ganglioglioma	5						
+Germinoma	5						
+Gingival Overgrowth	5						
+Glomerulonephritis, Membranoproliferative	5						
+Glycogen Storage Disease Type I	5						
+Glycogen Storage Disease Type V	5						
+Gonadal Dysgenesis, 46,XX	5						
+Heart Failure, Systolic	5						
+Hernia, Diaphragmatic	5						
+Heterotaxy Syndrome	5						
+Hydrocephalus, Normal Pressure	5						
+Hyperbilirubinemia, Neonatal	5						
+Hyperemia	5						
+Hyperglycinemia, Nonketotic	5						
+Hyperkeratosis, Epidermolytic	5						
+Hyperphosphatemia	5						
+Hyperprolactinemia	5						
+Hypertrichosis	5						
+Hypoalbuminemia	5						
+Jaundice, Neonatal	5						
+Keratosis, Seborrheic	5						
+Knee Injuries	5						
+Lead Poisoning	5						
+Legg-Calve-Perthes Disease	5						
+Leiomyomatosis	5						
+Lentivirus Infections	5						
+LEOPARD Syndrome	5						
+Leukemia, Myeloid, Chronic, Atypical, BCR-ABL Negative	5						
+Leukocyte-Adhesion Deficiency Syndrome	5						
+Leukoencephalopathy, Progressive Multifocal	5						
+Leukoplakia	5						
+Li-Fraumeni Syndrome	5						
+Lipid Metabolism Disorders	5						
+Lupus Erythematosus, Discoid	5						
+Lymphadenitis	5						
+Lymphocytosis	5						
+Lymphoma, AIDS-Related	5						
+Malignant Hyperthermia	5						
+Maple Syrup Urine Disease	5						
+MELAS Syndrome	5						
+Menkes Kinky Hair Syndrome	5						
+Mesenchymoma	5						
+Mucopolysaccharidoses	5						
+Multiple Chemical Sensitivity	5						
+Mycoplasma Infections	5						
+Neoplasm Micrometastasis	5						
+Nephrosis	5						
+Nervous System Neoplasms	5						
+Neurofibroma	5						
+Neurofibromatoses	5						
+Otitis Media with Effusion	5						
+Pain Insensitivity, Congenital	5						
+Paralyses, Familial Periodic	5						
+Paraparesis, Spastic	5						
+Pick Disease of the Brain	5						
+Pierre Robin Syndrome	5						
+Pneumonia, Pneumococcal	5						
+Pregnancy, Tubal	5						
+Preleukemia	5						
+Prodromal Symptoms	5						
+Prostatitis	5						
+Pulmonary Eosinophilia	5						
+Pulmonary Valve Stenosis	5						
+Purpura, Thrombotic Thrombocytopenic	5						
+Pyruvate Dehydrogenase Complex Deficiency Disease	5						
+Rare Diseases	5						
+Respiration Disorders	5						
+Rickets	5						
+Root Resorption	5						
+Roseolovirus Infections	5						
+Rupture, Spontaneous	5						
+Smith-Lemli-Opitz Syndrome	5						
+Splenic Neoplasms	5						
+Strabismus	5						
+Stuttering	5						
+Sweat Gland Neoplasms	5						
+Thrombasthenia	5						
+Thrombotic Microangiopathies	5						
+Thyroid Dysgenesis	5						
+Tonsillar Neoplasms	5						
+Trichothiodystrophy Syndromes	5						
+Urea Cycle Disorders, Inborn	5						
+Vaginal Neoplasms	5						
+Vitamin A Deficiency	5						
+Vocal Cord Paralysis	5						
+Abnormal Karyotype	4						
+Abscess	4						
+Achondroplasia	4						
+Airway Obstruction	4						
+Akathisia, Drug-Induced	4						
+Albinism, Ocular	4						
+Anaplasia	4						
+Anemia, Hypochromic	4						
+Angina Pectoris, Variant	4						
+Anticipation, Genetic	4						
+Anus, Imperforate	4						
+Aortic Rupture	4						
+Asbestosis	4						
+Brain Concussion	4						
+Brain Damage, Chronic	4						
+Bronchial Neoplasms	4						
+Bronchitis, Chronic	4						
+Burning Mouth Syndrome	4						
+CADASIL	4						
+Candidiasis, Oral	4						
+Candidiasis, Vulvovaginal	4						
+Capsule Opacification	4						
+Carbon Monoxide Poisoning	4						
+Cherubism	4						
+Chondrodysplasia Punctata	4						
+Chondrodysplasia Punctata, Rhizomelic	4						
+Chondroma	4						
+Chorioretinitis	4						
+Choroid Neoplasms	4						
+Common Cold	4						
+Coxsackievirus Infections	4						
+Craniocerebral Trauma	4						
+Crigler-Najjar Syndrome	4						
+Cryopyrin-Associated Periodic Syndromes	4						
+Cytomegalovirus Retinitis	4						
+Dandy-Walker Syndrome	4						
+Deglutition Disorders	4						
+Dermatitis, Irritant	4						
+Dermatitis, Occupational	4						
+Diabetes Insipidus, Nephrogenic	4						
+Diabetic Ketoacidosis	4						
+Digestive System Abnormalities	4						
+Dysarthria	4						
+Dysautonomia, Familial	4						
+Embolism	4						
+End Stage Liver Disease	4						
+Epilepsy, Rolandic	4						
+Esophageal and Gastric Varices	4						
+Factor VII Deficiency	4						
+Fallopian Tube Diseases	4						
+Fetal Macrosomia	4						
+Fibroma, Ossifying	4						
+Fibromatosis, Gingival	4						
+Fibrous Dysplasia of Bone	4						
+Filariasis	4						
+Foramen Ovale, Patent	4						
+Fractures, Spontaneous	4						
+Galactosemias	4						
+Gangliosidoses	4						
+Giant Cell Tumors	4						
+Gitelman Syndrome	4						
+Glomus Tumor	4						
+Glycogen Storage Disease Type IV	4						
+Headache	4						
+Hearing Disorders	4						
+Hearing Loss, Bilateral	4						
+Heart Failure, Diastolic	4						
+Hemangioendothelioma, Epithelioid	4						
+Hemangioma, Capillary	4						
+Hepatitis A	4						
+Hepatitis, Alcoholic	4						
+Hepatitis, Chronic	4						
+Hepatomegaly	4						
+Herpes Genitalis	4						
+Herpes Zoster	4						
+Histiocytosis, Non-Langerhans-Cell	4						
+Hyperlipoproteinemia Type III	4						
+Hyperlipoproteinemia Type IV	4						
+Hyperopia	4						
+Hyperoxaluria, Primary	4						
+Hypokalemic Periodic Paralysis	4						
+Hypophosphatemia, Familial	4						
+Hypoxia, Brain	4						
+Idiopathic Interstitial Pneumonias	4						
+Ileal Diseases	4						
+Inflammatory Breast Neoplasms	4						
+Intestinal Obstruction	4						
+Intestinal Polyposis	4						
+Intestinal Pseudo-Obstruction	4						
+Klinefelter Syndrome	4						
+Laron Syndrome	4						
+Legionnaires' Disease	4						
+Lentigo	4						
+Leprosy, Lepromatous	4						
+Leukemia, Basophilic, Acute	4						
+Leukemic Infiltration	4						
+Leukoaraiosis	4						
+Lipodystrophy, Congenital Generalized	4						
+Lipodystrophy, Familial Partial	4						
+Liposarcoma, Myxoid	4						
+Manganese Poisoning	4						
+Mastocytosis	4						
+Menorrhagia	4						
+Menstruation Disturbances	4						
+Microscopic Polyangiitis	4						
+Microvascular Angina	4						
+Milk Hypersensitivity	4						
+Mouth Abnormalities	4						
+Mouth Diseases	4						
+Mucopolysaccharidosis II	4						
+Mucopolysaccharidosis III	4						
+Mucopolysaccharidosis IV	4						
+Multiple Acyl Coenzyme A Dehydrogenase Deficiency	4						
+Myotonia	4						
+Myotonic Disorders	4						
+Neoplasms, Connective Tissue	4						
+Neuroaxonal Dystrophies	4						
+Nevus, Blue	4						
+Nystagmus, Congenital	4						
+Osteitis	4						
+Pancreatic Cyst	4						
+Paracoccidioidomycosis	4						
+Paraneoplastic Syndromes, Nervous System	4						
+Parvoviridae Infections	4						
+Pelizaeus-Merzbacher Disease	4						
+Pelvic Neoplasms	4						
+Perceptual Disorders	4						
+Pericardial Effusion	4						
+Peritoneal Fibrosis	4						
+Pharyngitis	4						
+Photophobia	4						
+Placental Insufficiency	4						
+Pneumothorax	4						
+Porokeratosis	4						
+Porphyria Cutanea Tarda	4						
+Porphyria, Erythropoietic	4						
+Porphyrias, Hepatic	4						
+Prognathism	4						
+Pseudomyxoma Peritonei	4						
+Radiodermatitis	4						
+Red-Cell Aplasia, Pure	4						
+Reflex, Abnormal	4						
+Refsum Disease	4						
+Retinal Artery Occlusion	4						
+Retroperitoneal Neoplasms	4						
+Romano-Ward Syndrome	4						
+Rothmund-Thomson Syndrome	4						
+Scalp Dermatoses	4						
+Schistosomiasis haematobia	4						
+Schistosomiasis japonica	4						
+Sciatica	4						
+Sex Chromosome Disorders	4						
+Sexual Dysfunction, Physiological	4						
+Short Rib-Polydactyly Syndrome	4						
+Sickle Cell Trait	4						
+Sinus Thrombosis, Intracranial	4						
+Skull Base Neoplasms	4						
+Spinal Cord Neoplasms	4						
+Staphylococcal Skin Infections	4						
+Stiff-Person Syndrome	4						
+Stillbirth	4						
+Tangier Disease	4						
+Thoracic Neoplasms	4						
+Thrombocytopenia, Neonatal Alloimmune	4						
+Transposition of Great Vessels	4						
+Urologic Diseases	4						
+Vision, Low	4						
+Wallerian Degeneration	4						
+Warts	4						
+22q11 Deletion Syndrome	3						
+Abetalipoproteinemia	3						
+Acrodermatitis	3						
+Acro-Osteolysis	3						
+Adenocarcinoma, Sebaceous	3						
+Adenoma, Islet Cell	3						
+Adenovirus Infections, Human	3						
+Adnexal Diseases	3						
+Afibrinogenemia	3						
+Agranulocytosis	3						
+Alagille Syndrome	3						
+Anovulation	3						
+Aphasia	3						
+Arachnodactyly	3						
+Arenaviridae Infections	3						
+Arthritis, Gouty	3						
+Arthritis, Infectious	3						
+Athetosis	3						
+Athletic Injuries	3						
+Autolysis	3						
+Birt-Hogg-Dube Syndrome	3						
+Boutonneuse Fever	3						
+Brain Diseases, Metabolic	3						
+Brain Injuries, Traumatic	3						
+Bulbar Palsy, Progressive	3						
+Bursitis	3						
+Candidiasis, Invasive	3						
+Cardiovascular Abnormalities	3						
+Carotid Artery, Internal, Dissection	3						
+Carotid Body Tumor	3						
+Carpal Tunnel Syndrome	3						
+Cerebral Amyloid Angiopathy, Familial	3						
+Chediak-Higashi Syndrome	3						
+Choanal Atresia	3						
+Cholesteatoma	3						
+Choline Deficiency	3						
+Chondroblastoma	3						
+Chondrocalcinosis	3						
+Churg-Strauss Syndrome	3						
+Citrullinemia	3						
+Cleidocranial Dysplasia	3						
+Cluster Headache	3						
+Complex Regional Pain Syndromes	3						
+Conjunctivitis	3						
+Cri-du-Chat Syndrome	3						
+Dehydration	3						
+Dementia, Multi-Infarct	3						
+Dermatitis, Exfoliative	3						
+Diabetes Insipidus	3						
+Diverticulitis, Colonic	3						
+Dizziness	3						
+Double Outlet Right Ventricle	3						
+Drug Overdose	3						
+Drug Resistant Epilepsy	3						
+Ear Diseases	3						
+Ectodermal Dysplasia 1, Anhidrotic	3						
+Ectopia Lentis	3						
+Elephantiasis, Filarial	3						
+Encephalitis, Herpes Simplex	3						
+Enchondromatosis	3						
+Epidermodysplasia Verruciformis	3						
+Erythromelalgia	3						
+Eyelid Diseases	3						
+Factor X Deficiency	3						
+Factor XI Deficiency	3						
+Febrile Neutropenia	3						
+Femoral Fractures	3						
+Fibrocystic Breast Disease	3						
+Fibromatosis, Abdominal	3						
+Fibrous Dysplasia, Polyostotic	3						
+Fluorosis, Dental	3						
+Foot Deformities	3						
+Fraser Syndrome	3						
+Ganglioneuroma	3						
+Gangliosidoses, GM2	3						
+Genital Diseases, Male	3						
+Gliosarcoma	3						
+Glomus Jugulare Tumor	3						
+Glycogen Storage Disease Type VII	3						
+Haemophilus Infections	3						
+Hand, Foot and Mouth Disease	3						
+Hartnup Disease	3						
+Hearing Loss, Conductive	3						
+Heat Stress Disorders	3						
+Helminthiasis	3						
+Hemangioendothelioma	3						
+Hemangioma, Cavernous	3						
+Hemangiopericytoma	3						
+Hematoma, Subdural, Chronic	3						
+Hemorrhagic Fever, Ebola	3						
+Hemosiderosis	3						
+Hepatitis, Viral, Human	3						
+Hepatopulmonary Syndrome	3						
+Hernia, Inguinal	3						
+Hernias, Diaphragmatic, Congenital	3						
+Hidradenitis Suppurativa	3						
+Histiocytoma, Malignant Fibrous	3						
+Hydrophthalmos	3						
+Hypercapnia	3						
+Hyperemesis Gravidarum	3						
+Hyper-IgM Immunodeficiency Syndrome	3						
+Hyperostosis, Cortical, Congenital	3						
+Hypersensitivity, Delayed	3						
+Hypertrophy, Right Ventricular	3						
+Hyperventilation	3						
+Hypoalphalipoproteinemias	3						
+Hypohidrosis	3						
+Hypoprothrombinemias	3						
+Hypothalamic Diseases	3						
+Hypoventilation	3						
+Ichthyosis, X-Linked	3						
+Ileal Neoplasms	3						
+Ileitis	3						
+Immune Reconstitution Inflammatory Syndrome	3						
+Intestinal Atresia	3						
+Iris Diseases	3						
+Isolated Noncompaction of the Ventricular Myocardium	3						
+Jaw Diseases	3						
+Joint Dislocations	3						
+Kashin-Beck Disease	3						
+Keratoderma, Palmoplantar, Diffuse	3						
+Klippel-Feil Syndrome	3						
+Klippel-Trenaunay-Weber Syndrome	3						
+Lactose Intolerance	3						
+Latex Hypersensitivity	3						
+Lennox Gastaut Syndrome	3						
+Leprosy, Multibacillary	3						
+Leukemia, Biphenotypic, Acute	3						
+Leukemia, Prolymphocytic	3						
+Liddle Syndrome	3						
+Lipidoses	3						
+Lipomatosis	3						
+Liver Cirrhosis, Experimental	3						
+Lupus Vasculitis, Central Nervous System	3						
+Lymphatic Diseases	3						
+Maxillary Sinus Neoplasms	3						
+Melanoma, Amelanotic	3						
+Meningitis	3						
+Meningitis, Viral	3						
+Mercury Poisoning, Nervous System	3						
+Mesenteric Vascular Occlusion	3						
+Metrorrhagia	3						
+Mitral Valve Insufficiency	3						
+Mixed Connective Tissue Disease	3						
+Mobius Syndrome	3						
+Monilethrix	3						
+MPTP Poisoning	3						
+Mucositis	3						
+Multicystic Dysplastic Kidney	3						
+Muscle Hypertonia	3						
+Muscle Rigidity	3						
+Myoglobinuria	3						
+Myotonia Congenita	3						
+Neonatal Abstinence Syndrome	3						
+Neoplasms, Adipose Tissue	3						
+Nephrosclerosis	3						
+Neuroectodermal Tumors, Primitive, Peripheral	3						
+Neurogenic Inflammation	3						
+Neuroleptic Malignant Syndrome	3						
+Nijmegen Breakage Syndrome	3						
+Nocturnal Myoclonus Syndrome	3						
+No-Reflow Phenomenon	3						
+Oculomotor Nerve Diseases	3						
+Olivopontocerebellar Atrophies	3						
+Optic Disk Drusen	3						
+Organophosphate Poisoning	3						
+Osteophyte	3						
+Pachyonychia Congenita	3						
+Paget's Disease, Mammary	3						
+Paralysis, Hyperkalemic Periodic	3						
+Peanut Hypersensitivity	3						
+Pelvic Inflammatory Disease	3						
+Pemphigus, Benign Familial	3						
+Perivascular Epithelioid Cell Neoplasms	3						
+Phlebotomus Fever	3						
+Piebaldism	3						
+Pilomatrixoma	3						
+Placenta Accreta	3						
+Pneumonia, Ventilator-Associated	3						
+Pneumonia, Viral	3						
+Pouchitis	3						
+Premenstrual Syndrome	3						
+Propionic Acidemia	3						
+Psychomotor Agitation	3						
+Raynaud Disease	3						
+Rectal Fistula	3						
+REM Sleep Behavior Disorder	3						
+Renal Artery Obstruction	3						
+Respiratory Tract Neoplasms	3						
+Retinal Perforations	3						
+Rheumatoid Nodule	3						
+Rickets, Hypophosphatemic	3						
+Ring Chromosomes	3						
+Sandhoff Disease	3						
+Sarcoma, Alveolar Soft Part	3						
+Sarcoma, Small Cell	3						
+Shock, Hemorrhagic	3						
+Short Bowel Syndrome	3						
+Silver-Russell Syndrome	3						
+Skin Diseases, Vesiculobullous	3						
+Skin Ulcer	3						
+Solitary Fibrous Tumors	3						
+Solitary Pulmonary Nodule	3						
+Somatostatinoma	3						
+ST Elevation Myocardial Infarction	3						
+Steroid Metabolism, Inborn Errors	3						
+Stomatitis	3						
+Stroke, Lacunar	3						
+Surgical Wound Infection	3						
+Tay-Sachs Disease	3						
+Tendon Injuries	3						
+Tension-Type Headache	3						
+Teratocarcinoma	3						
+Tetraploidy	3						
+Tooth, Impacted	3						
+Torticollis	3						
+Tracheoesophageal Fistula	3						
+Tyrosinemias	3						
+Urinary Bladder, Overactive	3						
+Urinary Incontinence	3						
+Uterine Cervicitis	3						
+Vascular System Injuries	3						
+Ventricular Dysfunction	3						
+Ventricular Dysfunction, Right	3						
+Vertebral Artery Dissection	3						
+Vitelliform Macular Dystrophy	3						
+von Willebrand Disease, Type 1	3						
+Wasting Syndrome	3						
+Wolff-Parkinson-White Syndrome	3						
+Wolf-Hirschhorn Syndrome	3						
+Abnormalities, Drug-Induced	2						
+Abortion, Missed	2						
+ACTH Syndrome, Ectopic	2						
+Acute Pain	2						
+Adenolymphoma	2						
+Adenomatosis, Pulmonary	2						
+Adenoma, Villous	2						
+Adrenal Cortex Diseases	2						
+Agricultural Workers' Diseases	2						
+Alcohol-Induced Disorders, Nervous System	2						
+Alexander Disease	2						
+alpha-Mannosidosis	2						
+Alstrom Syndrome	2						
+Amino Acid Transport Disorders, Inborn	2						
+Anastomotic Leak	2						
+Andersen Syndrome	2						
+Anemia, Macrocytic	2						
+Anencephaly	2						
+Ankle Injuries	2						
+Ankylosis	2						
+Anthrax	2						
+Anuria	2						
+Anus Diseases	2						
+Aortic Valve Insufficiency	2						
+Apnea	2						
+Appendicitis	2						
+Arachnoid Cysts	2						
+Arteriovenous Fistula	2						
+Arthropathy, Neurogenic	2						
+Bladder Exstrophy	2						
+Blepharospasm	2						
+Bone Cysts	2						
+Bone Cysts, Aneurysmal	2						
+Brain Death	2						
+Bundle-Branch Block	2						
+Burkholderia Infections	2						
+Calculi	2						
+Carney Complex	2						
+Cartilage Diseases	2						
+Cecal Neoplasms	2						
+Central Nervous System Cysts	2						
+Cerebral Small Vessel Diseases	2						
+CHARGE Syndrome	2						
+Child Nutrition Disorders	2						
+Chondrosarcoma, Mesenchymal	2						
+Cogan Syndrome	2						
+Coma	2						
+Confusion	2						
+Conjunctivitis, Allergic	2						
+Corneal Dystrophy, Juvenile Epithelial of Meesmann	2						
+Costello Syndrome	2						
+Cranial Nerve Diseases	2						
+Cryptococcosis	2						
+Cryptosporidiosis	2						
+Cystinosis	2						
+Darier Disease	2						
+Death	2						
+delta-Thalassemia	2						
+Dental Pulp Diseases	2						
+Dent Disease	2						
+Dentofacial Deformities	2						
+Denys-Drash Syndrome	2						
+Dermatitis Herpetiformis	2						
+Dermoid Cyst	2						
+Dextrocardia	2						
+Diabetes Insipidus, Neurogenic	2						
+Diabetes Mellitus, Lipoatrophic	2						
+Drowning	2						
+Dysentery, Bacillary	2						
+Dysgerminoma	2						
+Ebstein Anomaly	2						
+Ectodermal Dysplasia, Hypohidrotic, Autosomal Recessive	2						
+Ectromelia	2						
+Ehrlichiosis	2						
+Encephalomyelitis, Acute Disseminated	2						
+Endocarditis	2						
+Endometrial Stromal Tumors	2						
+Endomyocardial Fibrosis	2						
+Epilepsy, Reflex	2						
+Epistaxis	2						
+Erythroblastosis, Fetal	2						
+Facial Asymmetry	2						
+Factor XII Deficiency	2						
+Factor XIII Deficiency	2						
+Fetal Alcohol Spectrum Disorders	2						
+Flushing	2						
+Focal Dermal Hypoplasia	2						
+Fractures, Stress	2						
+Fractures, Ununited	2						
+Ganglioneuroblastoma	2						
+Gangliosidosis, GM1	2						
+Gerstmann-Straussler-Scheinker Disease	2						
+Gingival Hyperplasia	2						
+Gingival Neoplasms	2						
+Gingival Recession	2						
+Glycogen Storage Disease Type IIb	2						
+Glycosuria	2						
+Glycosuria, Renal	2						
+Gonadal Disorders	2						
+Granuloma, Giant Cell	2						
+Granuloma, Pyogenic	2						
+Hajdu-Cheney Syndrome	2						
+Hand Dermatoses	2						
+Headache Disorders, Secondary	2						
+Hearing Loss, Central	2						
+Hearing Loss, High-Frequency	2						
+Hearing Loss, Mixed Conductive-Sensorineural	2						
+Hearing Loss, Unilateral	2						
+Heartburn	2						
+Heart Injuries	2						
+Hemoglobinuria	2						
+Henipavirus Infections	2						
+Hepatorenal Syndrome	2						
+Hernia, Hiatal	2						
+Histiocytosis	2						
+Histiocytosis, Sinus	2						
+Hyperbilirubinemia, Hereditary	2						
+Hyperhidrosis	2						
+Hyperlysinemias	2						
+Hyperostosis	2						
+Hypertension, Renovascular	2						
+Hypothermia	2						
+Iatrogenic Disease	2						
+IgG Deficiency	2						
+Ileus	2						
+Impotence, Vasculogenic	2						
+Inappropriate ADH Syndrome	2						
+Incontinentia Pigmenti	2						
+Intermittent Claudication	2						
+Intracranial Arterial Diseases	2						
+Intraoperative Complications	2						
+Jacobsen Distal 11q Deletion Syndrome	2						
+Jaundice	2						
+Jervell-Lange Nielsen Syndrome	2						
+Ketosis	2						
+Klebsiella Infections	2						
+Lacrimal Apparatus Diseases	2						
+Lambert-Eaton Myasthenic Syndrome	2						
+Langer-Giedion Syndrome	2						
+Lecithin Cholesterol Acyltransferase Deficiency	2						
+Leishmaniasis, Mucocutaneous	2						
+Leprosy, Paucibacillary	2						
+Lesch-Nyhan Syndrome	2						
+Leukemia, Large Granular Lymphocytic	2						
+Leukemia, Neutrophilic, Chronic	2						
+Leukemia, Prolymphocytic, T-Cell	2						
+Leukodystrophy, Globoid Cell	2						
+Leukodystrophy, Metachromatic	2						
+Leukomalacia, Periventricular	2						
+Leydig Cell Tumor	2						
+Lichen Sclerosus et Atrophicus	2						
+Lithiasis	2						
+Lower Extremity Deformities, Congenital	2						
+Lower Urinary Tract Symptoms	2						
+Lyme Neuroborreliosis	2						
+Lymphangioma	2						
+Lymphocytic Choriomeningitis	2						
+Lymphoma, Primary Cutaneous Anaplastic Large Cell	2						
+Lynch Syndrome II	2						
+Mammary Analogue Secretory Carcinoma	2						
+Mastocytosis, Cutaneous	2						
+Maxillofacial Abnormalities	2						
+Melioidosis	2						
+Meningeal Carcinomatosis	2						
+Meningitis, Pneumococcal	2						
+Mental Fatigue	2						
+Miosis	2						
+Mixed Tumor, Mullerian	2						
+Mucopolysaccharidosis VI	2						
+Mumps	2						
+Muscle Cramp	2						
+Muscular Disorders, Atrophic	2						
+Myalgia	2						
+Myelitis, Transverse	2						
+Myelodysplastic-Myeloproliferative Diseases	2						
+Myofibroma	2						
+Myopathy, Central Core	2						
+Nail-Patella Syndrome	2						
+Neoplasms, Adnexal and Skin Appendage	2						
+Neoplasms, Fibroepithelial	2						
+Neoplasms, Muscle Tissue	2						
+Neoplasms, Nerve Tissue	2						
+Neoplasms, Neuroepithelial	2						
+Neuroacanthocytosis	2						
+Newcastle Disease	2						
+Obstetric Labor Complications	2						
+Odontodysplasia	2						
+Oligohydramnios	2						
+Optic Atrophy, Autosomal Dominant	2						
+Oral Ulcer	2						
+Osteoarthropathy, Primary Hypertrophic	2						
+Osteochondroma	2						
+Osteoma	2						
+Otitis Media, Suppurative	2						
+Ovotesticular Disorders of Sex Development	2						
+Paramyxoviridae Infections	2						
+Parathyroid Diseases	2						
+Pelger-Huet Anomaly	2						
+Pemphigoid, Benign Mucous Membrane	2						
+Periapical Granuloma	2						
+Pericarditis	2						
+Peripheral Nerve Injuries	2						
+Periventricular Nodular Heterotopia	2						
+Persistent Hyperplastic Primary Vitreous	2						
+Phosphorus Metabolism Disorders	2						
+Poisoning	2						
+Polyuria	2						
+Porencephaly	2						
+Porphyria, Acute Intermittent	2						
+Porphyria, Hepatoerythropoietic	2						
+Port-Wine Stain	2						
+Prehypertension	2						
+Primary Graft Dysfunction	2						
+Primary Progressive Nonfluent Aphasia	2						
+Prosthesis-Related Infections	2						
+Protein-Energy Malnutrition	2						
+Proteus Syndrome	2						
+Protoporphyria, Erythropoietic	2						
+Pseudohypoparathyroidism	2						
+Pseudolymphoma	2						
+Pulmonary Blastoma	2						
+Pulpitis	2						
+Pupil Disorders	2						
+Purpura	2						
+Pyloric Stenosis, Hypertrophic	2						
+Reflex Sympathetic Dystrophy	2						
+Reproductive Tract Infections	2						
+Retinal Telangiectasis	2						
+Retinoschisis	2						
+Rhabdomyoma	2						
+Rotator Cuff Injuries	2						
+Rotavirus Infections	2						
+Rubella	2						
+Rubinstein-Taybi Syndrome	2						
+Sarcoglycanopathies	2						
+Scrapie	2						
+Sensation Disorders	2						
+Sertoli-Leydig Cell Tumor	2						
+Sialic Acid Storage Disease	2						
+Skin Diseases, Papulosquamous	2						
+Skin Diseases, Vascular	2						
+Sleep Apnea, Central	2						
+Sotos Syndrome	2						
+Sphingolipidoses	2						
+Spinal Cord Diseases	2						
+Spinal Injuries	2						
+Status Epilepticus	2						
+Struma Ovarii	2						
+Sturge-Weber Syndrome	2						
+Synovitis, Pigmented Villonodular	2						
+Tachycardia, Supraventricular	2						
+Takotsubo Cardiomyopathy	2						
+Telangiectasis	2						
+Testicular Diseases	2						
+Tic Disorders	2						
+Tinea	2						
+Tonsillitis	2						
+Tooth Mobility	2						
+Tooth, Supernumerary	2						
+Toxoplasmosis, Congenital	2						
+Tracheal Stenosis	2						
+Triploidy	2						
+Trismus	2						
+Trophoblastic Neoplasms	2						
+Tuberculosis, Central Nervous System	2						
+Tuberculosis, Lymph Node	2						
+Tuberculosis, Miliary	2						
+Tuberculosis, Multidrug-Resistant	2						
+Tuberculosis, Spinal	2						
+Ulcer	2						
+Unconsciousness	2						
+Urinary Bladder Neck Obstruction	2						
+Urticaria Pigmentosa	2						
+Venous Insufficiency	2						
+Ventilator-Induced Lung Injury	2						
+Vertigo	2						
+Vitamin K Deficiency Bleeding	2						
+von Willebrand Disease, Type 2	2						
+Water-Electrolyte Imbalance	2						
+Weill-Marchesani Syndrome	2						
+Whooping Cough	2						
+Wolfram Syndrome	2						
+Wounds, Nonpenetrating	2						
+Xerostomia	2						
+X-Linked Combined Immunodeficiency Diseases	2						
+Zoonoses	2						
+46, XX Testicular Disorders of Sex Development	1						
+Acanthamoeba Keratitis	1						
+Acatalasia	1						
+Acrocallosal Syndrome	1						
+Acrospiroma	1						
+Acute-On-Chronic Liver Failure	1						
+Adenocarcinoma in Situ	1						
+Adenofibroma	1						
+Adenoma, Sweat Gland	1						
+AIDS-Related Complex	1						
+Alcohol Amnestic Disorder	1						
+Alcohol-Induced Disorders	1						
+Alcohol Withdrawal Seizures	1						
+Alkalosis	1						
+Alkalosis, Respiratory	1						
+Alkaptonuria	1						
+Amyloid Neuropathies	1						
+Anemia, Pernicious	1						
+Anemia, Refractory, with Excess of Blasts	1						
+Angiodysplasia	1						
+Angioid Streaks	1						
+Angiomatosis	1						
+Anhedonia	1						
+Ankyloglossia	1						
+Anorectal Malformations	1						
+Anterior Wall Myocardial Infarction	1						
+Antley-Bixler Syndrome Phenotype	1						
+Aortic Coarctation	1						
+Aortic Stenosis, Subvalvular	1						
+Aortic Stenosis, Supravalvular	1						
+Aphakia	1						
+Apraxia, Ideomotor	1						
+Argininosuccinic Aciduria	1						
+Arrhythmia, Sinus	1						
+Arteriosclerosis Obliterans	1						
+Aspartylglucosaminuria	1						
+Asthma, Exercise-Induced	1						
+Astigmatism	1						
+Atrial Flutter	1						
+Atrial Remodeling	1						
+Atypical Squamous Cells of the Cervix	1						
+Avitaminosis	1						
+Back Pain	1						
+Bacteriuria	1						
+Barth Syndrome	1						
+Basal Ganglia Hemorrhage	1						
+Biotinidase Deficiency	1						
+Bird Fancier's Lung	1						
+Bisphosphonate-Associated Osteonecrosis of the Jaw	1						
+Blastocystis Infections	1						
+Blood Protein Disorders	1						
+Brachial Plexus Neuritis	1						
+Bulbo-Spinal Atrophy, X-Linked	1						
+Bunyaviridae Infections	1						
+Cadmium Poisoning	1						
+Calcium Metabolism Disorders	1						
+Caliciviridae Infections	1						
+Campomelic Dysplasia	1						
+Campylobacter Infections	1						
+Camurati-Engelmann Syndrome	1						
+Canavan Disease	1						
+Cancer Pain	1						
+Candidemia	1						
+Carbamoyl-Phosphate Synthase I Deficiency Disease	1						
+Carcinoma, Bronchogenic	1						
+Carcinoma, Giant Cell	1						
+Carcinoma, Islet Cell	1						
+Carcinoma, Skin Appendage	1						
+Cardio-Renal Syndrome	1						
+Cardiovirus Infections	1						
+Caroli Disease	1						
+Castleman Disease	1						
+Catastrophic Illness	1						
+Central Nervous System Fungal Infections	1						
+Central Nervous System Viral Diseases	1						
+Central Serous Chorioretinopathy	1						
+Cerebrospinal Fluid Rhinorrhea	1						
+Chancroid	1						
+Chilblains	1						
+Chloracne	1						
+Cholangitis	1						
+Cholera	1						
+Cholestasis, Extrahepatic	1						
+Cholesterol Ester Storage Disease	1						
+Chronic Traumatic Encephalopathy	1						
+Coffin-Lowry Syndrome	1						
+Colitis, Collagenous	1						
+Colitis, Microscopic	1						
+Colonic Diseases	1						
+Colonic Diseases, Functional	1						
+Cone-Rod Dystrophies	1						
+Coproporphyria, Hereditary	1						
+Corneal Edema	1						
+Corneal Endothelial Cell Loss	1						
+Corneal Injuries	1						
+Corneal Ulcer	1						
+Coronaviridae Infections	1						
+Coxa Vara	1						
+Cystadenocarcinoma	1						
+Cystadenoma	1						
+Deaf-Blind Disorders	1						
+Demyelinating Autoimmune Diseases, CNS	1						
+Dendritic Cell Sarcoma, Follicular	1						
+Dental Calculus	1						
+Dental Pulp Calcification	1						
+Dentin Dysplasia	1						
+Dentin Sensitivity	1						
+Desmoplastic Small Round Cell Tumor	1						
+Dihydropyrimidine Dehydrogenase Deficiency	1						
+Diverticulosis, Colonic	1						
+Dog Diseases	1						
+Donohue Syndrome	1						
+Drug Hypersensitivity Syndrome	1						
+Duodenal Diseases	1						
+Dyscalculia	1						
+Dysentery, Amebic	1						
+Dysphonia	1						
+Ear Neoplasms	1						
+Echinococcosis	1						
+Echogenic Bowel	1						
+Egg Hypersensitivity	1						
+Embolism, Paradoxical	1						
+Encephalitis, Japanese	1						
+Encephalomyelitis	1						
+Encephalopathy, Bovine Spongiform	1						
+Endocarditis, Bacterial	1						
+Endoleak	1						
+Endolymphatic Hydrops	1						
+Entamoebiasis	1						
+Enterocolitis	1						
+Enterocolitis, Pseudomembranous	1						
+Enteropathy-Associated T-Cell Lymphoma	1						
+Epidermal Cyst	1						
+Epidermolysis Bullosa Acquisita	1						
+Epilepsy, Partial, Sensory	1						
+Epilepsy, Tonic-Clonic	1						
+Epispadias	1						
+Erdheim-Chester Disease	1						
+Erysipelas	1						
+Erythrokeratodermia Variabilis	1						
+Exophthalmos	1						
+Exotropia	1						
+Eye Infections, Bacterial	1						
+Eye Infections, Fungal	1						
+Facial Neoplasms	1						
+Facial Nerve Injuries	1						
+Facial Paralysis	1						
+Farber Lipogranulomatosis	1						
+Fasciculation	1						
+Fasciitis	1						
+Favism	1						
+Feminization	1						
+Fetal Hypoxia	1						
+Fetal Weight	1						
+Fetofetal Transfusion	1						
+Fever of Unknown Origin	1						
+Flatfoot	1						
+Focal Epithelial Hyperplasia	1						
+Frasier Syndrome	1						
+Fructose-1,6-Diphosphatase Deficiency	1						
+Fructose Intolerance	1						
+Fucosidosis	1						
+Gait Ataxia	1						
+Gallbladder Diseases	1						
+Gardner Syndrome	1						
+Gastritis, Hypertrophic	1						
+Gastroschisis	1						
+Genetic Diseases, Y-Linked	1						
+Genital Neoplasms, Male	1						
+Giant Axonal Neuropathy	1						
+Gingival Hypertrophy	1						
+Gingivitis, Necrotizing Ulcerative	1						
+Glaucoma, Neovascular	1						
+Glycogen Storage Disease Type II	1						
+Glycogen Storage Disease Type III	1						
+Glycogen Storage Disease Type VI	1						
+Goat Diseases	1						
+Goldenhar Syndrome	1						
+Gonadal Dysgenesis, Mixed	1						
+Granular Cell Tumor	1						
+Granuloma, Plasma Cell	1						
+Gray Platelet Syndrome	1						
+Gyrate Atrophy	1						
+Hand Deformities	1						
+Hantavirus Infections	1						
+Headache Disorders	1						
+Heat Stroke	1						
+Hemarthrosis	1						
+Hemoglobin C Disease	1						
+Hemoglobin SC Disease	1						
+Hemoptysis	1						
+Hemorrhagic Fever, American	1						
+Hepatitis, Animal	1						
+Hepatitis D	1						
+Hepatitis D, Chronic	1						
+Hepatitis E	1						
+Hereditary Angioedema Type III	1						
+Hereditary Angioedema Types I and II	1						
+Hernia, Abdominal	1						
+Hernia, Umbilical	1						
+Histiocytic Sarcoma	1						
+Histoplasmosis	1						
+Holocarboxylase Synthetase Deficiency	1						
+Hutchinson's Melanotic Freckle	1						
+Hyaline Membrane Disease	1						
+Hyalinosis, Systemic	1						
+Hydatidiform Mole, Invasive	1						
+Hydranencephaly	1						
+Hydrocolpos	1						
+Hyperargininemia	1						
+Hyperekplexia	1						
+Hyperesthesia	1						
+Hyper-IgM Immunodeficiency Syndrome, Type 1	1						
+Hyperoxaluria	1						
+Hypersomnolence, Idiopathic	1						
+Hypertension, Malignant	1						
+Hyperthyroxinemia	1						
+Hyperthyroxinemia, Familial Dysalbuminemic	1						
+Hypervitaminosis A	1						
+Hypesthesia	1						
+Hypoadrenocorticism, Familial	1						
+Hypoaldosteronism	1						
+Hypobetalipoproteinemia, Familial, Apolipoprotein B	1						
+Hypophosphatasia	1						
+Ichthyosis Vulgaris	1						
+Iliac Aneurysm	1						
+Immune Complex Diseases	1						
+Infarction	1						
+Infratentorial Neoplasms	1						
+Insect Bites and Stings	1						
+Insomnia, Fatal Familial	1						
+Intestinal Fistula	1						
+Intracranial Hypertension	1						
+Intussusception	1						
+Iris Neoplasms	1						
+Isaacs Syndrome	1						
+Isochromosomes	1						
+Jaundice, Chronic Idiopathic	1						
+Jaw Abnormalities	1						
+Jaw, Edentulous	1						
+Jejunal Neoplasms	1						
+Kaposi Varicelliform Eruption	1						
+Keratitis, Herpetic	1						
+Keratoconjunctivitis	1						
+Keratoderma, Palmoplantar, Epidermolytic	1						
+Kernicterus	1						
+Kidney Tubular Necrosis, Acute	1						
+Klatskin Tumor	1						
+Krukenberg Tumor	1						
+Kuru	1						
+Kyphosis	1						
+Labor Pain	1						
+Lacrimal Duct Obstruction	1						
+Landau-Kleffner Syndrome	1						
+Laryngismus	1						
+Lassa Fever	1						
+Late Onset Disorders	1						
+Lead Poisoning, Nervous System, Adult	1						
+Lead Poisoning, Nervous System, Childhood	1						
+Leg Ulcer	1						
+Leishmaniasis	1						
+Lens Diseases	1						
+Lens Subluxation	1						
+Leprosy, Tuberculoid	1						
+Leukemia L1210	1						
+Leukemia L5178	1						
+Leukemia, Mast-Cell	1						
+Leukemia, Plasma Cell	1						
+Leukemoid Reaction	1						
+Leukoencephalitis, Acute Hemorrhagic	1						
+Lichenoid Eruptions	1						
+Limbic Encephalitis	1						
+Lipoblastoma	1						
+Lipoid Proteinosis of Urbach and Wiethe	1						
+Livedo Reticularis	1						
+Liver Abscess, Pyogenic	1						
+Liver Diseases, Parasitic	1						
+Loose Anagen Hair Syndrome	1						
+Lordosis	1						
+Lymphangiectasis	1						
+Lymphangiectasis, Intestinal	1						
+Lymphatic Abnormalities	1						
+Lymphomatoid Papulosis	1						
+Male Urogenital Diseases	1						
+Malformations of Cortical Development, Group I	1						
+Malocclusion	1						
+Marburg Virus Disease	1						
+Maxillary Neoplasms	1						
+Medullary Sponge Kidney	1						
+Melorheostosis	1						
+Meningocele	1						
+MERRF Syndrome	1						
+Methemoglobinemia	1						
+Mineralocorticoid Excess Syndrome, Apparent	1						
+Mitral Valve Stenosis	1						
+Mobility Limitation	1						
+Monkey Diseases	1						
+Mucocele	1						
+Mucopolysaccharidosis I	1						
+Mucopolysaccharidosis VII	1						
+Muir-Torre Syndrome	1						
+Mulibrey Nanism	1						
+Multiple Carboxylase Deficiency	1						
+Multiple Endocrine Neoplasia Type 2b	1						
+Multiple Sulfatase Deficiency Disease	1						
+Muscular Dystrophy, Oculopharyngeal	1						
+Musculoskeletal Pain	1						
+Myasthenia Gravis, Autoimmune, Experimental	1						
+Mydriasis	1						
+Myelitis	1						
+Myocardial Stunning	1						
+Myoclonic Cerebellar Dyssynergia	1						
+Myofibromatosis	1						
+Myokymia	1						
+Myoma	1						
+Myositis Ossificans	1						
+Myxosarcoma	1						
+Nasal Obstruction	1						
+Neck Pain	1						
+Neoplasms, Gonadal Tissue	1						
+Neoplasms, Vascular Tissue	1						
+Nephrogenic Fibrosing Dermopathy	1						
+Netherton Syndrome	1						
+Neuralgia, Postherpetic	1						
+Neurocutaneous Syndromes	1						
+Neurocysticercosis	1						
+Neurofibroma, Plexiform	1						
+Neurologic Manifestations	1						
+Neuroma	1						
+Neurosyphilis	1						
+Nevus, Sebaceous of Jadassohn	1						
+Niemann-Pick Disease, Type A	1						
+Niemann-Pick Disease, Type B	1						
+Nocardia Infections	1						
+Nocturnal Enuresis	1						
+Nondisjunction, Genetic	1						
+Non-ST Elevated Myocardial Infarction	1						
+Nose Diseases	1						
+Obesity, Metabolically Benign	1						
+Ochronosis	1						
+Odontogenic Cyst, Calcifying	1						
+Onychomycosis	1						
+Opisthorchiasis	1						
+Opsoclonus-Myoclonus Syndrome	1						
+Optic Nerve Glioma	1						
+Optic Nerve Injuries	1						
+Orbital Neoplasms	1						
+Ornithine Carbamoyltransferase Deficiency Disease	1						
+Osteoblastoma	1						
+Osteopoikilosis	1						
+Out-of-Hospital Cardiac Arrest	1						
+Pain, Intractable	1						
+Pallister-Hall Syndrome	1						
+Panniculitis	1						
+Pantothenate Kinase-Associated Neurodegeneration	1						
+Papilloma, Choroid Plexus	1						
+Papilloma, Intraductal	1						
+Papillon-Lefevre Disease	1						
+Parakeratosis	1						
+Paranasal Sinus Diseases	1						
+Paraneoplastic Cerebellar Degeneration	1						
+Paraneoplastic Endocrine Syndromes	1						
+Paraneoplastic Syndromes, Ocular	1						
+Parasitic Diseases	1						
+Paratuberculosis	1						
+Paresis	1						
+Pars Planitis	1						
+Pemphigoid Gestationis	1						
+Penile Induration	1						
+Peptic Ulcer Hemorrhage	1						
+Peritonitis, Tuberculous	1						
+Persistent Fetal Circulation Syndrome	1						
+Pinealoma	1						
+Pityriasis Rubra Pilaris	1						
+Placenta Previa	1						
+Plague	1						
+Platelet Storage Pool Deficiency	1						
+Pleurisy	1						
+Pneumonia, Pneumocystis	1						
+Pneumonia, Staphylococcal	1						
+POEMS Syndrome	1						
+Poliomyelitis	1						
+Polyarteritis Nodosa	1						
+Polydipsia	1						
+Polyhydramnios	1						
+Polymicrogyria	1						
+Polyradiculoneuropathy	1						
+Porphyria, Variegate	1						
+Postural Orthostatic Tachycardia Syndrome	1						
+Premature Ejaculation	1						
+Pressure Ulcer	1						
+Priapism	1						
+Prolidase Deficiency	1						
+Protein-Losing Enteropathies	1						
+Pseudarthrosis	1						
+Pseudopseudohypoparathyroidism	1						
+Pulmonary Sclerosing Hemangioma	1						
+Pulmonary Veno-Occlusive Disease	1						
+Pycnodysostosis	1						
+Pyloric Stenosis	1						
+Pyoderma Gangrenosum	1						
+Pyruvate Carboxylase Deficiency Disease	1						
+Pyruvate Metabolism, Inborn Errors	1						
+Quadriplegia	1						
+Rabies	1						
+Radicular Cyst	1						
+Radius Fractures	1						
+Rectal Diseases	1						
+Recurrent Laryngeal Nerve Injuries	1						
+Renal Aminoacidurias	1						
+Respiratory Paralysis	1						
+Retinal Dysplasia	1						
+Retinal Vasculitis	1						
+Retinitis	1						
+Riboflavin Deficiency	1						
+Rosacea	1						
+Sacroiliitis	1						
+Salpingitis	1						
+Sarcoma, Experimental	1						
+Sarcoma, Myeloid	1						
+Schizencephaly	1						
+Sciatic Neuropathy	1						
+Scotoma	1						
+Sepsis-Associated Encephalopathy	1						
+Sertoli Cell-Only Syndrome	1						
+Sertoli Cell Tumor	1						
+Sex Chromosome Disorders of Sex Development	1						
+Shock, Cardiogenic	1						
+Shoulder Dislocation	1						
+Shoulder Pain	1						
+Sialadenitis	1						
+Siderosis	1						
+Sjogren-Larsson Syndrome	1						
+Skin Diseases, Bacterial	1						
+Skull Fractures	1						
+Slow Virus Diseases	1						
+Snoring	1						
+Soft Tissue Injuries	1						
+Somnambulism	1						
+Spinal Osteophytosis	1						
+Spondylitis	1						
+Spondylolisthesis	1						
+Staphylococcal Scalded Skin Syndrome	1						
+Status Asthmaticus	1						
+Steatorrhea	1						
+Strongylida Infections	1						
+Strongyloidiasis	1						
+Submandibular Gland Neoplasms	1						
+Superinfection	1						
+Sweat Gland Diseases	1						
+Sweet Syndrome	1						
+Swine Diseases	1						
+Syringomyelia	1						
+Tachycardia, Paroxysmal	1						
+Taste Disorders	1						
+Thanatophoric Dysplasia	1						
+Thiamine Deficiency	1						
+Thoracic Injuries	1						
+Thymus Hyperplasia	1						
+Tibial Fractures	1						
+Tinnitus	1						
+Tongue Diseases	1						
+Tooth Diseases	1						
+Tooth, Nonvital	1						
+Toxoplasmosis, Ocular	1						
+Transient Tachypnea of the Newborn	1						
+Trichiasis	1						
+Trichomonas Vaginitis	1						
+Tricuspid Atresia	1						
+Tricuspid Valve Insufficiency	1						
+Trigeminal Nerve Diseases	1						
+Trypanosomiasis	1						
+Tuberculoma	1						
+Tularemia	1						
+Unverricht-Lundborg Syndrome	1						
+Upper Extremity Deformities, Congenital	1						
+Ureaplasma Infections	1						
+Urethral Neoplasms	1						
+Urethral Stricture	1						
+Urinary Bladder Diseases	1						
+Urogenital Neoplasms	1						
+Uterine Cervical Diseases	1						
+Uveitis, Intermediate	1						
+Uveitis, Posterior	1						
+Vaginal Diseases	1						
+Ventricular Outflow Obstruction	1						
+Ventricular Premature Complexes	1						
+Visceral Pain	1						
+Vitamin B Deficiency	1						
+Vitamin E Deficiency	1						
+Vitreous Hemorrhage	1						
+Voice Disorders	1						
+von Willebrand Disease, Type 3	1						
+Vulvar Lichen Sclerosus	1						
+Wasting Disease, Chronic	1						
+Whipple Disease	1						
+Wolman Disease	1						
+Wound Infection	1						
+Xanthogranuloma, Juvenile	1						
+Xanthomatosis, Cerebrotendinous	1						
+Xerophthalmia	1						
+Yin Deficiency	1						
+Zika Virus Infection	1						
+Zollinger-Ellison Syndrome	1						

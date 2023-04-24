@@ -1,0 +1,84 @@
+GEO_Series,BioProject,Instrument,LibraryLayout,SamplesPairing,SRA Study,Control,Treat,Control_desc,Treat_desc,mesh_terms (pipe-separated list),Notes,DEG_notes,Cor_notes,batches,select
+GSE100925,PRJNA393443,Illumina HiSeq 2000,SINGLE,0,SRP111343,Normal,BRCA,Adjacent normal,Breast tumor,Breast Neoplasms,,,,0,1
+GSE104423,PRJNA412585,Illumina HiSeq 2500,SINGLE,0,SRP119122,Control,Reduced,normal/mildly reduced right ventricular function,moderately/severely reduced right ventricular function,Heart Failure,Batch not annotated; males; MHII; group 2; 2 controls from group 1; 2 Treat from group 1,,,0,0
+GSE106899,PRJNA418402,Illumina HiSeq 2000,SINGLE,0,SRP125001,Lung_tumor_adjacent,Lung_tumor,Tissue adjacent to lung tumor_LU2465B,Lung tumor tissue_LU2465A,Lung Neoplasms,Fraction: Total RNA,,,0,1
+GSE108643,PRJNA427961,Illumina HiSeq 2500,SINGLE,0,SRP127751,Control,Obese,BMI<25; biopsy prior to exercise bout,BMI>=25; biopsy prior to exercise bout,Obesity,male; prior to sport bout,few deg (n=1),,0,1
+GSE115643,PRJNA475639,NextSeq 500,SINGLE,0,SRP150287,Control,EVl1,(Empty Vector | Untransfected ) + Untreated,(EVl1-WT | Evl-1-AQA) + Untreated,Neoplasms,"Batch 1 (day3 and 17, WT); Cell line!; irrelavant MeSH term; Weird distribution of genes’ FDR vs quality",,,1,1
+GSE116250,PRJNA477855,Illumina HiSeq 2500,SINGLE,0,SRP151309,Control,ICM,non-failing,ischemic cardiomyopathy,Heart Failure|Myocardial Infarction,,,0.54,0,1
+GSE117875,PRJNA483489,Illumina HiSeq 2500,SINGLE,0,SRP155771,Control,Crohn,healthy control,newly-diagnosed Crohn''s disease,Crohn Disease,,,,0,1
+GSE120099,PRJNA491651,Illumina HiSeq 2500,PAIRED,0,SRP161997,Non_Risk,Risk_CVD,individuals homozygous non-risk (NN-green) for 9p21.3 CAD-risk region,individuals homozygous risk (RR-red) for 9p21.3 CAD-risk region,Cardiovascular Diseases,"RR_WT and NN_WT from batch 2; Genotype manually reannotated (article suppl. Info 2), both day3 and day17 selected for batches",,,1,1
+GSE120852,PRJNA494710,Illumina HiSeq 2500,SINGLE,0,SRP163478,Control,Heart_Failure,Right Ventricle; Not Failing,Right Ventricle; BiVentricular Heart Failure,Heart Failure|Myocardial Infarction,,,0.44,0,1
+GSE121519,PRJNA497536,ILLUMINA,PAIRED,0,SRP166162,Control,sALS,Control,sALS,Amyotrophic Lateral Sclerosis,,,,0,1
+GSE122619,PRJNA505785,Ion Torrent Proton,SINGLE,0,SRP169071,Uninfected,R179,Uninfected,Infected with R179,Tuberculosis|Bacterial Infections,12 hours post infection,few deg,,0,1
+GSE123496,PRJNA508944,Illumina HiSeq 3000,SINGLE,0,SRP173190,Control,MS,healthy control,MS,Multiple Sclerosis,corpus callosum,,0.4,0,1
+GSE125583,PRJNA516886,Illumina HiSeq 2500,SINGLE,0,SRP181886,Control,Alzheimer,control,Alzheimer's disease,Alzheimer Disease,,,,0,1
+GSE126848,PRJNA523510,NextSeq 500,SINGLE,0,SRP186450,healthy,NASH,healthy,NASH,Non-alcoholic Fatty Liver Disease|Fatty Liver,male,,0.63,0,1
+GSE142582,PRJNA597533,Illumina HiSeq 4000,SINGLE,0,SRP238713,healthy,psoriasis,healthy skin control,Psoriatic plaque tissue (PS),Psoriasis,AvgSpotLen>200; weird distribution of genes’s FDR vs quality; Almost no genes mapped!,few deg (n=1),0.49,0,0
+GSE147339,PRJNA613909,Illumina HiSeq 4000,SINGLE,0,SRP253611,Control,Psoriasis,Control,Psoriasis,Psoriasis,Annotated as PAIRED but automatically downloaded as SINGLE,,,0,1
+GSE25599,PRJNA134241,Illumina Genome Analyzer,SINGLE,0,SRP004768,Control,Liver_Cancer,"Liver tissues\, Non-cancerous adjacent","Liver tissues\, Cancer","Carcinoma, Hepatocellular",,,,0,0
+GSE61491,PRJNA261297,Illumina HiSeq 2000,PAIRED,0,SRP047233,Control,CHD8,"For controls, NPCs were treated with shRNAs targeting GFP and LacZ",NPCs treated with shRNAs targeting CHD8,"Memory Disorders|Mental Retardation, X-Linked|Intellectual Disability","batch 2, CDH8 and Controls (GFP); Related disease=Autism but absent from GS2D (Genie(Autism)=>GS2D)",,,1,1
+GSE63511,PRJNA268095,Illumina Genome Analyzer IIx,SINGLE,0,SRP050087,Normal,Tumour,Papillary Thyroid Carcinoma,Papillary Thyroid Carcinoma,Thyroid Neoplasms,,,,0,1
+GSE63744,PRJNA268971,Illumina HiSeq 1500,SINGLE,0,SRP050390,healthy,asthma,healthy,asthma,Asthma,Weird distribution of genes’s FDR vs quality,,0.49,0,0
+GSE66207,PRJNA276116,Illumina HiSeq 2500,PAIRED,0,SRP055438,Control,Crohn,Normal (from cancer/disease patient),Crohn's Disease,Crohn Disease,females; age>=20,,,0,1
+GSE73189,PRJNA296108,Illumina HiSeq 2000,SINGLE,0,SRP063838,Normal,IPF,nomral lung tissue adjacent to benign pulmonary tumors,idiopathic pulmonary fibrosis,Idiopathic Pulmonary Fibrosis,males,,0.83,0,1
+GSE76220,PRJNA306659,Illumina Genome Analyzer II,SINGLE,0,SRP067645,Control,sALS,Control,sALS,Amyotrophic Lateral Sclerosis,,,,0,1
+GSE82177,PRJNA324260,Illumina HiSeq 2000,SINGLE,0,SRP076032,Non_Tumor,Tumor,Biopsy of HCV+ Non-neoplastic,Biopsy of HCV+ HCC tumor,"Carcinoma, Hepatocellular",Batch 1 (not batch 0); male & female; HCV infected; Some weird distribution of genes’s FDR vs quality,few deg,,1,1
+GSE84445,PRJNA329186,Illumina HiSeq 2500,SINGLE,0,SRP078560,Healthy,Tuberculosis,Healthy,Latent tuberculosis infection,Tuberculosis,Memory CD3+CD4+ T cells,few deg,,0,1
+GSE85567,PRJNA338808,Illumina HiSeq 2000,SINGLE,0,SRP081599,Control,Asthma,Control,Asthma,Asthma,Weird distribution of genes’s FDR vs quality,sparse,,0,0
+GSE92724,PRJNA358470,Illumina HiSeq 4000,SINGLE,0,SRP095512,Control,Diabetic,Healthy control,Diabetic Patient,"Diabetes Mellitus, Type 2",female only,,,0,1
+GSE99816,PRJNA389715,NextSeq 500,SINGLE,0,SRP108847,Control,Crohn,Non_Crohn's disease,Crohn's disease,Crohn Disease,Non Crohn disease VS non-inflammed Crohn disease; male and female; no duplicate patient ID,few deg,0.9,0,1
+GSE55296,PRJNA239241,AB 5500xl Genetic Analyzer,PAIRED,0,SRP038887,Control,Heart_Failure,non-failing,ischemic or dilating cardiomyopathy,Heart Failure,"non failure vs ischemic and dilating, deselected for now, bowtie throws errors like haymakers. Perhaps this bug can be fixed, so that we can include non illumina systems",,,0,0
+GSE156044,PRJNA656537,Illumina NovaSeq 6000,SINGLE,0,SRP277065,Control,Crohn,Non_Crohn's disease,Crohn's disease,Crohn Disease,Only 8 samples,,,0,1
+GSE57344,PRJNA246308,Illumina Genome Analyzer,PAIRED,0,SRP041706,Control,Heart_Failure,non-failing,ischemic or dilating cardiomyopathy,Heart Failure,Only 6 samples,,,0,1
+GSE71613,PRJNA291619,Illumina HiSeq 2000,PAIRED,0,SRP061888,Control,Heart_Failure,non-failing,ischemic or dilating cardiomyopathy,Heart Failure,Only 8 samples,,,0,1
+GSE148355,PRJNA624047,Illumina HiSeq 2000,PAIRED,0,SRP255859,Control,Liver_Cancer,Healthy,"Liver tissues\, Cancer","Carcinoma, Hepatocellular","Also fibrosis and cirrhosis as well as nodule samples, but deselected",,,0,1
+GSE114564,PRJNA471801,Illumina HiSeq 2000,PAIRED,0,SRP148066,Normal,Advanced_HCC,Healthy,"Liver tissues\, Cancer","Carcinoma, Hepatocellular","Also cirrhosis and hepatitis and nodule samples and early hcc, chose only advanced for now",,,0,1
+GSE105130,PRJNA414787,Illumina HiSeq 2000,PAIRED,0,SRP120360,Adjacent-non-tumour,tumor,Adjacent normal,"Liver tissues\, Cancer","Carcinoma, Hepatocellular",,,,0,1
+GSE116946,PRJNA480670,Illumina HiSeq 2500,SINGLE,0,SRP153069,Macrophages,TAM,Macrophages from adjacent non tumor tissue,TAMs from lung cancer,"Lung Neoplasms|Carcinoma, Non-Small-Cell Lung|Macrophages|Tumor Associated Macrophages",,,,0,1
+GSE117970,PRJNA483877,Illumina HiSeq 2500,PAIRED,0,SRP155941,Macrophages,TAM,Macrophages from adjacent non tumor tissue,TAMs from breast and endometrial cancer,Breast Neoplasms|Macrophages|Tumor Associated Macrophages,this set contains both tams from breast and endometrial cancer,,,0,1
+GSE115397,PRJNA474825,NextSeq 500,SINGLE,0,SRP149884,Macrophages,TAM,Macrophages from adjacent non tumor tissue,TAMs from Gliomas,Glioma|Macrophages|Tumor Associated Macrophages,,,,0,1
+GSE74697,PRJNA301173,Illumina HiSeq 2500,PAIRED,0,SRP065812,Control,Psoriasis,healthy skin control,Psoriasis,Psoriasis,,,,0,1
+GSE54456,PRJNA236547,Illumina Genome Analyzer,SINGLE,0,SRP035988,normal_skin,Psoriasis_skin,healthy skin control,Psoriasis,Psoriasis,,,,0,1
+GSE119834,PRJNA490436,Illumina HiSeq 2500,PAIRED,0,SRP161553,Control,gbm,neural stem cell ,glioblastoma multiforme,Glioma|Glioblastoma,,,,0,1
+GSE163044,PRJNA684512,Illumina HiSeq 2000,PAIRED,0,SRP297662,Control,gbm,Normal tissue mix from around the brain,glioblastoma multiforme,Glioma|Glioblastoma,Possibility to use either normal tissue or normal neural stem cells as control. Tissue for now.,,,0,1
+GSE159851,PRJNA670696,Illumina HiSeq 4000,SINGLE,0,SRP288330,Control,gbm,human brain control,glioblastoma multiforme,Glioma|Glioblastoma,"contains also 7 adenocarcinoma metastasis, deselected",,,0,1
+GSE165595,PRJNA695017,Illumina HiSeq 4000,PAIRED,0,SRP303386,Normal,Tumor,Normal (from cancer/disease patient),oligodendroglioma,Glioma|Oligodendroglioma,,,,0,1
+GSE147352,PRJNA613939,Illumina HiSeq 4000,PAIRED,0,SRP253645,Normal,gbm,Normal tissue brain,glioblastoma multiforme,Glioma|Glioblastoma,deselected lower grad gliomas,,,0,1
+GSE173078,PRJNA723754,Illumina HiSeq 4000,SINGLE,0,SRP315849,Normal,periodontitis,Normal gingival tissue,ginival tissue from periodontitis,Periodontitis,also contains deselected gingivitis,,,1,1
+GSE162760,PRJNA682985,NextSeq 500,SINGLE,0,SRP296765,Control,cutaneous,control blood,Cutaneous leishmaniasis whole blood,"Leishmaniasis, Cutaneous",,,,1,1
+GSE145645,PRJNA607792,Illumina HiSeq 2000,PAIRED,0,SRP250171,Normal,Glioblastoma,Normal brain tissue,glioblastoma multiforme,Glioma|Glioblastoma,,,,0,1
+GSE165286,PRJNA693873,Illumina HiSeq 4000,PAIRED,0,SRP302777,Normal,GBM,Normal brain tissue,glioblastoma multiforme,Glioma|Glioblastoma,,,,0,1
+GSE154041,PRJNA644919,NextSeq 500,SINGLE,0,SRP270958,Regorafenib,Lomustine,Regorafenib,Lomustine,Glioma|Glioblastoma-treated,"no normal tissue deselected for now, but could be added later?",,,0,1
+GSE174330,PRJNA729468,Illumina HiSeq 2500,SINGLE,0,SRP319473,Normal,Tumor,normal lung tissue,non-small cell lung cancer,Lung Neoplasms,,,,0,1
+GSE77314,PRJNA310012,Illumina Genome Analyzer,PAIRED,0,SRP068976,Normal,Tumor,normal liver,HCC,"Carcinoma, Hepatocellular",,,,0,1
+GSE79362,PRJNA315611,Illumina HiSeq 2000,PAIRED,0,SRP071965,Control,Case,non progressor,progressor tuberculosis,Tuberculosis,blood ,,,0,1
+GSE144269,PRJNA603277,Illumina NovaSeq 6000,SINGLE,0,SRP245346,non-tumor,tumor,liver tissue adjacent,"Liver tissues\, Cancer","Carcinoma, Hepatocellular",,,,0,1
+GSE101432,PRJNA394206,Illumina HiSeq 2000,PAIRED,0,SRP111914,Normal,Tumor,Benign adjacent liver sample ,primary HCC sample,"Carcinoma, Hepatocellular",,,,0,1
+GSE141142,PRJNA592199,NextSeq 500,PAIRED,0,SRP233583,Normal,BRCA,Normal tissue,Breast cancer,Breast Neoplasms,,,,0,1
+GSE45419,PRJNA193673,Illumina Genome Analyzer IIx,PAIRED,0,SRP019936,Control,Tumor,Benign cell lines (HMEC),Breast cancer,Breast Neoplasms,,,,0,1
+GSE136630,PRJNA562898,Illumina HiSeq 2000,PAIRED,0,SRP219837,Normal,Tumor,Adjacent normal,colorectal tumor,Colorectal Neoplasms,,,,0,1
+GSE151282,PRJNA635385,Illumina HiSeq 2500,PAIRED,0,SRP264957,Healthy,Down-syndrome,healthy blood,blood of trisomy 21 patient,Down Syndrome,,,,0,1
+GSE111523,PRJNA437298,Ion Torrent Proton,SINGLE,0,SRP134099,Control,Prewound,normal tissue,human gingival tissue sample,Gingvitis,,,,0,1
+GSE164158,PRJNA689307,HiSeq X Ten,PAIRED,0,SRP300091,Normal,ESCC,Adjacent normal,esophageal squamous cell carcinoma,"Carcinoma, Squamous Cell",,,,0,1
+GSE109203,PRJNA430130,Illumina HiSeq 2000,PAIRED,0,SRP130989,Normal,Tumor,Normal tissue,colorectal tumor,Colorectal Neoplasms,,,,0,1
+GSE148036,PRJNA609278,Illumina HiSeq 3000,PAIRED,0,SRP251945,Normal,Tumor,normal lung tissue,lung adenocarcinoma,Lung Neoplasms,,,,0,1
+GSE163908,PRJNA688158,Illumina NovaSeq 6000,PAIRED,0,SRP299376,Control,Treated,lung fibroblasts treated with media from ATII cells,lung fibros treated with media of the same cells treated with 4-OHT,Idiopathic Pulmonary Fibrosis,,,,0,1
+GSE163424,PRJNA686436,Illumina HiSeq 2500,PAIRED,0,SRP298507,Vehicle,Niraparib,untreated PDX tumor cell,PDX treated with Niraparib,Melanoma,,,,0,1
+GSE179397,PRJNA743540,Illumina NovaSeq 6000,PAIRED,0,SRP326808,Control,CAD,Pericardial Adipose tissue control patients,Pericardial Adipose tissue cad patients,Coronary Artery Disease|Coronary Disease,,,,0,1
+GSE180882,PRJNA749873,Illumina NovaSeq 6000,SINGLE,0,SRP329969,Healthy,NASH,healthy liver explant,NASH liver explant,Non-alcoholic Fatty Liver Disease,"only subset can be used, too many groups",,,0,1
+GSE171643,PRJNA720402,Illumina HiSeq 4000,SINGLE,0,SRP313828,Control,Cirrhosis,Vastus lateralis_without cirrhosis,Vastus lateralis_with cirrhosis,Liver Cirrhosis,,,,0,1
+GSE147761,PRJNA616324,HiSeq X Ten,PAIRED,0,SRP254646,benign,cancer,benign prostatic hyperplasia,prostate cancer,Prostatic Neoplasms,,,,0,1
+GSE180415,PRJNA748086,Illumina HiSeq 4000,PAIRED,0,SRP328996,normal,diseased,fibroblast of healthy individuual,fibroblasts of IPF,Idiopathic Pulmonary Fibrosis,,,,0,1
+GSE179882,PRJNA745459,Illumina HiSeq 2500,PAIRED,0,SRP327853,Normal,GBM,Normal human astrocytes,GBM,Glioma|Glioblastoma,"only subset can be used, too many groups, only control groups used, knockouts discarded",,,0,1
+GSE156003,PRJNA656295,Illumina NovaSeq 6000,PAIRED,0,SRP276949,mock,VACV,human monocytes before/without VACV infection,VACV infection in Monocytes,Vaccinia virus,,,,0,1
+GSE123291,PRJNA508194,Illumina HiSeq 2000,SINGLE,0,SRP172098,Control,shEGR1,control shRNA,shRNA treatment,Diffuse large B cell lymphoma ,only one cell type selected,,,0,1
+GSE181458,PRJNA752102,NextSeq 500,PAIRED,0,SRP331115,GCB,WT_ABC,GCB subtype of DLBCL,ABC subtype of DLBCL,Diffuse large B cell lymphoma ,"No normal tissue, only two different subtypes of a disease against each other",,,0,1
+GSE181376,PRJNA751988,NextSeq 500,SINGLE,0,SRP331012,TD,CP,typically developing,cerebral plasy,Cerebral plasy,Experiment has patients vs normaative control and treatment with AZA. Only non treated are used (8samples a 4),,,0,1
+GSE146944,PRJNA612479,Illumina HiSeq 2500,SINGLE,0,SRP252760,Non-silencing,HOXC6,pancreatic adenocarcinoma with non-silencing shRNA,PADC with HOXC6 shRNA,"Adenocarcinoma|Adenocarcinoma, pancreatic",the experiment has two different shRNA that target HOX. Only A12 is selected ,,,0,1
+GSE155559,PRJNA650298,NextSeq 500,PAIRED,0,SRP275577,DMSO,Tamibarotene,AML control,AML treated,"Leukemia|Leukemia, Myeloid, Acute",,,,0,1
+GSE155800,PRJNA655677,Illumina HiSeq 3000,PAIRED,0,SRP276412,Normal,tumor,Normal gastrointestinal stromal,Gastrointestinal stromal tumor,Gastrointestinal stromal tumors,"Only half are selected, there are resistant and non resistant group and ctrl vs tumor for both",,,0,1
+GSE171343,PRJNA719235,Illumina HiSeq 4000,PAIRED,0,SRP313301,2mo,4mo,GIH-6-C1-{delta}A02 after 2 months,GIH-6-C1-{delta}A02 after 4 months,Dementia ,"Subset selected, there are other ages (6mo) and multiple cell lines used",,,1,1
+GSE153380,PRJNA642175,Illumina HiSeq 4000,PAIRED,0,SRP268939,PC,MM,Plasma cell,plasma cell of multiple myeloma,Muliple Myeloma,"subset of MM selected, since there are much more, 4th batch is entierly different cells, omitted",,,1,1
+GSE179448,PRJNA743862,NextSeq 500,PAIRED,0,SRP326974,Healthy,hospitalized,Tconv cells of healthy donors,tTconv cells of Covid19 patients,Coronavirus,"Subset taken, there is another cell type (Treg) and multiple other severities (mild outpatients, Recovered)",,,1,1
+GSE166638,PRJNA701458,NextSeq 500,PAIRED,0,SRP305908,blood,hematoma,PBMCs,blood cells from hematoma drainage,Cerebral Hemorrhage,"sc Data available but not in metafile (see sra), deselected, does not work with rasflow, strange error during quantify",,,0,0
+GSE81871,PRJNA322833,Illumina HiSeq 2500,SINGLE,0,SRP075692,treated,treated-and-rested,pbmcs IL-7 treated,pbmcs IL-7 treated and rested,None,"for qcgenes only batch 2 LV sh-TRIM28b are selected, for batch all are selected",,,1,1

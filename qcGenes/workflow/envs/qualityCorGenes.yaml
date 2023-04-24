@@ -1,0 +1,12 @@
+name: qualityCorGenes
+channels:
+  - conda-forge
+  - bioconda
+  - r
+dependencies:
+  - r-tidyverse=1.3.1
+  - r-yaml
+  - bioconductor-fgsea=1.20.0
+  - r-ggpmisc=0.4.4
+  - r-ggpubr=0.4.0
+  

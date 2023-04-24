@@ -1,0 +1,6 @@
+name: seqqscorer
+channels:
+  - conda-forge
+dependencies:
+  - anaconda=2019.10
+  - scikit-learn=0.21.3

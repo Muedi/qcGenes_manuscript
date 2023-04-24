@@ -1,0 +1,14 @@
+name: readsAnno
+channels:
+  - bioconda
+  - conda-forge 
+dependencies:
+  - bedtools=2.29.2
+  - r-base=3.6.1
+  - r-cowplot=1.1.0
+  - bioconductor-chippeakanno=3.18.2
+  - bioconductor-chipseeker=1.20.0
+  - bioconductor-txdb.hsapiens.ucsc.hg38.knowngene=3.4.6
+  - bioconductor-txdb.mmusculus.ucsc.mm10.knowngene=3.4
+#  - bioconductor-txdb.dmelanogaster.ucsc.dm6.ensgene=3.11.0  
+#  - bioconductor-bsgenome.celegans.ucsc.ce10=1.4.0

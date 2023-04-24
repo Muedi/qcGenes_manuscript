@@ -1,0 +1,5 @@
+name: qcgenes
+channels:
+  - bioconda
+dependencies:
+  - snakemake=5.14.0
