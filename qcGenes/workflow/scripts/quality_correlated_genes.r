@@ -928,7 +928,7 @@ bias_deg.all.cor <- round(cor(datasets.stats$p_group_cor, datasets.stats$n_degs,
 bias_deg.selection.cor <- round(cor(datasets.stats[datasets.stats$selected==TRUE,]$p_group_cor, datasets.stats[datasets.stats$selected==TRUE,]$n_degs), 2)
 
 plot <- datasets.stats %>%
-  select(dataset, p_group_cor, `Exceeds Threshold`, p_group_cor_pval, n_degs) %>% 
+  select(dataset, p_group_cor, `Exceeds Threshold`, n_degs) %>% 
   ggplot(aes(x=reorder(dataset, -p_group_cor), y=p_group_cor, fill=`Exceeds Threshold`)) +
   geom_bar(stat='identity') +
   ylim(c(0, 1.1)) +
@@ -945,27 +945,27 @@ plot <- datasets.stats %>%
   theme_minimal(base_size = 20)
 ggsave(filename=path, plot=plot, width=13, height=20)
 
-path <- file.path(out.dir.path, "cor.group.pval.pdf")
-bias_deg.all.cor <- round(cor(datasets.stats$p_group_cor, datasets.stats$n_degs, use="pairwise.complete.obs"), 2)
-bias_deg.selection.cor <- round(cor(datasets.stats[datasets.stats$selected==TRUE,]$p_group_cor, datasets.stats[datasets.stats$selected==TRUE,]$n_degs), 2)
+# path <- file.path(out.dir.path, "cor.group.pval.pdf")
+# bias_deg.all.cor <- round(cor(datasets.stats$p_group_cor, datasets.stats$n_degs, use="pairwise.complete.obs"), 2)
+# bias_deg.selection.cor <- round(cor(datasets.stats[datasets.stats$selected==TRUE,]$p_group_cor, datasets.stats[datasets.stats$selected==TRUE,]$n_degs), 2)
 
-plot <- datasets.stats %>% mutate(`Exceeds Threshold`=ifelse(p_group_cor >= 0.3, T, F)) %>%
-  select(dataset, p_group_cor, `Exceeds Threshold`, p_group_cor_pval, n_degs) %>% 
-  ggplot(aes(x=reorder(dataset, -p_group_cor), y=p_group_cor, fill=`Exceeds Threshold`)) +
-  geom_bar(stat='identity') +
-  ylim(c(0, 1.1)) +
-  geom_text(aes(label=round(p_group_cor_pval, 3)), hjust=-0.25, size=7) +
-  # geom_hline(yintercept = dataset_p_group_cor_cutoff, col="gray") +
-  coord_flip() +
-  labs(#title=paste("Datasets Selection"), 
-      #  subtitle = paste0("dataset bias<", dataset_p_group_cor_cutoff, 
-      #                   " &  diff. expressed genes (degs)\u2265", dataset_n_deg_cutoff,
-      #                   "\nbias-degs cor=", bias_deg.all.cor,
-      #                   "| bias-degs cor (selected datasets)=", bias_deg.selection.cor),
-       x="Datasets", 
-       y="Quality Imbalance") +
-  theme_minimal(base_size = 20)
-ggsave(filename=path, plot=plot, width=13, height=20)
+# plot <- datasets.stats %>% mutate(`Exceeds Threshold`=ifelse(p_group_cor >= 0.3, T, F)) %>%
+#   select(dataset, p_group_cor, `Exceeds Threshold`, p_group_cor_pval, n_degs) %>% 
+#   ggplot(aes(x=reorder(dataset, -p_group_cor), y=p_group_cor, fill=`Exceeds Threshold`)) +
+#   geom_bar(stat='identity') +
+#   ylim(c(0, 1.1)) +
+#   geom_text(aes(label=round(p_group_cor_pval, 3)), hjust=-0.25, size=7) +
+#   # geom_hline(yintercept = dataset_p_group_cor_cutoff, col="gray") +
+#   coord_flip() +
+#   labs(#title=paste("Datasets Selection"), 
+#       #  subtitle = paste0("dataset bias<", dataset_p_group_cor_cutoff, 
+#       #                   " &  diff. expressed genes (degs)\u2265", dataset_n_deg_cutoff,
+#       #                   "\nbias-degs cor=", bias_deg.all.cor,
+#       #                   "| bias-degs cor (selected datasets)=", bias_deg.selection.cor),
+#        x="Datasets", 
+#        y="Quality Imbalance") +
+#   theme_minimal(base_size = 20)
+# ggsave(filename=path, plot=plot, width=13, height=20)
 
 # DEGs vs n.samples
 # ------------------------------------------------------------------------------

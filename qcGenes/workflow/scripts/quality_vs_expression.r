@@ -12,6 +12,7 @@ if (length(args)<1 | length(args)>2) {
 }
 dataid <- args[1]
 subdir <- args[2]
+
 if(is.na(subdir)){
   subdir <- ""
 }
@@ -30,8 +31,7 @@ suppressMessages(library(ggrepel, warn.conflicts = FALSE, quietly = TRUE, verbos
 suppressMessages(library(fpc, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 suppressMessages(library(fgsea, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 options(readr.num_columns = 0) # to mute readr functions
-options(ggplot2.discrete.colour= c("#295D8A", "#A41720", "#4E4459"))
-options(ggplot2.discrete.fill= c("#295D8A", "#A41720", "#4E4459"))
+
 # GLOBAL VARIABLES
 # ------------------------------------------------------------------------------
 config.path                   <- file.path(".", "config", "config.yaml")
@@ -138,7 +138,6 @@ scores.table <- read_tsv(scores.path, col_names=c("id", "p", "desc")) %>%
   ungroup()
 
 dataset.p.group.cor <- abs(cor(scores.table$p, scores.table$group_numeric))
-dataset.p.group.cor.pval <- cor.test(scores.table$p, scores.table$group_numeric)$p.value
 dataset.p.group.cor.batched <- (cluster.stats(dist(scores.table$p), scores.table$group_numeric)$pearsongamma+1)/2
 dataset.p.bases.cor <- cor(scores.table$p, scores.table$Bases)
 dataset.p.bases.ctrol.cor <- cor(scores.table[scores.table$group_numeric==0, ]$p, scores.table[scores.table$group_numeric==0, ]$Bases)
@@ -264,9 +263,9 @@ capture.output(suppressWarnings(suppressMessages(
 
 # PCA PLOTS
 # ------------------------------------------------------------------------------
-palette <- c("#295D8A", "#A41720")
+palette <- c("#999999", "#377EB8")
 if(length(group.name)==3){
-  palette <- c("#295D8A", "#A41720", "#4E4459")
+  palette <- c("#999999", "#377EB8", "#000000")
 }
 
 # Function returning plots from a PCA {FactoMineR} object
@@ -1054,7 +1053,6 @@ if(!is.na(sum(scores.table$batch)) & length(unique(scores.table$batch))>1){
 n.samples <- nrow(scores.table)
 if(ncol(d)>5){ dataset.stats.table <- data.frame(dataset=dataid,
                                  p_group_cor=dataset.p.group.cor,
-                                 p_group_cor_pval=dataset.p.group.cor.pval,
                                  p_group_cor_batched=dataset.p.group.cor.batched,
                                  p_bases_cor=dataset.p.bases.cor, 
                                  p_bases_cor_ctrl=dataset.p.bases.ctrol.cor,
@@ -1094,7 +1092,6 @@ if(ncol(d)>5){ dataset.stats.table <- data.frame(dataset=dataid,
                                  n_degs_fdr_only=n.degs.FdrOnly)
 }else{dataset.stats.table <- data.frame(dataset=dataid,
                                     p_group_cor=dataset.p.group.cor, 
-                                    p_group_cor_pval=dataset.p.group.cor.pval,
                                     p_group_cor_batched=dataset.p.group.cor.batched,
                                     p_bases_cor=dataset.p.bases.cor, 
                                     p_bases_cor_ctrl=dataset.p.bases.ctrol.cor,
