@@ -47,7 +47,7 @@ dataset_n_deg_cutoff = config["MIN_DATASET_N_DEG"]
 # %%
 # get GEO_Series for meshs with more or equal to 2 sets ande compare degs
 # the for loop iterates over all keys with more or equal to 2 sets.
-gtf_file = os.path.join("data", "ref", "GRCh38.101", "Homo_sapiens.GRCh38.101.gtf.gz")
+gtf_file = config["ANNOT_PATH"]
 gtf = read_gtf(gtf_file)
 
 geneid_to_name = gtf[["gene_id", "gene_name"]]
