@@ -5,17 +5,20 @@ configfile: "config/config.yaml"
 meta_data = pd.read_csv("config/metadata/MetaRunTable.csv")
 
 all_geo_ids = meta_data["geo_id"].unique()
+all_sra_runs = meta_data.loc[(meta_data["geo_id"].isin(all_geo_ids)) & (meta_data["is_sample"].eq(True)), "Run"]
 
 rule all:
     input:
         expand("output/plots/{geo_id}/quality_vs_mean_enrichment_of_bin_max.png", geo_id=all_geo_ids),
         expand("output/plots/disease_vs_quality_{geo_id}.png", geo_id=all_geo_ids),
+        expand("output/counts/{geo_id}/peak_counts.csv", geo_id=all_geo_ids),
         "output/positively_correlated_pathways.png",
         "output/negatively_correlated_pathways.png",
         "output/positively_correlated_pathways.csv",
         "output/negatively_correlated_pathways.csv",
         "output/positively_correlated_genes.csv",
         "output/negatively_correlated_genes.csv"
+
 
 rule downloadSample:
     output:
@@ -155,7 +158,6 @@ rule aggregate_scores:
 
 
 """ 
-
 # These functions were written to keep control and sample files seperate and to be able to use proteins with different peak widths
 
 def get_path_to_control_files_as_string(wildcards):
@@ -203,6 +205,39 @@ rule call_peaks:
         "macs2 callpeak -t {input} -f BAM -n {wildcards.sra_run_id} --outdir {params.outdir} --verbose 1 > {log} && "
         "mv {params.outdir}{wildcards.sra_run_id}_peaks.narrowPeak {output}"
 
+rule count_peaks:
+    input:
+        bam=rules.samtools.output,
+        peak=rules.call_peaks.output
+    output:
+        "output/macs2/{geo_id}/{sra_run_id}_peak_counts.bed"
+    conda:
+        "workflow/envs/bioconda.yaml"
+    log:
+        "log/datasets/{geo_id}/{sra_run_id}.count_peaks.log"
+    shell:
+        "bedtools coverage -abam {input.bam} -b {input.peak} -counts > {output} 2> {log}"
+
+def get_aggregated_peakcounts_files(wildcards):
+    paths = []
+    sra_runs = meta_data.loc[(meta_data["geo_id"] == wildcards.geo_id) & (meta_data["is_sample"].eq(True)), "Run"]
+    for sr in sra_runs:
+        paths.append("output/macs2/{}/{}_peak_counts.bed".format(wildcards.geo_id, sr))
+    return paths
+
+rule annotate_counted_peaks:
+    input:
+        files=get_aggregated_peakcounts_files,
+        scores=rules.aggregate_scores.output
+    output:
+        "output/counts/{geo_id}/peak_counts.csv"
+    conda:
+        "workflow/envs/gseaAnalysis.yaml"
+    log:
+        "log/datasets/{geo_id}.count_peaks.log"
+    shell:
+        "Rscript workflow/scripts/get_peak_count_tables.r {input.files} {input.scores} {output} 2&> {log}"
+
 
 rule windows_along_genome:
     output:
@@ -212,7 +247,8 @@ rule windows_along_genome:
     shell:
         "mysql --user=genome --host=genome-mysql.cse.ucsc.edu -A " 
         "-e 'select chrom, size from hg38.chromInfo' | head -n 25 | tail -n 24 | "
-        "bedtools makewindows -g stdin -w 1000 > {output}"
+        "bedtools makewindows -g stdin -w 500 > {output}"
+
 
 rule bin_peaks:
     input:

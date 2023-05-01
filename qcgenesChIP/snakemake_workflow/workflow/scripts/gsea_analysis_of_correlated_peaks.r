@@ -7,7 +7,7 @@ suppressMessages(library(fgsea, warn.conflicts = FALSE, quietly = TRUE, verbose 
 
 pathways.hallmark <- gmtPathways("/mnt/scratch1/projects/qcGenes.git/data/ref/msigdb/c2.all.v7.4.symbols.gmt")
 txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
-CORR_THRESHOLD = 0.2
+CORR_THRESHOLD = 0.3
 
 argv <- commandArgs(trailingOnly=TRUE)
 
@@ -52,7 +52,8 @@ correlated_pathways <- function(threshold, label){
   
   fgsea_stats <- genes_across_datasets[["dataset_corr_count"]]
   names(fgsea_stats) <- genes_across_datasets[["SYMBOL"]]
-  
+  print("fgsea_stats: ")
+  print(fgsea_stats)
   fgseaRes <- as_tibble(fgsea::fgsea(pathways = pathways.hallmark, stats = fgsea_stats, minSize = 15, 
                            maxSize = 500, scoreType = "pos")) %>% 
     dplyr::select(-leadingEdge)
@@ -60,7 +61,7 @@ correlated_pathways <- function(threshold, label){
   write_csv(fgseaRes, path = paste0("output/", label, "_correlated_pathways.csv"))
   write_csv(genes_across_datasets, path = paste0("output/", label, "_correlated_genes.csv"))
   
-  ggplot(fgseaRes %>% filter(padj < 0.05)) + aes(reorder(pathway, NES), NES) + 
+  ggplot(fgseaRes %>% filter(padj < 0.05) %>% arrange(padj) %>% slice_head(n=25)) + aes(reorder(pathway, NES), NES) + 
     geom_col(aes(fill=padj)) + 
     labs(x = "Pathway",  y = "Normalized Enrichment Score (NES)", 
         title = paste0("GSEA of ", label, " correlated Genes across Datasets")) + 

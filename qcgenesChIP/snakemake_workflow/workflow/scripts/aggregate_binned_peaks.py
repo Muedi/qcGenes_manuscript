@@ -34,7 +34,6 @@ indices = [3, 4, 5, 9]
 
 
 # %%    
-    
 for col, df in zip(indices, dataframes):
 
     # find file that is not empty:
