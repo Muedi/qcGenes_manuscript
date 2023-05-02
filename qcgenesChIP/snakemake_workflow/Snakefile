@@ -230,7 +230,8 @@ rule annotate_counted_peaks:
         files=get_aggregated_peakcounts_files,
         scores=rules.aggregate_scores.output
     output:
-        "output/counts/{geo_id}/peak_counts.csv"
+        "output/counts/{geo_id}/peak_counts.csv", 
+        "output/counts/{geo_id}/peak_counts_normalized.csv"
     conda:
         "workflow/envs/gseaAnalysis.yaml"
     log:
