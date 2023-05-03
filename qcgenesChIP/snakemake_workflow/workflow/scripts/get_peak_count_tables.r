@@ -8,7 +8,7 @@ suppressMessages(library(fgsea, warn.conflicts = FALSE, quietly = TRUE, verbose 
 # # for testing
 # setwd(file.path(getwd(), "qcgenesChIP/snakemake_workflow"))
 # folder <- "output/macs2/GSE107734/"
-# bed_files <- grep("\\counts.bed$",list.files(folder), value = T)
+# bed_files <- grep("\\peaks.bed$",list.files(folder), value = T)
 # bed_files <- file.path(folder, bed_files)
 # output <- c("output/counts/GSE107734/peak_counts.csv", 
 #             "output/counts/GSE107734/peak_counts_normalized.csv")
@@ -41,13 +41,15 @@ annotated_peaks <- lapply(bed_files, function(bed_file) {
   names(peakdf) <- c("chr",
                     "start",
                     "end",
-                    "name",
-                    "score",
-                    "strand",
-                    "thickstart",
-                    "thickend",
-                    "itemRGB",
-                    "blockCount")
+                    "length",
+                    "abs_summit",
+                    "pileup",
+                    "-log10(pvalue)",
+                    "fold_enrichment",
+                    "-log10(qvalue)",
+                    "name")
+
+
   # print(head(peakdf))
   peaks <- makeGRangesFromDataFrame(peakdf, keep.extra.columns=T)
 
@@ -76,94 +78,19 @@ print(paste0("Output1: ", output[[2]]))
 write.csv(summarized_peaks_NORM, output[[2]], row.names = FALSE)
 print("written.")
 
-# # counted_reads_in_peaks <- vector(mode = "list", length = length(bed_files))
-# counted_peaks <- vector(mode = "list", length = length(bed_files))
-# counted_peaks_normalized <- vector(mode = "list", length = length(bed_files))
-# for (i in 1:length(bed_files)) { 
-#   bed_file <- bed_files[[i]]
-#   peakdf <- read_delim(bed_file, col_names=F)
-  
-#   names(peakdf) <- c("chr",
-#                     "start",
-#                     "end",
-#                     "name",
-#                     "score",
-#                     "strand",
-#                     "thickstart",
-#                     "thickend",
-#                     "itemRGB",
-#                     "blockCount")
-#   # print(head(peakdf))
-#   peaks <- makeGRangesFromDataFrame(peakdf, keep.extra.columns=T)
-
-#   annot <- annotatePeak(peaks, tssRegion=c(-3000, 3000), TxDb=txdb, annoDb="org.Hs.eg.db")
-#   annot <- as_tibble(annot)
-#   annot2 <- annot %>% group_by(SYMBOL) %>% count(SYMBOL)
-#   # normalize for gene length
-#   annot2_norm <- annot2 %>% 
-#     left_join(gene_lengths %>% dplyr::select(SYMBOL, width), by="SYMBOL") %>%
-#     mutate(n=n/width) %>%
-#     dplyr::select(-width)
-#   # counted_reads_in_peaks[[i]] <- annot
-#   counted_peaks[[i]] <- annot2
-#   counted_peaks_normalized[[i]] <- annot2_norm
-#   #return(outlist)
-# }
-# #)
-# names <- str_extract_all(bed_files, "SRR\\d+")
-# names(counted_peaks) <- names
-# names(counted_peaks_normalized) <- names
-
-# # for (i in 1:length(bed_files)) {
-# #   peakdf <- read_delim(bed_files[[i]], col_names=F)
-# #   names(peakdf) <- c("chr",
-# #                     "start",
-# #                     "end",
-# #                     "name",
-# #                     "score",
-# #                     "strand",
-# #                     "thickstart",
-# #                     "thickend",
-# #                     "itemRGB",
-# #                     "blockCount")
-# #   peaks <- makeGRangesFromDataFrame(peakdf, keep.extra.columns=T)
-
-# # }
-
-# # counted_reads_in_peaks <- annotated_peaks_out[[1]]
-# # counted_peaks <- annotated_peaks_out[[1]]
-# # counted_peaks_normalized <- annotated_peaks_out[[2]]
-
-# # length normalized counted peaks
-# summarized_peaks <- counted_peaks_normalized %>% purrr::reduce(full_join, by = "SYMBOL") %>% set_names("SYMBOL", names(counted_peaks_normalized))
-# write.csv(summarized_peaks, output[[2]], row.names = FALSE)
-# rm(summarized_peaks)
-# rm(counted_peaks_normalized)
-# # counted peaks
-# summarized_peaks <- counted_peaks %>% purrr::reduce(full_join, by = "SYMBOL") %>% set_names("SYMBOL", names(counted_peaks))
-# # Save summarized peaks to a file
-# write.csv(summarized_peaks, output[[1]], row.names = FALSE)
-# rm(summarized_peaks)
-# rm(counted_peaks)
-
-
-# for (i in 1:length(bed_files)) {
-#   peakdf <- read_delim(bed_files[[i]], col_names=F)
-#   names(peakdf) <- c("chr",
-#                     "start",
-#                     "end",
-#                     "name",
-#                     "score",
-#                     "strand",
-#                     "thickstart",
-#                     "thickend",
-#                     "itemRGB",
-#                     "blockCount")
-#   peaks <- makeGRangesFromDataFrame(peakdf, keep.extra.columns=T)
-
-# }
-
-# Group peaks by gene and summarize the results
-# to get the number of od peaks in genes over all datasets
-# combined_peaks <- do.call(rbind, annotated_peaks)
-# summarized_peaks <- combined_peaks %>% count(SYMBOL) 
+# TODO: 
+# compute correlations!
+# add reads in peaks (only need to filter it out of the annot df, no hasssle! :)
+# the current counting is faulty, so I'll fall back on counted peaks atm
+  # names(peakdf) <- c("chr",
+  #                   "start",
+  #                   "end",
+  #                   "name",
+  #                   "score",
+  #                   "strand",
+  #                   "thickstart",
+  #                   "thickend",
+  #                   "itemRGB",
+  #                   "blockCount",
+  #                   "blockSizes",
+  #                   "blockStarts")
