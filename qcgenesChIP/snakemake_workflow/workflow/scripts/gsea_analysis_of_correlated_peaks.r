@@ -20,7 +20,7 @@ correlated_pathways <- function(threshold, label){
   if(threshold > 0){
     for(i in 1:length(argv)){
       granges[[i]] <- read_csv(file = argv[i]) %>% 
-        mutate(end = genomic_range + 999) %>% 
+        mutate(end = genomic_range + 499) %>% 
         dplyr::select(chromosome, start = genomic_range, end, cor, p, bin) %>% 
         filter(cor > threshold) %>% 
         makeGRangesFromDataFrame()
@@ -28,7 +28,7 @@ correlated_pathways <- function(threshold, label){
   } else {
     for(i in 1:length(argv)){
       granges[[i]] <- read_csv(file = argv[i]) %>% 
-        mutate(end = genomic_range + 999) %>% 
+        mutate(end = genomic_range + 499) %>% 
         dplyr::select(chromosome, start = genomic_range, end, cor, p, bin) %>% 
         filter(cor < threshold) %>% 
         makeGRangesFromDataFrame()

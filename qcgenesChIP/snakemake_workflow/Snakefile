@@ -218,12 +218,20 @@ rule count_peaks:
     shell:
         "bedtools coverage -abam {input.bam} -b {input.peak} -counts > {output} 2> {log}"
 
-def get_aggregated_peakcounts_files(wildcards):
+# def get_aggregated_peakcounts_files(wildcards):
+#     paths = []
+#     sra_runs = meta_data.loc[(meta_data["geo_id"] == wildcards.geo_id) & (meta_data["is_sample"].eq(True)), "Run"]
+#     for sr in sra_runs:
+#         paths.append("output/macs2/{}/{}_peak_counts.bed".format(wildcards.geo_id, sr))
+#     return paths
+
+def get_aggregated_peak_files(wildcards):
     paths = []
     sra_runs = meta_data.loc[(meta_data["geo_id"] == wildcards.geo_id) & (meta_data["is_sample"].eq(True)), "Run"]
     for sr in sra_runs:
-        paths.append("output/macs2/{}/{}_peak_counts.bed".format(wildcards.geo_id, sr))
+        paths.append("output/macs2/{}/{}_peaks.bed".format(wildcards.geo_id, sr))
     return paths
+
 
 rule annotate_counted_peaks:
     input:
