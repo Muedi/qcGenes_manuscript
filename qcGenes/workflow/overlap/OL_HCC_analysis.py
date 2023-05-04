@@ -77,12 +77,14 @@ for DATAID in data_ids:
     ctrl = datasets.loc[DATAID, "Control"]
     treat = datasets.loc[DATAID, "Treat"]
     file = os.path.join("output", "main", "RASflowResults", DATAID, "trans/dea/DEA/gene-level",
-                        "deg_" + ctrl + "_" + treat + ".tsv") 
+                        "dea_" + ctrl + "_" + treat + ".tsv") 
     print(file)
     print("Exists: " + str(os.path.isfile(file)))
     if os.path.isfile(file):
-        with open(file) as f:
-            deg_stats[DATAID] = sum(1 for line in f) -1 # (counts always one more than JFs script, most likeley endline)
+        deg_tmp = pd.read_csv(file, index_col=0, sep='\t')
+        deg_tmp = deg_tmp.loc[deg_tmp.log2FoldChange.ge(1) | deg_tmp.log2FoldChange.le(-1)]
+        deg_tmp = deg_tmp.loc[deg_tmp.padj.le(0.05)]
+        deg_stats[DATAID] = deg_tmp.shape[0] 
     else:
         deg_stats[DATAID] = -1
 # convert to df and join with datasets_stats
@@ -120,7 +122,9 @@ for DATAID in GEO_Series:
     dea_file = os.path.join("output", "main", "RASflowResults", DATAID, "trans/dea/DEA/gene-level",
                             "dea_" + ctrl + "_" + treat + ".tsv")
     if os.path.isfile(deg_file):
-        degs[DATAID] = pd.read_csv(deg_file, index_col=0, sep='\t')
+        degs[DATAID] = pd.read_csv(dea_file, index_col=0, sep='\t')
+        degs[DATAID] = degs[DATAID].loc[degs[DATAID].log2FoldChange.ge(1) | degs[DATAID].log2FoldChange.le(-1)]
+        degs[DATAID] = degs[DATAID].loc[degs[DATAID].padj.le(0.05)]
         tmp_df = pd.read_csv(dea_file, sep='\t')
         lfc_genes_dict[DATAID] = tmp_df["log2FoldChange"]
         pval_genes_dict[DATAID] = tmp_df["padj"]
