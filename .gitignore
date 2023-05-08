@@ -12,3 +12,4 @@ qcGenes/data/
 qcGenes/ref/
 qcGenes/pub/
 *.zip
+overlapping_*.tsv
