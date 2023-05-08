@@ -10,7 +10,7 @@ all_sra_runs = meta_data.loc[(meta_data["geo_id"].isin(all_geo_ids)) & (meta_dat
 rule all:
     input:
         expand("output/plots/{geo_id}/quality_vs_mean_enrichment_of_bin_max.png", geo_id=all_geo_ids),
-        expand("output/plots/disease_vs_quality_{geo_id}.png", geo_id=all_geo_ids),
+        expand("output/plots/disease_vs_quality_{geo_id}.svg", geo_id=all_geo_ids),
         expand("output/counts/{geo_id}/peak_counts.csv", geo_id=all_geo_ids),
         "output/positively_correlated_pathways.png",
         "output/negatively_correlated_pathways.png",
@@ -235,7 +235,7 @@ def get_aggregated_peak_files(wildcards):
 
 rule annotate_counted_peaks:
     input:
-        files=get_aggregated_peakcounts_files,
+        files=get_aggregated_peak_files,
         scores=rules.aggregate_scores.output
     output:
         "output/counts/{geo_id}/peak_counts.csv", 
@@ -323,7 +323,7 @@ rule plot_disease_vs_quality:
         scores=rules.aggregate_scores.output,
         metadata=rules.make_metadata.output
     output:
-        "output/plots/disease_vs_quality_{geo_id}.png"
+        "output/plots/disease_vs_quality_{geo_id}.svg"
     conda:
         "workflow/envs/bioconda.yaml"
     shell:

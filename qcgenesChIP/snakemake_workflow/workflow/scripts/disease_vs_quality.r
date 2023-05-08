@@ -1,5 +1,6 @@
 library(ggplot2)
 suppressMessages(library(dplyr, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
+options(ggplot2.discrete.colour= c("#295D8A", "#A41720", "#4E4459"))
 
 args = commandArgs(trailingOnly=TRUE)
 
@@ -20,4 +21,5 @@ plot <- ggplot(data = df)  +
        subtitle = sprintf("Pearsons R: %1.3f, P-Value: %1.3e", res$estimate, res$p.value)) + 
   coord_flip()
 
-ggsave(sprintf("output/plots/disease_vs_quality_%s.png", geo_id), width = 10, height = 7)
+ggsave(sprintf("output/plots/disease_vs_quality_%s.svg", geo_id), plot = plot, width = 10, height = 7)
+# ggsave(sprintf("output/plots/disease_vs_quality_%s.png", geo_id), plot = plot, width = 10, height = 7)
