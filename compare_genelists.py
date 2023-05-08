@@ -25,6 +25,8 @@ print("length ol: ", len(overlap_pos))
 print(overlap_pos)
 print(qcgenes_gene_positive_noBias.loc[qcgenes_gene_positive_noBias.genes.isin(overlap_pos)].head(10))
 print(chip_gene_positive.loc[chip_gene_positive.SYMBOL.isin(overlap_pos)].head(10))
+qcgenes_gene_positive_noBias.loc[qcgenes_gene_positive_noBias.genes.isin(overlap_pos)].to_csv("overlapping_low_quality_marker_pathways.tsv", sep="\t")
+
 # %%
 qcgenes = set(
     qcgenes_gene_negative.loc[qcgenes_gene_negative.n.gt(4), "genes"])
@@ -36,7 +38,7 @@ print("length ol: ", len(overlap_neg))
 print(overlap_neg)
 print(qcgenes_gene_negative.loc[qcgenes_gene_negative.genes.isin(overlap_neg)].head(10))
 print(chip_gene_negative.loc[chip_gene_negative.SYMBOL.isin(overlap_neg)].head(10))
-
+qcgenes_gene_negative.loc[qcgenes_gene_negative.genes.isin(overlap_neg)].to_csv("overlapping_high_quality_marker_pathways.tsv", sep="\t")
 #%%
 # psoitively correlating pathways
 
@@ -54,6 +56,7 @@ print("length ol: ", len(overlap_pos))
 print(overlap_pos)
 print(qcgenes_path_positive_noBias.loc[qcgenes_path_positive_noBias.pathway.isin(overlap_pos)].head(10))
 print(chip_path_positive.loc[chip_path_positive.pathway.isin(overlap_pos)].head(10))
+qcgenes_path_positive_noBias.loc[qcgenes_path_positive_noBias.pathway.isin(overlap_pos)].to_csv("overlapping_low_quality_marker_pathways.tsv", sep="\t")
 #%%
 qcgenes = set(qcgenes_path_negative_noBias["pathway"])
 chip = set(chip_path_negative["pathway"])
@@ -62,5 +65,5 @@ print("length ol: ", len(overlap_neg))
 print(overlap_neg)
 print(qcgenes_path_negative_noBias.loc[qcgenes_path_negative_noBias.pathway.isin(overlap_neg)].head(10))
 print(chip_path_negative.loc[chip_path_negative.pathway.isin(overlap_neg)].head(10))
-
+qcgenes_path_negative_noBias.loc[qcgenes_path_negative_noBias.pathway.isin(overlap_neg)].to_csv("overlapping_high_quality_marker_pathways.tsv", sep="\t")
 
