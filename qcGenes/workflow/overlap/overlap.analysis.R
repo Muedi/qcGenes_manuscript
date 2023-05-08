@@ -148,11 +148,16 @@ disease.genes.3 %>%
 # ==============================================================================
 dis.genes.fdr.vs.quality.plot <- disease.genes.1 %>% 
   filter(count_name_in_gene_set>3) %>% 
+  mutate(cor_genes=ifelse(
+    cor_genes=="positive", "low", ifelse(
+      cor_genes=="negative", "high", "none"
+    ))) %>%
+  mutate(cor_genes=factor(cor_genes, levels=c("high", "none", "low"))) %>%
   ggplot(aes(x=cor_genes, y=fdr)) +
   geom_boxplot() +
   geom_jitter(alpha=0.05, color="#295D8A") +
   facet_wrap(vars(name), scales = "free") +
-  xlab("Type of correlation with sample low quality") +
+  xlab("Quality marker genes") +
   ylab("False Discovery Rate (FDR)") +
   ggtitle("Disease Genes Significance and Relation to Quality")
 # dis.genes.fdr.vs.quality.plot
@@ -284,8 +289,8 @@ datasets.vs.overlap.2.plot <- merged.tables %>%
   ggtitle("Differential Genes vs Quality in Datasets") +
   labs(subtitle = "by Design; Samples<50") +
   stat_poly_eq(formula = y~x, 
-              #  aes(label = paste(after_stat(eq.label), after_stat(rr.label), sep = "~~~")), 
-               aes(label = after_stat(rr.label)), 
+               aes(label = paste(after_stat(eq.label), after_stat(rr.label), sep = "~~~")), 
+               #aes(label = after_stat(rr.label)), 
                size = rel(4),
                parse = TRUE,
                color="#295D8A") +
@@ -314,8 +319,8 @@ datasets.vs.overlap.dis.plot <- merged.tables %>%
   ggtitle("Differential vs Known Genes in Datasets") +
   labs(subtitle = "by Design and Size. Data size: small<30 and big\u2265 30 samples") +
   stat_poly_eq(formula = y~x, 
-              #  aes(label = paste(after_stat(eq.label), after_stat(rr.label), sep = "~~~")), 
-               aes(label = after_stat(rr.label)), 
+               aes(label = paste(after_stat(eq.label), after_stat(rr.label), sep = "~~~")), 
+               # aes(label = after_stat(rr.label)), 
                size = rel(4),
                parse = TRUE)
 # datasets.vs.overlap.dis.plot
@@ -338,8 +343,8 @@ datasets.vs.overlap.dis.2.plot <- merged.tables %>%
   ggtitle("Differential vs Known Genes in Datasets") +
   labs(subtitle = "by Design; Samples<50") +
   stat_poly_eq(formula = y~x, 
-              #  aes(label = paste(after_stat(eq.label), after_stat(rr.label), sep = "~~~")), 
-               aes(label = after_stat(rr.label)), 
+               aes(label = paste(after_stat(eq.label), after_stat(rr.label), sep = "~~~")), 
+               # aes(label = after_stat(rr.label)), 
                size = rel(4),
                parse = TRUE,
                color="#295D8A") + 

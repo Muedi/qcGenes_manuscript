@@ -40,10 +40,10 @@ print(chip_gene_negative.loc[chip_gene_negative.SYMBOL.isin(overlap_neg)].head(1
 #%%
 # psoitively correlating pathways
 
-qcgenes_path_positive_noBias = pd.read_csv("qcGenes/output/main/qualityCorGenes/fgsea/fgsea.pos.cure.highBias.gsea.sets.tsv", sep='\t')
+qcgenes_path_positive_noBias = pd.read_csv("qcGenes/output/main/qualityCorGenes/fgsea/fgsea.pos.cure.noBias.gsea.sets.tsv", sep='\t')
 chip_path_positive = pd.read_csv("qcgenesChIP/snakemake_workflow/output/positively_correlated_pathways.csv")
 chip_path_positive = chip_path_positive.sort_values("padj").head(100)
-qcgenes_path_negative_noBias = pd.read_csv("qcGenes/output/main/qualityCorGenes/fgsea/fgsea.neg.cure.highBias.gsea.sets.tsv", sep='\t')
+qcgenes_path_negative_noBias = pd.read_csv("qcGenes/output/main/qualityCorGenes/fgsea/fgsea.neg.cure.noBias.gsea.sets.tsv", sep='\t')
 chip_path_negative = pd.read_csv("qcgenesChIP/snakemake_workflow/output/negatively_correlated_pathways.csv")
 chip_path_negative = chip_path_negative.sort_values("padj").head(100)
 #%%

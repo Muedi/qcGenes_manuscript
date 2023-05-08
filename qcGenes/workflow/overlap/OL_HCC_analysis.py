@@ -272,17 +272,17 @@ combis_more_than_five = [combi for combi in combis_more_than_five if combi in hc
 more_than_5_subsets_genes = hcc_all_subsets.loc[combis_more_than_five]
 
 
-# divide into with and without bad influence
-combis_more_than_two_bad = [combi for combi in combis_more_than_two if "GSE105130" in combi or "GSE77314" in combi]
-more_than_2_subsets_genes_bad = hcc_all_subsets.loc[combis_more_than_two_bad]
-combis_more_than_two_not_bad = [combi for combi in combis_more_than_two if combi not in combis_more_than_two_bad]
-more_than_2_subsets_genes_not_bad = hcc_all_subsets.loc[combis_more_than_two_not_bad]
+# # divide into with and without bad influence
+# combis_more_than_two_bad = [combi for combi in combis_more_than_two if "GSE105130" in combi or "GSE77314" in combi]
+# more_than_2_subsets_genes_bad = hcc_all_subsets.loc[combis_more_than_two_bad]
+# combis_more_than_two_not_bad = [combi for combi in combis_more_than_two if combi not in combis_more_than_two_bad]
+# more_than_2_subsets_genes_not_bad = hcc_all_subsets.loc[combis_more_than_two_not_bad]
 
 gene_sets = [subset_exclusive_genes,
             bad_exclusive_genes,
             more_than_2_subsets_genes,
-            more_than_2_subsets_genes_bad,
-            more_than_2_subsets_genes_not_bad,
+            # more_than_2_subsets_genes_bad,
+            # more_than_2_subsets_genes_not_bad,
             more_than_3_subsets_genes,
             more_than_4_subsets_genes,
             more_than_5_subsets_genes]
@@ -326,8 +326,8 @@ combi_ratios = pd.DataFrame({
     index=["set_exclusive_genes",
     "bad_set_genes",
     "genes_of_overlapped(>2)",
-    "genes_of_overlapped(>2) bad influence",
-    "genes_of_overlapped(>2) no bad infl",
+    # "genes_of_overlapped(>2) bad influence",
+    # "genes_of_overlapped(>2) no bad infl",
     "genes_of_overlapped(>3)",
     "genes_of_overlapped(>4)",
     "genes_of_overlapped(>5)"] 

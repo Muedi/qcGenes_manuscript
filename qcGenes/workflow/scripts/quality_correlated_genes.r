@@ -923,7 +923,7 @@ ggsave(filename=path, plot=plot, width=15.2, height=30)
 
 # Dataset Selection Plot
 # ------------------------------------------------------------------------------
-path <- file.path(out.dir.path, "cor.group.pdf")
+path <- file.path(out.dir.path, "figure-1-cor.group.pdf")
 bias_deg.all.cor <- round(cor(datasets.stats$p_group_cor, datasets.stats$n_degs, use="pairwise.complete.obs"), 2)
 bias_deg.selection.cor <- round(cor(datasets.stats[datasets.stats$selected==TRUE,]$p_group_cor, datasets.stats[datasets.stats$selected==TRUE,]$n_degs), 2)
 
@@ -942,8 +942,9 @@ plot <- datasets.stats %>%
       #                   "| bias-degs cor (selected datasets)=", bias_deg.selection.cor),
        x="Datasets", 
        y="Quality Imbalance") +
-  theme_minimal(base_size = 20)
-ggsave(filename=path, plot=plot, width=13, height=20)
+  theme_minimal(base_size = 20) +
+  theme(legend.position = "bottom", legend.direction = "horizontal")
+ggsave(filename=path, plot=plot, width=13, height=17)
 
 # path <- file.path(out.dir.path, "cor.group.pval.pdf")
 # bias_deg.all.cor <- round(cor(datasets.stats$p_group_cor, datasets.stats$n_degs, use="pairwise.complete.obs"), 2)
@@ -985,8 +986,8 @@ deg.samples <-  datasets.stats %>%
   geom_point() +
   geom_smooth(method="glm", formula=my.formula <- y ~ x) +
   stat_poly_eq(formula = my.formula, 
-               aes(label = ..rr.label..), 
-               size = rel(8),
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               size = rel(6),
                parse = TRUE) +  
   labs(title=paste("FDR and fold change"), 
       #  subtitle = paste0(
@@ -996,7 +997,9 @@ deg.samples <-  datasets.stats %>%
       #    "\nQuality Imbalance: low \u2264 ", bias.high.cutoff, "< high imbalance"
       #  ),
        y="Differential genes", 
-       x="Samples") +
+       x="Samples",
+       size="QI Index",
+       color="QI status") +
   theme_minimal(base_size = 20) 
 ggsave(filename=path, plot=deg.samples, width=12, height=10)
 
@@ -1017,8 +1020,8 @@ deg.paired.samples <-  datasets.stats %>%
   geom_point() +
   geom_smooth(method="glm", formula=my.formula <- y ~ x) +
   stat_poly_eq(formula = my.formula, 
-               aes(label = ..rr.label..), 
-               size = rel(8),
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               size = rel(6),
                parse = TRUE) +  
   labs(title=paste("FDR and fold change - Paired Samples"), 
       #  subtitle = paste0(
@@ -1028,7 +1031,9 @@ deg.paired.samples <-  datasets.stats %>%
       #    "\nQuality Imbalance: low \u2264 ", bias.high.cutoff, "< high imbalance"
       #  ),
        y="Differential genes", 
-       x="Samples") +
+       x="Samples",
+       size="QI Index",
+       color="QI status") +
   theme_minimal(base_size = 20)
 ggsave(filename=path, plot=deg.paired.samples, width=12, height=10)
 
@@ -1049,8 +1054,8 @@ deg.no.paired.samples <-  datasets.stats %>%
   geom_point() +
   geom_smooth(method="glm", formula=my.formula <- y ~ x) +
   stat_poly_eq(formula = my.formula, 
-               aes(label = ..rr.label..), 
-               size = rel(8),
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               size = rel(6),
                parse = TRUE) +  
   labs(title=paste("FDR and fold change - No Paired Samples"), 
       #  subtitle = paste0(
@@ -1060,7 +1065,9 @@ deg.no.paired.samples <-  datasets.stats %>%
       #    "\nQuality Imbalance: low \u2264 ", bias.high.cutoff, "< high imbalance"
       #  ),
        y="Differential genes", 
-       x="Samples") +
+       x="Samples",
+       size="QI Index",
+       color="QI status") +
   theme_minimal(base_size = 20)
 ggsave(filename=path, plot=deg.no.paired.samples, width=12, height=10)
 
@@ -1090,8 +1097,8 @@ deg.fdrOnly.samples <-  datasets.stats %>%
   geom_point() +
   geom_smooth(method="glm", formula=my.formula <- y ~ x) +
   stat_poly_eq(formula = my.formula, 
-               aes(label = ..rr.label..), 
-               size = rel(8),
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               size = rel(6),
                parse = TRUE) +  
   labs(title=paste("FDR only"), 
       #  subtitle = paste0(
@@ -1106,7 +1113,9 @@ deg.fdrOnly.samples <-  datasets.stats %>%
       #    # "| samples-genes cor (selected datasets): ", sample_deg.selection.cor
       #  ),
        y="Differential genes", 
-       x="Samples") +
+       x="Samples",
+       size="QI Index",
+       color="QI status") +
   theme_minimal(base_size = 20)
 ggsave(filename=path, plot=deg.fdrOnly.samples, width=12, height=10)
 
@@ -1135,8 +1144,8 @@ deg.fdrOnly.paired.samples <-  datasets.stats %>%
   geom_point() +
   geom_smooth(method="glm", formula=my.formula <- y ~ x) +
   stat_poly_eq(formula = my.formula, 
-               aes(label = ..rr.label..), 
-               size = rel(8),
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               size = rel(6),
                parse = TRUE) +  
   labs(title=paste("FDR only - Paired Samples"), 
       #  subtitle = paste0(
@@ -1151,7 +1160,9 @@ deg.fdrOnly.paired.samples <-  datasets.stats %>%
       #    # "| samples-genes cor (selected datasets): ", sample_deg.selection.cor
       #  ),
        y="Differential genes", 
-       x="Samples") +
+       x="Samples",
+       size="QI Index",
+       color="QI status") +
   theme_minimal(base_size = 20)
 ggsave(filename=path, plot=deg.fdrOnly.paired.samples, width=12, height=10)
 
@@ -1180,8 +1191,8 @@ deg.fdrOnly.no.paired.samples <-  datasets.stats %>%
   geom_point() +
   geom_smooth(method="glm", formula=my.formula <- y ~ x) +
   stat_poly_eq(formula = my.formula, 
-               aes(label = ..rr.label..), 
-               size = rel(8),
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               size = rel(6),
                parse = TRUE) +  
   labs(title=paste("FDR only - No Paired Samples"), 
       #  subtitle = paste0(
@@ -1196,7 +1207,9 @@ deg.fdrOnly.no.paired.samples <-  datasets.stats %>%
       #    # "| samples-genes cor (selected datasets): ", sample_deg.selection.cor
       #  ),
        y="Differential genes", 
-       x="Samples") +
+       x="Samples",
+       size="QI Index",
+       color="QI status") +
   theme_minimal(base_size = 20)
 ggsave(filename=path, plot=deg.fdrOnly.no.paired.samples, width=12, height=10)
 
@@ -1218,7 +1231,7 @@ figure <- ggarrange(
   ncol = 2, nrow = 1)
 path <- file.path(out.dir.path, "figure-3.pdf")
 ggsave(filename=path, plot=figure, width=14, height=7)
-# suppl figure S3
+# suppl figure S2
 figure <- ggarrange(
   deg.fdrOnly.no.paired.samples,
   deg.no.paired.samples,
@@ -1228,7 +1241,7 @@ figure <- ggarrange(
   font.label = list(size = 20, color = "black", face = "bold", family = NULL),
   common.legend = TRUE, legend = "bottom",
   ncol = 2, nrow = 2)
-path <- file.path(out.dir.path, "suppl-figure-S3.pdf")
+path <- file.path(out.dir.path, "suppl-figure-S2.pdf")
 ggsave(filename=path, plot=figure, width=14, height=14)
 
 
@@ -2042,7 +2055,7 @@ plot <- datasets.stats %>%
   theme_minimal(base_size = 20)
 ggsave(filename=path, plot=plot, width=12, height=10)
 
-path <- file.path(out.dir.path, "deg.plow.subsets.regr.facet.pdf")
+path <- file.path(out.dir.path, "figure-2-deg.plow.subsets.regr.facet.pdf")
 plot <- datasets.stats %>%
   # filter(n_degs>=dataset_n_deg_cutoff) %>%
   # filter(n_samples>=samples.cutoff) %>%
@@ -2054,8 +2067,8 @@ plot <- datasets.stats %>%
   geom_point(color="#295D8A") +
   geom_smooth(method="glm", formula=my.formula, color="#295D8A") +
   stat_poly_eq(formula = my.formula, 
-               aes(label = ..rr.label..), 
-               size = rel(5),
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               size = rel(6),
                parse = TRUE,
                color="#295D8A") +  
   labs(
@@ -2066,4 +2079,4 @@ plot <- datasets.stats %>%
   facet_wrap(~ data_origin, scales="free_y") +
   theme_minimal(base_size = 22) +
   theme(aspect.ratio = 1)
-ggsave(filename=path, plot=plot, width=12, height=10)
+ggsave(filename=path, plot=plot, width=20, height=10)
