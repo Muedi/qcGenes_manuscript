@@ -18,7 +18,7 @@ plot <- ggplot(data = df)  +
   geom_bar(stat = "identity") +
   labs(x = "SRA Run", y = "Probability of Low Quality",
        title = sprintf("Correlation of Quality and Disease for %s", geo_id),
-       subtitle = sprintf("Pearsons R: %1.3f, P-Value: %1.3e", res$estimate, res$p.value)) + 
+       subtitle = sprintf("QI: %1.3f, P-Value: %1.3e", abs(res$estimate), res$p.value)) + 
   coord_flip()
 
 ggsave(sprintf("output/plots/disease_vs_quality_%s.svg", geo_id), plot = plot, width = 10, height = 7)

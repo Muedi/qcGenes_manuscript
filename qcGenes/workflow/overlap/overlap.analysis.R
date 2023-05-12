@@ -32,7 +32,7 @@ output.dir <- file.path(base.dir, "overlap")
 dir.create(output.dir, showWarnings = F, recursive = T)
 output.table.path <- file.path(output.dir, "disease_deg_cor.tsv")
 n_dis_genes.table.path <- file.path(output.dir, "n_dis_genes.tsv")
-dis.genes.fdr.vs.quality.plot.path <- file.path(output.dir, "figure-7-dis.genes.fdr.vs.quality.plot.pdf")
+dis.genes.fdr.vs.quality.plot.path <- file.path(output.dir, "suppl-figure-S3-dis.genes.fdr.vs.quality.plot.pdf")
 
 dis_pos_neg_intersections.path <- file.path(output.dir, "dis_pos_neg_intersections.tsv")
 datasets.vs.overlap.path <- file.path(output.dir, "datasets.vs.overlap.pdf")
@@ -360,8 +360,18 @@ figure <- ggarrange(
   font.label = list(size = 20, color = "black", face = "bold", family = NULL),
   common.legend = TRUE, legend = "bottom",
   ncol = 2, nrow = 1)
-path <- file.path(output.dir, "figure-6.pdf")
+path <- file.path(output.dir, "figure-6.pdf") # is checkpoint do not rename :)
 ggsave(filename=path, plot=figure, width=14, height=7)
+
+figure <- ggarrange(
+  datasets.vs.overlap.2.plot,
+  datasets.vs.overlap.dis.2.plot,
+  labels = c("A", "B"),
+  font.label = list(size = 20, color = "black", face = "bold", family = NULL),
+  common.legend = TRUE, legend = "bottom",
+  ncol = 2, nrow = 1)
+path <- file.path(output.dir, "figure-6-scaling-test.pdf")
+ggsave(filename=path, plot=figure, width=10, height=5)
 
 # ==============================================================================
 # MESH TERMS WITH MULTIPLE DATASETS
