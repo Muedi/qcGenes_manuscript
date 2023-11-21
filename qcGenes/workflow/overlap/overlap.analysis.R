@@ -370,7 +370,7 @@ figure <- ggarrange(
   font.label = list(size = 20, color = "black", face = "bold", family = NULL),
   common.legend = TRUE, legend = "bottom",
   ncol = 2, nrow = 1)
-path <- file.path(output.dir, "figure-6-scaling-test.pdf")
+path <- file.path(output.dir, "figure-6-scaled.pdf")
 ggsave(filename=path, plot=figure, width=10, height=5)
 
 # ==============================================================================
