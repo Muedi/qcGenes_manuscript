@@ -13,3 +13,7 @@ qcGenes/ref/
 qcGenes/pub/
 *.zip
 overlapping_*.tsv
+.vscode/
+qcGenes/lib/
+qcGenes/qcfeatures_heatmapfastqc.png
+qcGenes/review/
