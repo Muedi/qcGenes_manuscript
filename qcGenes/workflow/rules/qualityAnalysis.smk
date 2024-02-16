@@ -71,7 +71,7 @@ rule OL_analysis:
         rules.qualityAnalysis.output
         # "output/main/qualityCorGenes/pos.cor.genes.pdf"
     output:
-        "output/main/overlap/hcc-top-2-fdr-gs2d.csv",
+        # "output/main/overlap/hcc-top-2-fdr-gs2d.csv",
         "output/main/overlap/figure-6.pdf"
     group:
         "qualityAnalysis" 
@@ -120,7 +120,7 @@ rule draft:
         "output/main/qualityCorGenes/fgsea/fgsea.neg.cure.gsea.plot.pdf",
         "output/main/qualityCorGenes/pos.cor.genes.noBias.pdf",
         "output/main/qualityCorGenes/neg.cor.genes.noBias.pdf",
-        "output/main/overlap/hcc-top-2-fdr-gs2d.csv",
+       # "output/main/overlap/hcc-top-2-fdr-gs2d.csv",
         "output/main/overlap/figure-6.pdf"
 #	,
 #	"output/batched/qualityVsExp/GSE163214/GSE163214.batch.pdf",
