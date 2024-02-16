@@ -5,12 +5,12 @@
 # ------------------------------------------------------------------------------
 rule downloadDatasets:
     input:
-        expand("../qcGenes.git/data/datasets/{dataid}/{sample}_1.fastq.gz", zip, dataid=SAMPLES_ALL_GEO_COL, sample=SAMPLES_ALL_RUN_COL)
+        expand("data/datasets/{dataid}/{sample}_1.fastq.gz", zip, dataid=SAMPLES_ALL_GEO_COL, sample=SAMPLES_ALL_RUN_COL)
 
 # ------------------------------------------------------------------------------
 rule download_sample:
     output:
-        "../qcGenes.git/data/datasets/{dataid}/{sample}_1.fastq.gz"
+        "data/datasets/{dataid}/{sample}_1.fastq.gz"
     group:
         "downloadDatasets"
     log:
@@ -22,4 +22,4 @@ rule download_sample:
     params:
         max_reads=config['MAX_READS']
     shell:
-        "fastq-dump -X {params.max_reads} --outdir ../qcGenes.git/data/datasets/{wildcards.dataid} --gzip --skip-technical --split-files {wildcards.sample} > {log} 2>&1"
+        "fastq-dump -X {params.max_reads} --outdir data/datasets/{wildcards.dataid} --gzip --skip-technical --split-files {wildcards.sample} > {log} 2>&1"

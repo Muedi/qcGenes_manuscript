@@ -131,7 +131,8 @@ rule scorer:
 #        loc="output/qc/{dataid}/reads_anno/{sample}.readsannot.txt",
 #        tss="output/qc/{dataid}/tss_anno/{sample}.tss.txt"
     output:
-        "output/qc/{dataid}/scores/{sample}.score.txt"
+        out="output/qc/{dataid}/scores/{sample}.score.txt",
+        feat="output/qc/{dataid}/scores/{sample}.features.txt"
     group:
         "qualityFeatures"
     log:
@@ -149,7 +150,7 @@ rule scorer:
     shell:
         "cd lib/seqQscorer.git/ && "
 #        "python seqQscorer.py --spec {params.species} --assay RNA-seq --rt single-ended --raw {params.raw} --map {params.map} --loc {params.loc} --tss {params.tss} --out {params.out} > ../../{log} 2>&1 && "
-        "python seqQscorer.py --spec None --assay None --rt None --raw ../../{input.raw} --map ../../{input.map} --loc ../../{input.loc} --tss ../../{input.tss} --out ../../{output} > ../../{log} 2>&1 && "
+        "python seqQscorer.py --spec None --assay None --rt None --raw ../../{input.raw} --map ../../{input.map} --loc ../../{input.loc} --tss ../../{input.tss} --out ../../{output.out} --featOut ../../{output.feat} > ../../{log} 2>&1 && "
         "cd ../.."
 
 # ------------------------------------------------------------------------------

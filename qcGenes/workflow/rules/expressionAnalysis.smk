@@ -13,6 +13,23 @@ rule expressionAnalysis:
 #        "config/metadata/Datasets.csv"
         expand("output/main/RASflowResults/{dataid}/trans/tpmFile/all.samples.tpm.tsv", dataid=DATAIDS_MAIN),
         expand("output/batched/RASflowResults/{dataid}/trans/tpmFile/all.samples.tpm.tsv", dataid=DATAIDS_BATCH)
+        
+rule quantification:
+    input:
+        # expand("data/output/{dataid}/salmon/{sample}/quant.sf", zip, dataid=SAMPLES_ALL_GEO_COL, sample=SAMPLES_ALL_RUN_COL),
+        expand("data/output/{dataid}/salmon/{sample}_tpm.tsv", zip, dataid=SAMPLES_ALL_GEO_COL, sample=SAMPLES_ALL_RUN_COL)
+
+rule pipeline:
+    input:
+        expand("output/main/pipelines/{dataid}/main.py", dataid=DATAIDS_MAIN)
+
+rule metadata:
+    input:
+        expand("output/main/pipelines/{dataid}/configs/metadata.tsv", dataid=DATAIDS_MAIN)
+
+rule run_all_pipelines:
+    input:
+        expand("output/main/RASflowResults/{dataid}/trans/dea/countGroup/tx2gene.RData", dataid=DATAIDS_MAIN)
 
 # # ------------------------------------------------------------------------------
 # rule unzip_gtf:
@@ -175,7 +192,7 @@ rule create_pipeline_dir:
         "../envs/linux.yaml"
     shell:
         "rm -rf output/{params.subdir}/pipelines/{wildcards.dataid}/ && "
-        "git clone -q lib/RASflow.git output/{params.subdir}/pipelines/{wildcards.dataid} > {log} 2>&1 && "
+        "git clone -q ./lib/RASflow.git output/{params.subdir}/pipelines/{wildcards.dataid} > {log} 2>&1 && "
         "rm -rf output/{params.subdir}/pipelines/{wildcards.dataid}/data output/{params.subdir}/pipelines/{wildcards.dataid}/output output/{params.subdir}/pipelines/{wildcards.dataid}/configs/metadata.tsv && "
         "ln -s ../../../../data output/{params.subdir}/pipelines/{wildcards.dataid}/ >> {log} 2>&1 && "
 	"rm -rf output/{params.subdir}/pipelines/{wildcards.dataid}/data/output/{wildcards.dataid}/transcripts_index >> {log} 2>&1 && "

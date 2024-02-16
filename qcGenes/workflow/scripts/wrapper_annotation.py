@@ -8,10 +8,11 @@ organism = argv[2]
 output_file_ann = argv[3]
 output_file_tss = argv[4]
 
+prefix_bamfile = os.path.dirname(bam_file_path)
 # use the name of bam file for the temporary bed files
 bam_file_basename = os.path.basename(bam_file_path)
-mapping_bed_file_path = ('./%s.mapping.bed'%(bam_file_basename))
-mapping_1M_bed_file_path = ('./%s.mapping_1M.bed'%(bam_file_basename))
+mapping_bed_file_path = (prefix_bamfile+'/%s.mapping.bed'%(bam_file_basename))
+mapping_1M_bed_file_path = (prefix_bamfile+'/%s.mapping_1M.bed'%(bam_file_basename))
 
 #print('Converting bam to bed ...')
 bedtools = ['bedtools', 'bamtobed', '-i', bam_file_path, '>', mapping_bed_file_path]
