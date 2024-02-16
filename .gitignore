@@ -17,4 +17,4 @@ overlapping_*.tsv
 qcGenes/lib/
 qcGenes/qcfeatures_heatmapfastqc.png
 qcGenes/review/
-/mnt/scratch1/projects/manuscript/qcGenes/workflow/scripts/expression_test_clustering.r
+qcGenes/workflow/scripts/expression_test_clustering.r
