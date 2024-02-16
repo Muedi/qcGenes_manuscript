@@ -80,8 +80,8 @@ rule OL_analysis:
     conda:
         "../envs/OL_py.yaml"
     shell:
+        # python3 workflow/overlap/OL_HCC_analysis.py main {output} > {log} 2>&1
         """
-        python3 workflow/overlap/OL_HCC_analysis.py main {output} > {log} 2>&1
         Rscript workflow/overlap/process.gs2d.R  > {log} 2>&1
         Rscript workflow/overlap/overlap.analysis.R  > {log} 2>&1
         """
