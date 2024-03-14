@@ -5,31 +5,29 @@
 # ------------------------------------------------------------------------------
 rule expressionAnalysis:
     input:
-#        get_multiqc_salmon_files,
-#        get_batched_multiqc_salmon_files,
-#        get_all_pipeline_ack_files,
-#        get_all_batched_pipeline_ack_files
-#        "config/metadata/Mega_SraRunTable.csv",
-#        "config/metadata/Datasets.csv"
-        expand("output/main/RASflowResults/{dataid}/trans/tpmFile/all.samples.tpm.tsv", dataid=DATAIDS_MAIN),
-        expand("output/batched/RASflowResults/{dataid}/trans/tpmFile/all.samples.tpm.tsv", dataid=DATAIDS_BATCH)
+        expand("data/output/{dataid}/salmon/{sampleid}_cts.tsv", zip, dataid=SAMPLES_MAIN_GEO_COL, sampleid=SAMPLES_MAIN_RUN_COL),
+        expand("data/output/{dataid}/salmon/{sampleid}_tpm.tsv", zip, dataid=SAMPLES_MAIN_GEO_COL, sampleid=SAMPLES_MAIN_RUN_COL),
+        expand("output/main/gene_expression/{dataid}/{dataid}.samples.tpm.tsv.gz", dataid=DATAIDS_MAIN),
+        expand("output/main/gene_expression/{dataid}/{dataid}.samples.cts.tsv.gz", dataid=DATAIDS_MAIN),
+        expand("output/main/gene_expression/{dataid}/{dataid}.diff.genes.tsv.gz", dataid=DATAIDS_MAIN)
+
         
 rule quantification:
     input:
         # expand("data/output/{dataid}/salmon/{sample}/quant.sf", zip, dataid=SAMPLES_ALL_GEO_COL, sample=SAMPLES_ALL_RUN_COL),
         expand("data/output/{dataid}/salmon/{sample}_tpm.tsv", zip, dataid=SAMPLES_ALL_GEO_COL, sample=SAMPLES_ALL_RUN_COL)
 
-rule pipeline:
-    input:
-        expand("output/main/pipelines/{dataid}/main.py", dataid=DATAIDS_MAIN)
+# rule pipeline:
+#     input:
+#         expand("output/main/pipelines/{dataid}/main.py", dataid=DATAIDS_MAIN)
 
-rule metadata:
-    input:
-        expand("output/main/pipelines/{dataid}/configs/metadata.tsv", dataid=DATAIDS_MAIN)
+# rule metadata:
+#     input:
+#         expand("output/main/pipelines/{dataid}/configs/metadata.tsv", dataid=DATAIDS_MAIN)
 
-rule run_all_pipelines:
-    input:
-        expand("output/main/RASflowResults/{dataid}/trans/dea/countGroup/tx2gene.RData", dataid=DATAIDS_MAIN)
+# rule run_all_pipelines:
+#     input:
+#         expand("output/main/RASflowResults/{dataid}/trans/dea/countGroup/tx2gene.RData", dataid=DATAIDS_MAIN)
 
 # # ------------------------------------------------------------------------------
 # rule unzip_gtf:
@@ -136,7 +134,7 @@ rule quantify_sample:
     params:
         quant_dir="data/output/{dataid}/salmon/{sampleid}",
         read2="data/datasets/{dataid}/{sampleid}_2.fastq.gz",
-	tmp_dir="data/output/{dataid}/reads",
+	    tmp_dir="data/output/{dataid}/reads",
         tmp_fq_1="data/output/{dataid}/reads/{sampleid}.1.fastq.gz",
         tmp_fq_2="data/output/{dataid}/reads/{sampleid}.2.fastq.gz",
 #        gtf=config["ANNOT_PATH"],
@@ -162,284 +160,87 @@ rule quantify_sample:
         rm -f {params.tmp_fq_1} {params.tmp_fq_2} >> {log} 2>&1
         """
 
-# ------------------------------------------------------------------------------
-rule create_pipeline_dir:
+
+rule extract_counts_from_quant:
     input:
-        rules.salmon_index.output,
-	get_samples_tpm_files_by_analysis_and_GEOSeries
+        rules.quantify_sample.output.quant
     output:
-        "output/{analysis}/pipelines/{dataid}/main.py"
+        "data/output/{dataid}/salmon/{sampleid}_cts.tsv"
     group:
         "expressionAnalysis"
     log:
-        "output/logs/{analysis}/expressionAnalysis/{dataid}.create_pipeline_dir.log"
-    params:
-        control=getControlGroup,
-        treat=getTreatGroup,
-        trim="no",
-        end=getEndType,
-        samplesPairing=getSamplesPairing,
-        threads=config["MAX_THREADS"],
-        salmon_threads=config["RASFLOW_THREADS"],
-	salmon_index_dir=config["SALMON_INDEX_DIR"],
-        genomPath=config["GENOM_PATH"],
-        annotPath=config["ANNOT_PATH"],
-        transPath=config["TRANS_PATH"],
-        ensidPath=config["ENSID_PATH"],
-        ensemblDataset="hsapiens_gene_ensembl",
-        subdir="{analysis}"
-    conda:
-        "../envs/linux.yaml"
-    shell:
-        "rm -rf output/{params.subdir}/pipelines/{wildcards.dataid}/ && "
-        "git clone -q ./lib/RASflow.git output/{params.subdir}/pipelines/{wildcards.dataid} > {log} 2>&1 && "
-        "rm -rf output/{params.subdir}/pipelines/{wildcards.dataid}/data output/{params.subdir}/pipelines/{wildcards.dataid}/output output/{params.subdir}/pipelines/{wildcards.dataid}/configs/metadata.tsv && "
-        "ln -s ../../../../data output/{params.subdir}/pipelines/{wildcards.dataid}/ >> {log} 2>&1 && "
-	"rm -rf output/{params.subdir}/pipelines/{wildcards.dataid}/data/output/{wildcards.dataid}/transcripts_index >> {log} 2>&1 && "
-	"mkdir -p output/{params.subdir}/pipelines/{wildcards.dataid}/data/output/{wildcards.dataid} >> {log} 2>&1 && "
-	"ln -s ../../../{params.salmon_index_dir} output/{params.subdir}/pipelines/{wildcards.dataid}/data/output/{wildcards.dataid}/transcripts_index >> {log} 2>&1 && "
-	"rm -rf output/{params.subdir}/RASflowResults/{wildcards.dataid}/trans/quant >> {log} 2>&1 && "
-	"mkdir -p output/{params.subdir}/RASflowResults/{wildcards.dataid}/trans >> {log} 2>&1 && "
-	"ln -s ../../../../../data/output/{wildcards.dataid}/salmon output/{params.subdir}/RASflowResults/{wildcards.dataid}/trans/quant >> {log} 2>&1 && "
-        "cp output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.template.yaml output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s/VAL_PROJECT_NAME/{wildcards.dataid}/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s/VAL_TRIMMED/{params.trim}/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s#VAL_READSPATH#data/datasets/{wildcards.dataid}#\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s#VAL_METAFILE#configs/metadata.tsv#\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s/VAL_END/{params.end}/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s/VAL_NCORE_SALMON/{params.salmon_threads}/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s/VAL_NCORE/{params.threads}/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s#VAL_FINALOUTPUT#../../RASflowResults#\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s#VAL_GENOME#{params.genomPath}#\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s#VAL_ANNOTATION#{params.annotPath}#\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s#VAL_BIOMART_ENS_IDS#{params.ensidPath}#\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s#VAL_TRANS#{params.transPath}#\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s/VAL_PAIR/{params.samplesPairing}/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s/VAL_CONTROL/['{params.control}']/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s/VAL_TREAT/['{params.treat}']/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-        "sed -i \"s/VAL_EnsemblDataSet/{params.ensemblDataset}/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 "
-
-# ------------------------------------------------------------------------------
-rule create_metadata_file:
-    input:
-#        "output/{analysis}/pipelines/{dataid}/main.py"
-        rules.create_pipeline_dir.output
-    output:
-        "output/{analysis}/pipelines/{dataid}/configs/metadata.tsv"
-    group:
-        "expressionAnalysis"
-    log:
-        "output/logs/{analysis}/expressionAnalysis/{dataid}.create_metadata_file.log"
-    conda:
-        "../envs/tidyverse.yaml"
-    shell:
-        "Rscript workflow/scripts/create_metadata_file.R {wildcards.dataid} {wildcards.analysis} {output} > {log} 2>&1"
-
-#    run:
-#        """
-#        data = pd.read_csv("config/metadata/Mega_SraRunTable.csv")
-#        data = data.rename(columns={"Run": "sample"})
-#	if params[1] == "main":
-#	    data["my_selection"] = data["Selected"]
-#	elif params[1] == "batched":
-#	    data["my_selection"] = data["BatchAnalysisSelection"]
-#	else:
-#	    data["my_selection"] = data["Selected"]
-#        data = data[data.my_selection.eq(1) & data.GEO_Series.eq(params[0])][["sample", "group", "subject", "batch"]]
-#        data.to_csv(output[0], sep='\t', index=False)
-#        """
-
-# ------------------------------------------------------------------------------
-rule run_pipeline:
-    input:
-#        "output/main/pipelines/{dataid}/main.py",
-#        "output/main/pipelines/{dataid}/configs/metadata.tsv",
-#	get_samples_fastq_files_by_GEOSeries,
-        rules.create_pipeline_dir.output,
-	rules.create_metadata_file.output,
-#	get_samples_tpm_files_by_GEOSeries,
-#        expand("output/{analysis}/RASflowResults/{dataid}/trans/tpmFile/{sample}_tpm.tsv", analysis="{analysis}", dataid="{dataid}", sample=get_samples_by_analysis_and_dataid),
-        get_samples_tpm_files_by_analysis_and_GEOSeries,
-        config["GENOM_PATH"],
-        config["ANNOT_PATH"],
-        config["TRANS_PATH"]
-    output:
-        protected("output/{analysis}/RASflowResults/{dataid}/trans/dea/countGroup/tx2gene.RData")
-    group:
-        "expressionAnalysis"
-    log:
-        "output/logs/{analysis}/expressionAnalysis/{dataid}.run_pipeline.log"
-    benchmark:
-        "output/logs/{analysis}/expressionAnalysis/{dataid}.run_pipeline.bench"
-    conda:
-        "../envs/rasflow.yaml"
-#    threads:
-#        config['MAX_THREADS']
-    shell:
-        "cd output/{wildcards.analysis}/pipelines/{wildcards.dataid} && (python main.py) > ../../../../{log} 2>&1 && cd ../../../.."
-
-# ------------------------------------------------------------------------------
-rule post_pipeline:
-    input:
-#        "output/main/pipelines/{dataid}/main.py",
-#        "output/main/pipelines/{dataid}/configs/metadata.tsv",
-#        "output/main/RASflowResults/{dataid}/trans/dea/countGroup/tx2gene.RData"
-        rules.create_pipeline_dir.output,
-	rules.create_metadata_file.output,
-	rules.run_pipeline.output
-    output:
-        "output/{analysis}/RASflowResults/{dataid}/trans/tpmFile/all.samples.tpm.tsv"
-    group:
-        "expressionAnalysis"
-    log:
-        "output/logs/{analysis}/expressionAnalysis/{dataid}.post_pipeline.log"
-    params:
-        "output/{analysis}/pipelines/{dataid}"
-    benchmark:
-        "output/logs/{analysis}/expressionAnalysis/{dataid}.post_pipeline.bench"
-    conda:
-        "../envs/postExpression.yaml"
+         "output/logs/expressionAnalysis/{dataid}.{sampleid}.extract_counts_from_quant.log"
     threads:
         1
     shell:
-        "cd {params} && "
-	    "Rscript scripts/merge_tpm.R     > ../../../../{log} 2>&1 && "
-        "Rscript scripts/merge_deseq2.R >> ../../../../{log} 2>&1 && cd ../../../.."
+        """awk 'NR==1{{next}}{{print $1"\\t"$5}}' {input} > {output} 2> {log}"""
 
+rule extract_tpm_from_quant:
+    input:
+        rules.quantify_sample.output.quant
+    output:
+        "data/output/{dataid}/salmon/{sampleid}_tpm.tsv"
+    group:
+        "expressionAnalysis"
+    log:
+         "output/logs/expressionAnalysis/{dataid}.{sampleid}.extract_tpm_from_quant.log"
+    threads:
+        1
+    shell:
+        """awk 'NR==1{{next}}{{print $1"\\t"$4}}' {input} > {output} 2> {log}"""
 
-# ==============================================================================
-# BATCH ANALYSIS
-# ==============================================================================
 
 # ------------------------------------------------------------------------------
-#rule batchedExpressionAnalysis:
-#    input:
-#        get_all_batched_pipeline_ack_files
-#        expand("output/batched/RASflowResults/{dataid}/trans/tpmFile/all.samples.tpm.tsv", dataid=DATAIDS_BATCH)
+rule merge_tpm:
+    input:
+        ids=config["ENSIDFULLVER_PATH"],
+        files=get_samples_tpm_files_by_analysis_and_GEOSeries
+    output:
+        "output/{analysis}/gene_expression/{dataid}/{dataid}.samples.tpm.tsv.gz"
+    group:
+        "expressionAnalysis"
+    log:
+         "output/logs/{analysis}/expressionAnalysis/{dataid}.merge_tpm.log"
+    threads:
+        1
+    shell:
+        "Rscript workflow/scripts/merge_tpm.R {wildcards.dataid} {input.ids} {output} {input.files} > {log} 2>&1"
+
 
 # ------------------------------------------------------------------------------
-#rule create_batched_pipeline_dir:
-#    input:
-#        rules.salmon_index.output
-#    output:
-#        "output/batched/pipelines/{dataid}/main.py"
-#    group:
-#        "expressionAnalysis"
-#    log:
-#        "output/logs/batched/expressionAnalysis/{dataid}.create_pipeline_dir.log"
-#    params:
-#        control=getControlGroup,
-#        treat=getTreatGroup,
-#        trim="no",
-#        end=getEndType,
-#        samplesPairing=getSamplesPairing,
-#        threads=config["RASFLOW_THREADS"],
-#        salmon_threads=config["SALMON_THREADS"],
-#	salmon_index_dir=config["SALMON_INDEX_DIR"],
-#        genomPath=config["GENOM_PATH"],
-#        annotPath=config["ANNOT_PATH"],
-#        transPath=config["TRANS_PATH"],
-#        ensidPath=config["ENSID_PATH"],
-#        ensemblDataset="hsapiens_gene_ensembl",
-#        subdir="batched"
-#    conda:
-#        "../envs/linux.yaml"
-#    shell:
-#        "rm -rf output/{params.subdir}/pipelines/{wildcards.dataid}/ && "
-#        "git clone -q lib/RASflow.git output/{params.subdir}/pipelines/{wildcards.dataid} > {log} 2>&1 && "
-#        "rm -rf output/{params.subdir}/pipelines/{wildcards.dataid}/data output/{params.subdir}/pipelines/{wildcards.dataid}/output output/{params.subdir}/pipelines/{wildcards.dataid}/configs/metadata.tsv && "
-#        "ln -s ../../../../data output/{params.subdir}/pipelines/{wildcards.dataid}/ >> {log} 2>&1 && "
-#	"rm -rf output/{params.subdir}/pipelines/{wildcards.dataid}/data/output/{wildcards.dataid}/transcripts_index >> {log} 2>&1 && "
-#	"mkdir -p output/{params.subdir}/pipelines/{wildcards.dataid}/data/output/{wildcards.dataid} >> {log} 2>&1 && "
-#	"ln -s ../../../{params.salmon_index_dir} output/{params.subdir}/pipelines/{wildcards.dataid}/data/output/{wildcards.dataid}/transcripts_index >> {log} 2>&1 && "
-#        "cp output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.template.yaml output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s/VAL_PROJECT_NAME/{wildcards.dataid}/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s/VAL_TRIMMED/{params.trim}/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s#VAL_READSPATH#data/datasets/{wildcards.dataid}#\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s#VAL_METAFILE#configs/metadata.tsv#\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s/VAL_END/{params.end}/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s/VAL_NCORE_SALMON/{params.salmon_threads}/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s/VAL_NCORE/{params.threads}/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s#VAL_FINALOUTPUT#../../RASflowResults#\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s#VAL_GENOME#{params.genomPath}#\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s#VAL_ANNOTATION#{params.annotPath}#\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s#VAL_BIOMART_ENS_IDS#{params.ensidPath}#\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s#VAL_TRANS#{params.transPath}#\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s/VAL_PAIR/{params.samplesPairing}/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s/VAL_CONTROL/['{params.control}']/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s/VAL_TREAT/['{params.treat}']/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 && "
-#        "sed -i \"s/VAL_EnsemblDataSet/{params.ensemblDataset}/\" output/{params.subdir}/pipelines/{wildcards.dataid}/configs/config_main.yaml >> {log} 2>&1 "
+rule merge_cts:
+    input:
+        ids=config["ENSIDFULLVER_PATH"],
+        files=get_samples_cts_files_by_analysis_and_GEOSeries
+    output:
+        "output/{analysis}/gene_expression/{dataid}/{dataid}.samples.cts.tsv.gz"
+    group:
+        "expressionAnalysis"
+    log:
+         "output/logs/{analysis}/expressionAnalysis/{dataid}.merge_cts.log"
+    threads:
+        1
+    shell:
+        "Rscript workflow/scripts/merge_cts.R {wildcards.dataid} {input.ids} {output} {input.files} > {log} 2>&1"
+
 
 # ------------------------------------------------------------------------------
-#rule create_batched_metadata_file:
-#    input:
-#        "output/batched/pipelines/{dataid}/main.py",
-#        rules.create_batched_pipeline_dir.output
-#    output:
-#        "output/batched/pipelines/{dataid}/configs/metadata.tsv"
-#    group:
-#        "expressionAnalysis"
-#    log:
-#        "output/logs/batched/expressionAnalysis/{dataid}.create_metadata_file.log"
-#    params:
-#        dataid="{dataid}"
-#    run:
-#        data = pd.read_csv("config/metadata/Mega_SraRunTable.csv")
-#        data = data.rename(columns={"Run": "sample"})
-#        data = data[data.BatchAnalysisSelection.eq(1) & data.GEO_Series.eq(params[0])][["sample", "group", "subject", "batch"]]
-#        data.to_csv(output[0], sep='\t', index=False)
-
-# ------------------------------------------------------------------------------
-#rule run_batched_pipeline:
-#    input:
-#        "output/batched/pipelines/{dataid}/main.py",
-#        "output/batched/pipelines/{dataid}/configs/metadata.tsv",
-#	get_batched_samples_fastq_files_by_GEOSeries,
-#        rules.create_batched_pipeline_dir.output,
-#        rules.create_batched_metadata_file.output,
-#        get_batched_samples_tpm_files_by_GEOSeries,
-#        config["GENOM_PATH"],
-#        config["ANNOT_PATH"],
-#        config["TRANS_PATH"]
-#    output:
-#        "output/batched/RASflowResults/{dataid}/trans/dea/countGroup/tx2gene.RData"
-#    group:
-#        "expressionAnalysis"
-#    log:
-#        "output/logs/batched/expressionAnalysis/{dataid}.run_pipeline.log"
-#    benchmark:
-#        "output/logs/batched/expressionAnalysis/{dataid}.run_pipeline.bench"
-#    conda:
-#        "../envs/rasflow.yaml"
-#    threads:
-#        config['MAX_THREADS']
-#    shell:
-#        "cd output/batched/pipelines/{wildcards.dataid} && (python main.py <<< y) > ../../../../{log} 2>&1 && cd ../../../.."
-
-# ------------------------------------------------------------------------------
-#rule post_batched_pipeline:
-#    input:
-#        "output/batched/pipelines/{dataid}/main.py",
-#        "output/batched/pipelines/{dataid}/configs/metadata.tsv",
-#        "output/batched/RASflowResults/{dataid}/trans/dea/countGroup/tx2gene.RData"
-#        rules.create_batched_pipeline_dir.output,
-#        rules.create_batched_metadata_file.output,
-#	rules.run_batched_pipeline.output
-#    output:
-#        "output/batched/RASflowResults/{dataid}/trans/tpmFile/all.samples.tpm.tsv"
-#    group:
-#        "expressionAnalysis"
-#    log:
-#        "output/logs/batched/expressionAnalysis/{dataid}.post_pipeline.log"
-#    params:
-#        "output/batched/pipelines/{dataid}"
-#    benchmark:
-#        "output/logs/batched/expressionAnalysis/{dataid}.post_pipeline.bench"
-#    conda:
-#        "../envs/postExpression.yaml"
-#    threads:
-#        1
-#    shell:
-#        "cd {params} && "
-#        "Rscript scripts/merge_tpm.R     > ../../../../{log} 2>&1 && "
-#        "Rscript scripts/merge_deseq2.R >> ../../../../{log} 2>&1 && cd ../../../.."
+rule deseq2:
+    input:
+        ids=config["ENSIDVER_PATH"],
+        scores=rules.aggregate_scores.output,
+        files=get_samples_quant_files_by_GEOSeries
+    output:
+        rlog="output/{analysis}/gene_expression/{dataid}/{dataid}.samples.rlg.tsv.gz",
+        diff="output/{analysis}/gene_expression/{dataid}/{dataid}.diff.genes.tsv.gz"
+    group:
+        "expressionAnalysis"
+    log:
+         "output/logs/{analysis}/expressionAnalysis/{dataid}.diff_analyze.log"
+    threads:
+        config["DESEQ2_THREADS"]
+    params:
+        datasets=config["DATASETS_FILE"]
+    shell:
+        #"Rscript workflow/scripts/diff_analyze.R {wildcards.dataid} {input.datasets} {input.samples} {input.ids} {output.rlog} {output.diff} {input.files} > {log} 2>&1"
+        "Rscript workflow/scripts/diff_analyze.R {wildcards.dataid} {params.datasets} {input.ids} {input.scores} {output.rlog} {output.diff} {input.files} > {log} 2>&1"

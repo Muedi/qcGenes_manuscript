@@ -1,5 +1,152 @@
 # =============================================================================
-# VARIABLES
+# QI METHOD (UNCOMMENT ONLY 1 BLOCK IN THIS SECTION) ====
+# choice for QI method among: pearson, spearman, cohen, ctdiff, permut
+# =============================================================================
+# OPT="--latency-wait 15 --restart-times 3 --cores 16"
+# SUFFIX="_S4" && rm -rf output/main$SUFFIX output/main && snakemake $OPT --rerun-incomplete && mv output/main output/main$SUFFIX
+
+# METADATA : dataset article + samples from jf_master
+# # OPTIONS P1 - Pearson Control
+# QI_METHOD: pearson                  # "pearson", "spearman" as method to calculate the correlation coefficient for the QI Index
+# QI_SIGNIFICANCE_TEST: FALSE         # USE A SIGNIFICANCE TEST FOR THE QI INDEX TO INCLUDE DATASETS IN SUBSETS
+# QI_TEST_WITH_PERMUTATIONS: FALSE
+# QI_SIGNIFICANCE_TEST_CUTOFF: 0.05   # PVALUE CUTOFF FOR THE SIGNIFICANCE TEST OF THE QI INDEX
+# FILTER_OUT_QUALITY_OUTLIERS: FALSE  # Filter out quality-outlier samples to compute QI Index and before expression analysis if TRUE, keep all samples otherwise
+# QUALITY_OUTLIERS_COEF: 2            # Coefficient to define a P_low outlier value. Within a sample group, outlier samples have P_low > Q3 + (IQR * QUALITY_OUTLIERS_COEF)
+# P_LOW_AS_CONFOUNDER: FALSE          # Use P_low values as confounder variable to derive differential genes
+# N_PERMUTATIONS: 1000
+# BIAS_LOW_CUTOFF: 0.18               # DATASETS WITH QUALITY BIAS BELOW THIS VALUE ARE CONSIDERED OF LOW BIAS
+# BIAS_HIGH_CUTOFF: 0.3               # DATASETS WITH QUALITY BIAS ABOVE THIS VALUE ARE CONSIDERED OF HIGH BIAS
+
+# # OPTIONS P2 - Pearson Test
+# QI_METHOD: pearson                  # "pearson", "spearman", "zscore", "npzscore" as method to calculate the correlation coefficient for the QI Index
+# QI_SIGNIFICANCE_TEST: TRUE          # USE A SIGNIFICANCE TEST FOR THE QI INDEX TO INCLUDE DATASETS IN SUBSETS
+# QI_TEST_WITH_PERMUTATIONS: TRUE
+# QI_SIGNIFICANCE_TEST_CUTOFF: 0.05   # PVALUE CUTOFF FOR THE SIGNIFICANCE TEST OF THE QI INDEX
+# FILTER_OUT_QUALITY_OUTLIERS: FALSE  # Filter out quality-outlier samples to compute QI Index and before expression analysis if TRUE, keep all samples otherwise
+# QUALITY_OUTLIERS_COEF: 2            # Coefficient to define a P_low outlier value. Within a sample group, outlier samples have P_low > Q3 + (IQR * QUALITY_OUTLIERS_COEF)
+# P_LOW_AS_CONFOUNDER: FALSE          # Use P_low values as confounder variable to derive differential genes
+# N_PERMUTATIONS: 1000
+# BIAS_LOW_CUTOFF: 0.18               # DATASETS WITH QUALITY BIAS BELOW THIS VALUE ARE CONSIDERED OF LOW BIAS
+# BIAS_HIGH_CUTOFF: 0.3               # DATASETS WITH QUALITY BIAS ABOVE THIS VALUE ARE CONSIDERED OF HIGH BIAS
+ 
+# # OPTIONS P3 - Pearson Test + Outliers
+# QI_METHOD: pearson                  # "pearson", "spearman" as method to calculate the correlation coefficient for the QI Index
+# QI_SIGNIFICANCE_TEST: TRUE          # USE A SIGNIFICANCE TEST FOR THE QI INDEX TO INCLUDE DATASETS IN SUBSETS
+# QI_TEST_WITH_PERMUTATIONS: TRUE
+# QI_SIGNIFICANCE_TEST_CUTOFF: 0.05   # PVALUE CUTOFF FOR THE SIGNIFICANCE TEST OF THE QI INDEX
+# FILTER_OUT_QUALITY_OUTLIERS: TRUE   # Filter out quality-outlier samples to compute QI Index and before expression analysis if TRUE, keep all samples otherwise
+# QUALITY_OUTLIERS_COEF: 2            # Coefficient to define a P_low outlier value. Within a sample group, outlier samples have P_low > Q3 + (IQR * QUALITY_OUTLIERS_COEF)
+# P_LOW_AS_CONFOUNDER: FALSE          # Use P_low values as confounder variable to derive differential genes
+# N_PERMUTATIONS: 1000
+# BIAS_LOW_CUTOFF: 0.18               # DATASETS WITH QUALITY BIAS BELOW THIS VALUE ARE CONSIDERED OF LOW BIAS
+# BIAS_HIGH_CUTOFF: 0.3               # DATASETS WITH QUALITY BIAS ABOVE THIS VALUE ARE CONSIDERED OF HIGH BIAS
+
+# # OPTIONS P4 - Pearson Test + Outliers + Confounders
+# QI_METHOD: pearson                  # "pearson", "spearman" as method to calculate the correlation coefficient for the QI Index
+# QI_SIGNIFICANCE_TEST: TRUE          # USE A SIGNIFICANCE TEST FOR THE QI INDEX TO INCLUDE DATASETS IN SUBSETS
+# QI_TEST_WITH_PERMUTATIONS: TRUE
+# QI_SIGNIFICANCE_TEST_CUTOFF: 0.05   # PVALUE CUTOFF FOR THE SIGNIFICANCE TEST OF THE QI INDEX
+# FILTER_OUT_QUALITY_OUTLIERS: TRUE   # Filter out quality-outlier samples to compute QI Index and before expression analysis if TRUE, keep all samples otherwise
+# QUALITY_OUTLIERS_COEF: 2            # Coefficient to define a P_low outlier value. Within a sample group, outlier samples have P_low > Q3 + (IQR * QUALITY_OUTLIERS_COEF)
+# P_LOW_AS_CONFOUNDER: TRUE           # Use P_low values as confounder variable to derive differential genes
+# N_PERMUTATIONS: 1000
+# BIAS_LOW_CUTOFF: 0.18               # DATASETS WITH QUALITY BIAS BELOW THIS VALUE ARE CONSIDERED OF LOW BIAS
+# BIAS_HIGH_CUTOFF: 0.3               # DATASETS WITH QUALITY BIAS ABOVE THIS VALUE ARE CONSIDERED OF HIGH BIAS
+# 
+# ______________________________________________________________________________
+
+# # OPTIONS C2 - CTDiff TEST
+# QI_METHOD: ctdiff                   # "pearson", "spearman" as method to calculate the correlation coefficient for the QI Index
+# QI_SIGNIFICANCE_TEST: TRUE          # USE A SIGNIFICANCE TEST FOR THE QI INDEX TO INCLUDE DATASETS IN SUBSETS
+# QI_TEST_WITH_PERMUTATIONS: TRUE
+# QI_SIGNIFICANCE_TEST_CUTOFF: 0.05   # PVALUE CUTOFF FOR THE SIGNIFICANCE TEST OF THE QI INDEX
+# FILTER_OUT_QUALITY_OUTLIERS: FALSE  # Filter out quality-outlier samples to compute QI Index and before expression analysis if TRUE, keep all samples otherwise
+# QUALITY_OUTLIERS_COEF: 2            # Coefficient to define a P_low outlier value. Within a sample group, outlier samples have P_low > Q3 + (IQR * QUALITY_OUTLIERS_COEF)
+# P_LOW_AS_CONFOUNDER: FALSE          # Use P_low values as confounder variable to derive differential genes
+# N_PERMUTATIONS: 1000
+# BIAS_LOW_CUTOFF: 0.3                # DATASETS WITH QUALITY BIAS BELOW THIS VALUE ARE CONSIDERED OF LOW BIAS
+# BIAS_HIGH_CUTOFF: 0.5               # DATASETS WITH QUALITY BIAS ABOVE THIS VALUE ARE CONSIDERED OF HIGH BIAS
+
+# # OPTIONS C3 - CTDiff TEST & OUTLIERS
+# QI_METHOD: ctdiff                   # "pearson", "spearman" as method to calculate the correlation coefficient for the QI Index
+# QI_SIGNIFICANCE_TEST: TRUE          # USE A SIGNIFICANCE TEST FOR THE QI INDEX TO INCLUDE DATASETS IN SUBSETS
+# QI_TEST_WITH_PERMUTATIONS: TRUE
+# QI_SIGNIFICANCE_TEST_CUTOFF: 0.05   # PVALUE CUTOFF FOR THE SIGNIFICANCE TEST OF THE QI INDEX
+# FILTER_OUT_QUALITY_OUTLIERS: TRUE   # Filter out quality-outlier samples to compute QI Index and before expression analysis if TRUE, keep all samples otherwise
+# QUALITY_OUTLIERS_COEF: 2            # Coefficient to define a P_low outlier value. Within a sample group, outlier samples have P_low > Q3 + (IQR * QUALITY_OUTLIERS_COEF)
+# P_LOW_AS_CONFOUNDER: FALSE          # Use P_low values as confounder variable to derive differential genes
+# N_PERMUTATIONS: 1000
+# BIAS_LOW_CUTOFF: 0.3                # DATASETS WITH QUALITY BIAS BELOW THIS VALUE ARE CONSIDERED OF LOW BIAS
+# BIAS_HIGH_CUTOFF: 0.5               # DATASETS WITH QUALITY BIAS ABOVE THIS VALUE ARE CONSIDERED OF HIGH BIAS
+
+# # OPTIONS C4 - CTDiff ALL
+# QI_METHOD: ctdiff                   # "pearson", "spearman" as method to calculate the correlation coefficient for the QI Index
+# QI_SIGNIFICANCE_TEST: TRUE          # USE A SIGNIFICANCE TEST FOR THE QI INDEX TO INCLUDE DATASETS IN SUBSETS
+# QI_TEST_WITH_PERMUTATIONS: TRUE
+# QI_SIGNIFICANCE_TEST_CUTOFF: 0.05   # PVALUE CUTOFF FOR THE SIGNIFICANCE TEST OF THE QI INDEX
+# FILTER_OUT_QUALITY_OUTLIERS: TRUE   # Filter out quality-outlier samples to compute QI Index and before expression analysis if TRUE, keep all samples otherwise
+# QUALITY_OUTLIERS_COEF: 2            # Coefficient to define a P_low outlier value. Within a sample group, outlier samples have P_low > Q3 + (IQR * QUALITY_OUTLIERS_COEF)
+# P_LOW_AS_CONFOUNDER: TRUE           # Use P_low values as confounder variable to derive differential genes
+# N_PERMUTATIONS: 1000
+# BIAS_LOW_CUTOFF: 0.3                # DATASETS WITH QUALITY BIAS BELOW THIS VALUE ARE CONSIDERED OF LOW BIAS
+# BIAS_HIGH_CUTOFF: 0.5               # DATASETS WITH QUALITY BIAS ABOVE THIS VALUE ARE CONSIDERED OF HIGH BIAS
+
+
+# ______________________________________________________________________________
+
+# 
+# # OPTIONS S1 - Spearman Control
+# QI_METHOD: spearman                 # "pearson", "spearman" as method to calculate the correlation coefficient for the QI Index
+# QI_SIGNIFICANCE_TEST: FALSE         # USE A SIGNIFICANCE TEST FOR THE QI INDEX TO INCLUDE DATASETS IN SUBSETS
+# QI_TEST_WITH_PERMUTATIONS: TRUE
+# QI_SIGNIFICANCE_TEST_CUTOFF: 0.05   # PVALUE CUTOFF FOR THE SIGNIFICANCE TEST OF THE QI INDEX
+# FILTER_OUT_QUALITY_OUTLIERS: FALSE  # Filter out quality-outlier samples to compute QI Index and before expression analysis if TRUE, keep all samples otherwise
+# QUALITY_OUTLIERS_COEF: 2            # Coefficient to define a P_low outlier value. Within a sample group, outlier samples have P_low > Q3 + (IQR * QUALITY_OUTLIERS_COEF)
+# P_LOW_AS_CONFOUNDER: FALSE          # Use P_low values as confounder variable to derive differential genes
+# N_PERMUTATIONS: 1000
+# BIAS_LOW_CUTOFF: 0.18               # DATASETS WITH QUALITY BIAS BELOW THIS VALUE ARE CONSIDERED OF LOW BIAS
+# BIAS_HIGH_CUTOFF: 0.3               # DATASETS WITH QUALITY BIAS ABOVE THIS VALUE ARE CONSIDERED OF HIGH BIAS
+
+# # OPTIONS S2 - Spearman Test
+# QI_METHOD: spearman                 # "pearson", "spearman" as method to calculate the correlation coefficient for the QI Index
+# QI_SIGNIFICANCE_TEST: TRUE          # USE A SIGNIFICANCE TEST FOR THE QI INDEX TO INCLUDE DATASETS IN SUBSETS
+# QI_TEST_WITH_PERMUTATIONS: TRUE
+# QI_SIGNIFICANCE_TEST_CUTOFF: 0.05   # PVALUE CUTOFF FOR THE SIGNIFICANCE TEST OF THE QI INDEX
+# FILTER_OUT_QUALITY_OUTLIERS: FALSE  # Filter out quality-outlier samples to compute QI Index and before expression analysis if TRUE, keep all samples otherwise
+# QUALITY_OUTLIERS_COEF: 2            # Coefficient to define a P_low outlier value. Within a sample group, outlier samples have P_low > Q3 + (IQR * QUALITY_OUTLIERS_COEF)
+# P_LOW_AS_CONFOUNDER: FALSE          # Use P_low values as confounder variable to derive differential genes
+# N_PERMUTATIONS: 1000
+# BIAS_LOW_CUTOFF: 0.18               # DATASETS WITH QUALITY BIAS BELOW THIS VALUE ARE CONSIDERED OF LOW BIAS
+# BIAS_HIGH_CUTOFF: 0.3               # DATASETS WITH QUALITY BIAS ABOVE THIS VALUE ARE CONSIDERED OF HIGH BIAS
+
+# # OPTIONS S3 - Spearman Test + Outliers
+# QI_METHOD: spearman                 # "pearson", "spearman" as method to calculate the correlation coefficient for the QI Index
+# QI_SIGNIFICANCE_TEST: TRUE          # USE A SIGNIFICANCE TEST FOR THE QI INDEX TO INCLUDE DATASETS IN SUBSETS
+# QI_TEST_WITH_PERMUTATIONS: TRUE
+# QI_SIGNIFICANCE_TEST_CUTOFF: 0.05   # PVALUE CUTOFF FOR THE SIGNIFICANCE TEST OF THE QI INDEX
+# FILTER_OUT_QUALITY_OUTLIERS: TRUE   # Filter out quality-outlier samples to compute QI Index and before expression analysis if TRUE, keep all samples otherwise
+# QUALITY_OUTLIERS_COEF: 2            # Coefficient to define a P_low outlier value. Within a sample group, outlier samples have P_low > Q3 + (IQR * QUALITY_OUTLIERS_COEF)
+# P_LOW_AS_CONFOUNDER: FALSE          # Use P_low values as confounder variable to derive differential genes
+# N_PERMUTATIONS: 1000
+# BIAS_LOW_CUTOFF: 0.18               # DATASETS WITH QUALITY BIAS BELOW THIS VALUE ARE CONSIDERED OF LOW BIAS
+# BIAS_HIGH_CUTOFF: 0.3               # DATASETS WITH QUALITY BIAS ABOVE THIS VALUE ARE CONSIDERED OF HIGH BIAS
+
+# # OPTIONS S4 - Spearman Test + Outliers + Confounders
+# QI_METHOD: spearman                   # "pearson", "spearman" as method to calculate the correlation coefficient for the QI Index
+# QI_SIGNIFICANCE_TEST: TRUE            # USE A SIGNIFICANCE TEST FOR THE QI INDEX TO INCLUDE DATASETS IN SUBSETS
+# QI_TEST_WITH_PERMUTATIONS: TRUE
+# QI_SIGNIFICANCE_TEST_CUTOFF: 0.05     # PVALUE CUTOFF FOR THE SIGNIFICANCE TEST OF THE QI INDEX
+# FILTER_OUT_QUALITY_OUTLIERS: TRUE     # Filter out quality-outlier samples to compute QI Index and before expression analysis if TRUE, keep all samples otherwise
+# QUALITY_OUTLIERS_COEF: 2              # Coefficient to define a P_low outlier value. Within a sample group, outlier samples have P_low > Q3 + (IQR * QUALITY_OUTLIERS_COEF)
+# P_LOW_AS_CONFOUNDER: TRUE             # Use P_low values as confounder variable to derive differential genes
+# N_PERMUTATIONS: 1000
+# BIAS_LOW_CUTOFF: 0.18                 # DATASETS WITH QUALITY BIAS BELOW THIS VALUE ARE CONSIDERED OF LOW BIAS
+# BIAS_HIGH_CUTOFF: 0.3                 # DATASETS WITH QUALITY BIAS ABOVE THIS VALUE ARE CONSIDERED OF HIGH BIAS
+
+
+# =============================================================================
+# GENERAL VARIABLES ====
 # =============================================================================
 
 # PERFORMANCE
@@ -28,6 +175,16 @@ GSEA_INPUTGENES_REPRESENTATION_PERCENTAGE_CUTOFF: 0.05 # 0.1 for a min of 10% of
 GSEA_TABLE_PADJ_CUTOFF: 0.05
 GSEA_PLOT_PADJ_CUTOFF2: 0.05
 
+# OVERLAP ANALYSIS
+# OVERLAP_MIN_N_DEGS: 1000
+# OVERLAP_DIS_GENES: 300
+OVERLAP_MIN_N_DEGS: 500
+# OVERLAP_DIS_GENES: 200
+# OVERLAP_MIN_N_DEGS: 300 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# OVERLAP_DIS_GENES: 100  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+OVERLAP_DIS_GENES: 50  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+OVERLAP_N_SAMPLES_BIG: 50
+OVERLAP_MAX_SAMPLES_FIG6: 50
 
 # =============================================================================
 # PATHS AND URLS FILE NAMES CONSISTENT BETWEEN URLS AND PATHS)

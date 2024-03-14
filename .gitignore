@@ -18,3 +18,4 @@ qcGenes/lib/
 qcGenes/qcfeatures_heatmapfastqc.png
 qcGenes/review/
 qcGenes/workflow/scripts/expression_test_clustering.r
+qcGenes/workflow/rules/comparison.*

@@ -1,26 +1,12 @@
-#!/usr/bin/env Rscript
 # ==============================================================================
-# Compare SeqQscorer probabilities and RNA-seq data analysis
+# ANALZE 1 RNA-SEQ DATASET
 # ==============================================================================
-# Rscript workflow/scripts/quality_vs_expression.r project3A main
 
-# ARGUMENTS
-# ------------------------------------------------------------------------------
-args = commandArgs(trailingOnly=TRUE)
-if (length(args)<1 | length(args)>2) {
-  stop("Please provide GEO_Series ID as command line parameter, and optionally a subdirectory name", call.=FALSE)
-}
-dataid <- args[1]
-subdir <- args[2]
-
-if(is.na(subdir)){
-  subdir <- ""
-}
-# dataid <- "MZB_WT_KO_2"
-# subdir <- "main"
-
+# ______________________________________________________________________________
 # LIBRARIES AND SYSTEM OPTIONS
-# ------------------------------------------------------------------------------
+# ______________________________________________________________________________
+# install.packages(c("FactoMineR", "factoextra", "fpc"))
+# BiocManager::install(c("fgsea"), ask = F, update = FALSE)
 #suppressMessages(library(EnsDb.Hsapiens.v86, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 suppressMessages(library(tidyverse, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 suppressMessages(library(yaml, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
@@ -30,17 +16,57 @@ suppressMessages(library(ggpubr, warn.conflicts = FALSE, quietly = TRUE, verbose
 suppressMessages(library(ggrepel, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 suppressMessages(library(fpc, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 suppressMessages(library(fgsea, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
+suppressMessages(library(rstatix, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 options(readr.num_columns = 0) # to mute readr functions
+# library(ImpactEffectsize)
 
+
+# ______________________________________________________________________________
+# ARGUMENTS
+# ______________________________________________________________________________
+args = commandArgs(trailingOnly=TRUE)
+if (length(args)<1 | length(args)>6) {
+  # stop("Please provide GEO_Series ID as command line parameter, and optionally a subdirectory name", call.=FALSE)
+  stop("Wrong number of parameters", call.=FALSE)
+}
+
+# test.dataid <- "GSE155800"
+# args <- c(
+#   test.dataid,
+#   "main",
+#   file.path("output", "main", "scores", paste(test.dataid, "scores", "txt", sep=".")),
+#   file.path("output", "main", "gene_expression", test.dataid, paste(test.dataid, "samples", "rlg", "tsv", "gz", sep=".")),
+#   file.path("output", "main", "gene_expression", test.dataid, paste(test.dataid, "diff", "genes", "tsv", "gz", sep=".")),
+#   file.path("output", "main", "qualityVsExp", test.dataid)
+# )
+
+dataid <- args[1]
+subdir <- args[2]
+scores.path <- args[3]
+exp.data.paths <- args[4]
+dea.path <- args[5]
+out.dir.path <- args[6]
+dir.create(out.dir.path, showWarnings=FALSE, recursive=TRUE)
+
+if(is.na(subdir)){
+  subdir <- ""
+}
+
+
+# ______________________________________________________________________________
 # GLOBAL VARIABLES
-# ------------------------------------------------------------------------------
-config.path                   <- file.path(".", "config", "config.yaml")
-config.data                   <- yaml.load_file(config.path)
+# ______________________________________________________________________________
 
-scores.dir.path               <- file.path(".", "output", subdir, "scores")
-gs2d.path                     <- file.path(".", config.data$GS2D_PATH)
-datasets.metadata.path        <- file.path(".", "config", "metadata", "Datasets.csv")
-sra.path                      <- file.path(".", "config", "metadata", "Mega_SraRunTable.csv")
+config.path                   <- file.path(".", "config", "config.yaml")
+config                        <- yaml.load_file(config.path)
+
+QI_METHOD                    <- config$QI_METHOD
+QI_TEST_WITH_PERMUTATIONS    <- config$QI_TEST_WITH_PERMUTATIONS
+N_PERMUTATIONS               <- config$N_PERMUTATIONS
+
+gs2d.path                     <- config$GS2D_PATH
+datasets.metadata.path        <- config$DATASETS_FILE
+sra.path                      <- config$SAMPLES_FILE
 pval_floor                    <- 10e-10  # lowest p-value to display boxplots
 outlier_sample_cutoff_p       <- 0.01     # min low-quality p-value to define an outlier sample
 outlier_sample_cutoff_rank    <- 2       # max sample rank to consider outlier
@@ -51,76 +77,106 @@ outlier_sample_max_n_group    <- 2       # max number of samples to remove per g
 cutoff_quant                  <- 0.25    # e.g. 0.05 to remove 5% lowest and also 5% highest correlatied genes
 cutoff_absol                  <- 0.4     # e.g. 0.7 to remove genes with correlation < -0.7 and also >0.7
 
-msigdb.kegg.path              <- config.data$MSIGDB_CURATED_PATH
-msigdb.posi.path              <- config.data$MSIGDB_POSITIONAL_PATH
-msigdb.gs2d.path              <- config.data$GS2D_MSIGDB_PATH
-gsea.table.cutoff             <- config.data$GSEA_TABLE_PADJ_CUTOFF
-gsea.plot.cutoff              <- config.data$GSEA_PLOT_PADJ_CUTOFF2
+msigdb.kegg.path              <- config$MSIGDB_CURATED_PATH
+msigdb.posi.path              <- config$MSIGDB_POSITIONAL_PATH
+msigdb.gs2d.path              <- config$GS2D_MSIGDB_PATH
+gsea.table.cutoff             <- config$GSEA_TABLE_PADJ_CUTOFF
+gsea.plot.cutoff              <- config$GSEA_PLOT_PADJ_CUTOFF2
 
-# DATASET-SPECIFIC VARIABLES
-# ------------------------------------------------------------------------------
-metadata.path     <- file.path(".", "output", subdir, "pipelines", dataid, "configs", "metadata.tsv")
-scores.path       <- file.path(scores.dir.path, paste0(dataid, ".scores.txt"))
-exp.data.dir.path <- file.path(".", "output", subdir, "RASflowResults", dataid, "trans", "dea", "countGroup")
-#exp.data.dir.path <- file.path(".", "output", subdir, "RASflowResults", dataid, "trans", "tpmFile")
-#exp.data.paths    <- file.path(exp.data.dir.path, grep("_gene_norm.tsv", dir(exp.data.dir.path), value=T)) 
-#exp.data.paths    <- file.path(exp.data.dir.path, "all_samples_gene_norm.tsv") 
-exp.data.paths    <- file.path(exp.data.dir.path, "all_samples_gene_rlog.tsv") 
-#exp.data.paths    <- file.path(exp.data.dir.path, "all_samples_tpm.tsv") 
-out.dir.path      <- file.path(".", "output", subdir, "qualityVsExp", dataid)
-dir.create(out.dir.path, showWarnings=FALSE, recursive=TRUE)
+gsea.input_genes           <- config$GSEA_INPUT_GENES
+gsea.pathway.perc.cutoff   <- config$GSEA_PATHWAY_REPRESENTATION_PERCENTAGE_CUTOFF
+gsea.input.perc.cutoff     <- config$GSEA_INPUTGENES_REPRESENTATION_PERCENTAGE_CUTOFF
+gsea.table.cutoff          <- config$GSEA_TABLE_PADJ_CUTOFF
+gsea.plot.cutoff           <- config$GSEA_PLOT_PADJ_CUTOFF2
+
+msigdb.hallmark.path   <- config$MSIGDB_HALLMARK_PATH
+msigdb.posi.path       <- config$MSIGDB_POSITIONAL_PATH
+msigdb.curated.path    <- config$MSIGDB_CURATED_PATH
+msigdb.curated.cp.path <- config$MSIGDB_CURATED_CP_PATH
+msigdb.regulatory.path <- config$MSIGDB_REGULATORY_PATH
+msigdb.cells.path      <- config$MSIGDB_CELLS_PATH
+msigdb.gs2d.path       <- config$GS2D_MSIGDB_PATH
+
+fgsea.dir.path <- file.path(out.dir.path, "fgsea")
+dir.create(fgsea.dir.path, recursive = T, showWarnings = F)
+
+
+# ______________________________________________________________________________
+# GENE IDS
+# ______________________________________________________________________________
+gene_ids_file <- config$ENSID_PATH
+ensembl_ids <- read_tsv(gene_ids_file, show_col_types = FALSE)
+
+full_gene_ids_file <- config$ENSIDFULLVER_PATH
+ensembl_ids_full <- read_tsv(full_gene_ids_file, show_col_types = FALSE)
+
+
+# DESEQ2 FILES
+# ______________________________________________________________________________
+# DIFFERENTIAL GENES TABLE
+dea.table <- read_tsv(dea.path, show_col_types = FALSE) %>% 
+  filter(!is.na(padj))
+n.degs <- sum(dea.table$padj<=0.05 & abs(dea.table$log2FoldChange)>=1)
+n.degs.FdrOnly <- sum(dea.table$padj<=0.05)
+
+# EXPRESSION DATA TABLE
+data0 <- read_tsv(exp.data.paths, show_col_types = FALSE) %>% 
+  filter(!is.na(geneid))
+
+# FILTERING
+data0$var <- apply(data0 %>% dplyr::select(-geneid), 1, var)
+var.min.cutoff <- quantile(data0$var[data0$var>0], 0.05)[1]
+my.annot <- ensembl_ids_full %>% 
+  rename(geneid=gene_id_ver) %>% 
+  select(geneid, gene_name) %>% 
+  distinct()
+data0 <- data0 %>%
+  left_join(my.annot, by="geneid") %>% 
+  filter(var>var.min.cutoff) %>%
+  group_by(gene_name) %>%
+  arrange(desc(var)) %>%
+  filter(row_number()==1) %>% 
+  ungroup() %>% 
+  select(-gene_name)
+
+
+deseq2.sample.names <- names(data0)[!names(data0) %in% c("geneid", "var")]
+
 
 # GLOBAL DATA
-# ------------------------------------------------------------------------------
-gs2d.table <- read_tsv(gs2d.path) # "GeneSet 2 Disease" data
-# write.csv(gs2d_top, "gs2d_top.csv", quote=TRUE, row.names = FALSE)
+# ______________________________________________________________________________
+gs2d.table <- read_tsv(gs2d.path, show_col_types = FALSE) # "GeneSet 2 Disease" data
 
 # vector of disease MeSH terms
 disease.meshs <- as.character(
-  read_csv(datasets.metadata.path) %>% 
+  read_csv(datasets.metadata.path, show_col_types = FALSE) %>% 
     dplyr::filter(GEO_Series==dataid) %>% 
     dplyr::rename(mesh_terms=`mesh_terms (pipe-separated list)`) %>% 
     dplyr::select(mesh_terms))
 disease.meshs <- unlist(strsplit(disease.meshs, "|", fixed = TRUE)) 
 
-sra.table <- read_csv(sra.path) %>% 
+sra.table <- read_csv(sra.path, show_col_types = FALSE) %>% 
   rename(sample=Run) %>% 
-  filter(GEO_Series==dataid)
+  filter(GEO_Series==dataid) %>% 
+  filter(Selected==1) %>% 
+  filter(sample %in% deseq2.sample.names) # FILTER HERE TO FIT DESEQ2 SAMPLES => OK
 
-datasets.table <- read_csv(datasets.metadata.path)
+datasets.table <- read_csv(datasets.metadata.path, show_col_types = FALSE)
 
-# Gene IDs and symbols
-#ensembl_annotation <- config.data$ANNOT_PATH
-#ensembl_ids  <- as_tibble(read.delim(ensembl_annotation, header=F,  comment.char = "#", stringsAsFactors=F)) %>% 
-#  filter(V3=="transcript") %>% 
-#  mutate(gene_id=str_extract(V9, regex("(?<=gene_id )(.+?)(?=;)", dotall = TRUE))) %>% 
-#  mutate(gene_name=str_extract(V9, regex("(?<=gene_name )(.+?)(?=;)", dotall = TRUE))) %>% 
-#  mutate(trans_id=str_extract(V9, regex("(?<=transcript_id )(.+?)(?=;)", dotall = TRUE))) %>% 
-#  mutate(trans_name=str_extract(V9, regex("(?<=transcript_name )(.+?)(?=;)", dotall = TRUE))) %>% 
-#  select(gene_id, trans_id, gene_name, trans_name)
-
-gene_ids_file <- config.data$ENSID_PATH
-ensembl_ids <- read_tsv(gene_ids_file)
 
 # DATASET-SPECIFIC DATA
-# ------------------------------------------------------------------------------
-# METADATA
-metadata.table  <- read_tsv(metadata.path) %>% 
-  left_join(sra.table %>% dplyr::select(-group, -subject, -batch), by="sample") %>% 
-  dplyr::select(sample, group, subject, batch, Bases, Bytes, ReleaseDate)
+# ______________________________________________________________________________
+metadata.table  <- sra.table
 
 dataset.metadata <-  as.list(datasets.table %>% dplyr::filter(GEO_Series==dataid))
 control.name <- dataset.metadata$Control
 treats.name <- dataset.metadata$Treat
-dea.path <- file.path(".", "output", subdir, "RASflowResults", dataid, 
-                      "trans", "dea", "DEA", "gene-level", 
-                      paste0("dea_", control.name[1], "_", treats.name[1], ".tsv")) 
 
 # QUALITY SCORES
-scores.table <- read_tsv(scores.path, col_names=c("id", "p", "desc")) %>% 
+scores.table <- read_tsv(scores.path, col_names=c("id", "p", "desc"), show_col_types = FALSE) %>% 
   dplyr::select(-desc) %>% 
   left_join(metadata.table, by=c("id" = "sample")) %>% 
-  filter(!is.na(group)) %>% 
+  filter(!is.na(group)) %>%   # FILTER HERE TO FIT DESEQ2 SAMPLES => OK
   mutate(row_ungrouped = row_number(desc(p))) %>% 
   group_by(group) %>% 
   mutate(n = n()) %>% 
@@ -132,75 +188,153 @@ scores.table <- read_tsv(scores.path, col_names=c("id", "p", "desc")) %>%
   mutate(outlier = ifelse(row>outlier_sample_max_n_group, 0, outlier)) %>%
   mutate(outlier = ifelse(n<=3 & row>1, 0, outlier)) %>%
   mutate(group_factor=as.factor(group)) %>% 
-#  mutate(group_numeric=ifelse(group == control.name, 0, 1)) %>% 
-  mutate(group_numeric=as.numeric(as.factor(group_factor))) %>% 
+  mutate(group_numeric=ifelse(group == control.name, 1, 2)) %>%
+  # mutate(group_numeric=as.numeric(as.factor(group_factor))) %>%
   select(-group_factor) %>%
   ungroup()
+# scores.table$group_numeric
 
-dataset.p.group.cor <- abs(cor(scores.table$p, scores.table$group_numeric))
+
+# ______________________________________________________________________________
+# ______________________________________________________________________________
+# QI INDEX
+# ______________________________________________________________________________
+# ______________________________________________________________________________
+gmd <- function(x){
+  gmd <- 0
+  for(i in 1:length(x)){
+    for(j in 1:length(x)){
+      gmd <- gmd + abs(x[i]-x[j])
+    }
+  }
+  return(gmd/length(x)^2)
+}
+# gmd(1:8)
+
+ctdiff <- function(x, y){  # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7514071/
+  (median(x)-median(y)) / 
+    sqrt( (gmd(x)^2 + gmd(x)^2) /  2 )
+}
+# ctdiff(10:20, 12:22)
+
+ctdiff.permut.test <- function(x, binary_class, permutations=1000){
+  # x <- sample(20)
+  # binary_class <- c(rep(1, 10), rep(2,10))
+  classes <- levels(factor(binary_class))
+  difference <- abs(ctdiff(x[binary_class==classes[1]], x[binary_class==classes[2]]))
+  random.diffs <- c()
+  for (i in 1:permutations) {
+    binary_class <- sample(binary_class)
+    random.diffs <- c(
+      random.diffs, 
+      abs(ctdiff(x[binary_class==classes[1]], x[binary_class==classes[2]]))
+    )
+  }  
+  n.better.values <-length(random.diffs[random.diffs>difference])
+  pvalue <- n.better.values / permutations
+  return(pvalue)
+}
+# ctdiff.permut.test(scores.table$p, scores.table$group_numeric, myfunc=mean)
+# ctdiff.permut.test(scores.table$p, scores.table$group_numeric, myfunc=median)
+
+permut.test.myfunc <- function(x, binary_class, permutations=1000, myfunc=mean){
+  # x <- sample(20)
+  # binary_class <- c(rep(1, 10), rep(2,10))
+  classes <- levels(factor(binary_class))
+  difference <- abs(myfunc(x[binary_class==classes[1]])-myfunc(x[binary_class==classes[2]]))
+  random.diffs <- c()
+  for (i in 1:permutations) {
+    binary_class <- sample(binary_class)
+    random.diffs <- c(
+      random.diffs,
+      abs(myfunc(x[binary_class==classes[1]])-myfunc(x[binary_class==classes[2]]))
+    )
+  }
+  n.better.values <-length(random.diffs[random.diffs>difference])
+  pvalue <- n.better.values / permutations
+  return(pvalue)
+}
+# # permut.test.myfunc(scores.table$p, scores.table$group_numeric, myfunc=mean)
+# # permut.test.myfunc(scores.table$p, scores.table$group_numeric, myfunc=median)
+
+# ______________________________________________________________________________
+# ______________________________________________________________________________
+
+dataset.p.group.cor <- -1
+dataset.p.group.test <- -1
+group_1_values <- scores.table[scores.table$group_numeric==1,]$p
+group_2_values <- scores.table[scores.table$group_numeric==2,]$p
+
+if(QI_METHOD %in% c("pearson", "spearman")){
+  dataset.p.group.cor <- abs(cor(scores.table$p, scores.table$group_numeric, method=QI_METHOD))
+  dataset.p.group.test <- cor.test(scores.table$p, scores.table$group_numeric, method=QI_METHOD, alternative = "two.sided", exact = F)$p.value
+} else if(QI_METHOD=="cohen"){
+  dataset.p.group.cor <- abs(cohens_d( scores.table %>% arrange(group_numeric, subject), p~group_numeric )$effsize)
+  dataset.p.group.test <- t.test(group_1_values, group_2_values, alternative = "two.sided")$p.value
+} else if(QI_METHOD=="ctdiff"){
+  # Lötsch J, Ultsch A. A non-parametric effect-size measure capturing changes in central tendency and data distribution shape. PLoS One. 2020 Sep 24;15(9):e0239623. doi: 10.1371/journal.pone.0239623. PMID: 32970758; PMCID: PMC7514071.
+  dataset.p.group.cor <- abs(ctdiff(group_1_values, group_2_values))
+  dataset.p.group.test <- wilcox.test(group_1_values, group_2_values, alternative = "two.sided", exact = F)$p.value
+} else if(QI_METHOD=="permut"){
+  dataset.p.group.test <- permut.test.myfunc(scores.table$p, scores.table$group_numeric, myfunc=median)
+  dataset.p.group.cor <- 1 - dataset.p.group.test
+}
+
+# else if(QI_METHOD=="impact"){
+#   # Lötsch J, Ultsch A. A non-parametric effect-size measure capturing changes in central tendency and data distribution shape. PLoS One. 2020 Sep 24;15(9):e0239623. doi: 10.1371/journal.pone.0239623. PMID: 32970758; PMCID: PMC7514071.
+#   dataset.p.group.cor <- Impact(scores.table$p, as.factor(scores.table$group_numeric))$Impact
+#   dataset.p.group.test <- wilcox.test(group_1_values, group_2_values, alternative = "two.sided", exact = F)$p.value
+# }
+
+# ______________________________________________________________________________
+# ______________________________________________________________________________
+# QI SIGNIFICANCE TEST
+# ______________________________________________________________________________
+# ______________________________________________________________________________
+
+if(QI_TEST_WITH_PERMUTATIONS){
+  if(QI_METHOD == "ctdiff"){
+    dataset.p.group.test <- ctdiff.permut.test(scores.table$p, scores.table$group_numeric, permutations=N_PERMUTATIONS)    
+  } else if(QI_METHOD %in% c("pearson", "cohen")){
+    dataset.p.group.test <- permut.test.myfunc(scores.table$p, scores.table$group_numeric, permutations=N_PERMUTATIONS, myfunc=mean)
+  } else{
+    dataset.p.group.test <- permut.test.myfunc(scores.table$p, scores.table$group_numeric, permutations=N_PERMUTATIONS, myfunc=median)
+  }
+}
+
+
+# The variable QI_METHOD will be used below only with the correlation function cor()
+QI_METHOD <- ifelse(QI_METHOD %in% c("pearson", "cohen", "ctdiff"), "pearson", "spearman")
+# QI_METHOD <- "pearson"
+
+
+# ______________________________________________________________________________
+# ______________________________________________________________________________
+
+# dataset.p.group.cor <- abs(cor(scores.table$p, scores.table$group_numeric, method=QI_METHOD))
 dataset.p.group.cor.batched <- (cluster.stats(dist(scores.table$p), scores.table$group_numeric)$pearsongamma+1)/2
-dataset.p.bases.cor <- cor(scores.table$p, scores.table$Bases)
-dataset.p.bases.ctrol.cor <- cor(scores.table[scores.table$group_numeric==0, ]$p, scores.table[scores.table$group_numeric==0, ]$Bases)
-dataset.p.bases.treat.cor <- cor(scores.table[scores.table$group_numeric==1, ]$p, scores.table[scores.table$group_numeric==1, ]$Bases)
-dataset.p.bytes.cor <- cor(scores.table$p, scores.table$Bytes)
-dataset.p.bytes.ctrol.cor <- cor(scores.table[scores.table$group_numeric==0, ]$p, scores.table[scores.table$group_numeric==0, ]$Bytes)
-dataset.p.bytes.treat.cor <- cor(scores.table[scores.table$group_numeric==1, ]$p, scores.table[scores.table$group_numeric==1, ]$Bytes)
+dataset.p.bases.cor <- cor(scores.table$p, scores.table$Bases, method=QI_METHOD)
+dataset.p.bases.ctrol.cor <- cor(scores.table[scores.table$group_numeric==0, ]$p, scores.table[scores.table$group_numeric==0, ]$Bases, method=QI_METHOD)
+dataset.p.bases.treat.cor <- cor(scores.table[scores.table$group_numeric==1, ]$p, scores.table[scores.table$group_numeric==1, ]$Bases, method=QI_METHOD)
+dataset.p.bytes.cor <- cor(scores.table$p, scores.table$Bytes, method=QI_METHOD)
+dataset.p.bytes.ctrol.cor <- cor(scores.table[scores.table$group_numeric==0, ]$p, scores.table[scores.table$group_numeric==0, ]$Bytes, method=QI_METHOD)
+dataset.p.bytes.treat.cor <- cor(scores.table[scores.table$group_numeric==1, ]$p, scores.table[scores.table$group_numeric==1, ]$Bytes, method=QI_METHOD)
 
 # OUTLIERS AND COUNTS
 outliers.table     <- scores.table %>% dplyr::filter(outlier==1) %>% dplyr::select(id) # 1-col table of outlier dataset ids
 n.outliers         <- length(outliers.table$id)           # number of outlier datasets
 scores.noout.table <- scores.table %>% dplyr::filter(outlier==0) # scores' table with no outlier datasets
 
-# DIFFERENTIAL GENES TABLE
-dea.table <- read.table(dea.path, header = TRUE, row.names = 1)
-dea.table <- as_tibble(dea.table, rownames="geneid")
-n.degs <- sum(dea.table$padj<=0.05 & abs(dea.table$log2FoldChange)>=1)
-n.degs.FdrOnly <- sum(dea.table$padj<=0.05)
 
-# EXPRESSION DATA
-#d0 <- as_tibble(read.delim(exp.data.paths[1]), rownames="geneid") 
-#for(f in 2:length(exp.data.paths)){
-#  e <- as_tibble(read.delim(exp.data.paths[f]), rownames="geneid")
-#  d0 <- d0 %>% left_join(e, by="geneid")
-#  }
-#d0 <- d0 %>% dplyr::select(geneid, scores.table$id)
 
-# LOAD DATA FOR GENE NORM OR ABUNDANCE FILE (CHANGE TO CREATE DATA0 OBJECT)
-data0 <- read_delim(exp.data.paths, delim="\t") %>% 
-                    filter(!is.na(ensembl_id))
-
-## LOAD DATA FOR TPM FILE (exp.data.paths must be equal)
-#data0 <- read_delim(exp.data.paths, delim="\t") %>%
-#    separate(gene_id_ver, c("ensembl_id", "ens_gene_ver")) %>%
-#    filter(!is.na(ensembl_id)) %>%
-#    dplyr::select(-trans_id_ver, -trans_name, -ens_gene_ver, -gene_name)
-
-# FILTERING
-data0$var <- apply(data0 %>% dplyr::select(-ensembl_id), 1, var)
-var.min.cutoff <- quantile(data0$var[data0$var>0], 0.05)[1]
-data0 <- data0 %>%
-   filter(var>var.min.cutoff) %>%
-   group_by(ensembl_id) %>%
-   arrange(desc(var)) %>%
-   filter(row_number()==1) %>%
-   rename(geneid=ensembl_id)
-
+# FIRST DATA VERSION
 d0 <- data0 %>%
    dplyr::select(geneid, scores.table$id)
 groups.labels0 <- scores.table$group
 group.name0 <- unique(groups.labels0)
-write_tsv(d0, file.path(out.dir.path, paste0(dataid, '.express.tsv')))
+
 
 # EXPRESSION DATA WITHOUT OUTLIERS
-#d <- as_tibble(read.delim(exp.data.paths[1]), rownames="geneid")
-#for(f in 2:length(exp.data.paths)){
-#  e <- as_tibble(read.delim(exp.data.paths[f]), rownames="geneid")
-#  d <- d %>% left_join(e, by="geneid")
-#}
-#d <- d %>% dplyr::select(geneid, scores.noout.table$id)
-#d <- read_delim(exp.data.paths, delim="\t") %>% 
-#    rename(geneid=ensembl_id) %>% 
-#    dplyr::select(geneid, scores.noout.table$id)
 d <- data0 %>%
   dplyr::select(geneid, scores.noout.table$id)
 groups.labels <- scores.noout.table$group
@@ -208,25 +342,31 @@ group.name <- unique(groups.labels)
 
 # CORRELATIONS AND DISTANCES
 suppressWarnings(
-#  cor_coef <- apply(d[,scores.noout.table$id], 1, 
+  #  cor_coef <- apply(d[,scores.noout.table$id], 1, 
   cor_coef <- apply(data0[,scores.table$id], 1, 
-                    function(x){ cor(x, 
-                                     scores.table$p, 
-                                     use="pairwise.complete.obs", 
-                                     method="pearson") } )
+                    function(x){ 
+                      cor(x, 
+                          scores.table$p, 
+                          use="pairwise.complete.obs", 
+                          method=QI_METHOD
+                      ) 
+                    } )
 )
 suppressWarnings(
   cor_coef_noout <- apply(data0[,scores.noout.table$id], 1, 
-                    function(x){ cor(x, 
-                                     scores.noout.table$p, 
-                                     use="pairwise.complete.obs", 
-                                     method="pearson") } )
+                          function(x){ 
+                            cor(x, 
+                                scores.noout.table$p, 
+                                use="pairwise.complete.obs", 
+                                method=QI_METHOD
+                            ) 
+                          } )
 )
 #d <- d %>% mutate(cor=cor_coef)
 d$cor <- cor_coef
 
 # SCORES PLOTS
-# ------------------------------------------------------------------------------
+# ______________________________________________________________________________
 scores.bar.plot <- scores.table %>% 
   ggplot(aes(x=reorder(id, p), y=p, fill=group)) + 
   geom_bar(stat="identity") + 
@@ -253,16 +393,19 @@ scores_bases.scatter.plot <- scores.table %>%
        x="Low-Quality Probability") +
   theme_minimal()
 
-capture.output(suppressWarnings(suppressMessages(
-  ggexport(plotlist = list(scores.bar.plot, 
-                           scores_bytes.scatter.plot, 
-                           scores_bases.scatter.plot), 
-           nrow = 1, ncol = 3, width=6000, height=3000, res=300, verbose=F,
-           filename = file.path(out.dir.path, paste0(dataid, ".scores.pdf")))
-)), file='/dev/null')
+# capture.output(suppressWarnings(suppressMessages(
+  ggexport(
+    plotlist = list(
+      scores.bar.plot, 
+      scores_bytes.scatter.plot, 
+      scores_bases.scatter.plot), 
+    nrow = 1, ncol = 3, width=6000, height=3000, res=300, verbose=F,
+    filename = file.path(out.dir.path, paste0(dataid, ".scores.png")))
+# )), file='/dev/null')
 
+  
 # PCA PLOTS
-# ------------------------------------------------------------------------------
+# ______________________________________________________________________________
 palette <- c("#999999", "#377EB8")
 if(length(group.name)==3){
   palette <- c("#999999", "#377EB8", "#000000")
@@ -280,7 +423,6 @@ if(length(group.name)==3){
 # ggplot 3: top variables contributions in dimension 2 plot
 # ggplot 4: PCA plot
 # list of PCA validation metrics (list) as returned by function cluster.stats() from package fpc
-
 PCA_plots <- function(res.pca, plot.title, control.name, scores.table, label_only_outliers=FALSE, design_bias="", degs=-1){
   
   var <- get_pca_var(res.pca)
@@ -336,29 +478,26 @@ PCA_plots <- function(res.pca, plot.title, control.name, scores.table, label_onl
   return(list(scree.plot0, contrib1.plot0, contrib2.plot0, pca.plot0, pca.valid0))
 }
 
+
 # PCA PLOT FOR ALL GENES AND ALL SAMPLES
-# ------------------------------------------------------------------------------
+# ______________________________________________________________________________
 norm.table <- as.data.frame(d0 %>% column_to_rownames("geneid"))
 #pca.table <- log2(norm.table[which(apply(norm.table, 1, var) != 0), ]+0.00000001)
 pca.table <- norm.table[which(apply(norm.table, 1, var) != 0), ] # For the RLOG data
-pca.table.ids <- rownames(pca.table)
-#pca.table.symbols <- ensembldb::select(EnsDb.Hsapiens.v86, 
-#                                       keys=pca.table.ids, 
-#                                       keytype = "GENEID", 
-#                                       columns = c("SYMBOL","GENEID"))
-#pca.table.symbols <- merge(data.frame(GENEID=pca.table.ids), 
-#                           pca.table.symbols, 
-#                           all.x=TRUE)$SYMBOL
+pca.table <- pca.table %>% 
+  rownames_to_column(var="gene_id_ver") %>% 
+  left_join(ensembl_ids_full %>% select(gene_id_ver, gene_name) %>% distinct(), by="gene_id_ver") %>% 
+  mutate(rowname=paste(gene_name, gene_id_ver, sep = "_")) %>% 
+  column_to_rownames() %>%
+  select(-gene_id_ver, -gene_name)
 
-pca.table.symbols2geneid <- ensembl_ids %>% 
-    rename(GENEID=gene_id, SYMBOL=gene_name) %>% 
-    select(SYMBOL, GENEID) %>% 
-    unique()
+pca.table.symbols2geneid <- ensembl_ids_full %>%
+  rename(GENEID=gene_id_ver, SYMBOL=gene_name) %>%
+  select(SYMBOL, GENEID) %>%
+  unique()
 
-pca.table.symbols <- merge(data.frame(GENEID=pca.table.ids), 
-                           pca.table.symbols2geneid, 
-                           all.x=TRUE)$SYMBOL
-rownames(pca.table) <- paste(pca.table.symbols, pca.table.ids, sep="_")
+
+# rownames(pca.table) <- paste(pca.table.symbols, pca.table.ids, sep="_")
 pca.table <- t(pca.table)
 res.pca <- PCA(pca.table, scale.unit = TRUE, ncp = 5, graph = FALSE)
 plots_and_valid <- PCA_plots(res.pca, paste0("PCA (all genes & all samples): ", dataid), control.name, scores.table, TRUE, design_bias=dataset.p.group.cor, degs=n.degs)
@@ -368,57 +507,29 @@ contrib2.plot0 <- plots_and_valid[[3]]
 pca.plot0      <- plots_and_valid[[4]]
 pca.valid0     <- plots_and_valid[[5]]
 
-# var <- get_pca_var(res.pca)
-# 
-# # Screeplot
-# scree.plot0 <- fviz_eig(res.pca, addlabels = TRUE, rotate=T)
-# # Contributions of variables to PC1
-# contrib1.plot0 <- fviz_contrib(res.pca, choice = "var", axes = 1, top = 20, rotate=T)
-# # Contributions of variables to PC2
-# contrib2.plot0 <- fviz_contrib(res.pca, choice = "var", axes = 2, top = 20, rotate=T)
-# # pca and clustering validation indices
-# res.pca.enriched.table <-  as_tibble(res.pca$ind$coord, rownames="id") %>% 
-#   left_join(scores.table, by="id") %>% 
-#   mutate(outlier=ifelse(outlier==1, TRUE, FALSE)) %>% 
-#   mutate(log_p=round(-log10(1-p), digits = 3)) %>% 
-#   mutate(labels=ifelse(outlier==TRUE, paste(id, p, sep="\n"), "")) %>% 
-#   column_to_rownames(var="id")
-# res.pca.enriched.dist <- dist(res.pca.enriched.table[, c("Dim.1", "Dim.2")])
-# clustering.labels <- ifelse(res.pca.enriched.table$group==control.name, 1, 2)
-# pca.valid <- cluster.stats(res.pca.enriched.dist, clustering.labels)
-# # pca plot
-# pca.plot0 <- as_tibble(res.pca$ind$coord, rownames="id") %>% 
-#   left_join(scores.table, by="id") %>% 
-#   mutate(outlier=ifelse(outlier==1, TRUE, FALSE)) %>% 
-#   mutate(log_p=round(-log10(1-p), digits = 3)) %>% 
-#   mutate(labels=ifelse(outlier==TRUE, paste(id, p, sep="\n"), "")) %>% 
-#   ggplot(aes(x = Dim.1, y = Dim.2))+
-#   geom_point(aes(color = group, size = log_p, shape = outlier)) +
-#   geom_text_repel(aes(label=labels)) +
-#   labs(title=paste0("PCA (all genes & all samples): ", dataid), 
-#        subtitle = paste0("Norm. Gamma: ", round(pca.valid$pearsongamma, 2), 
-#                          ", Dunn index: ", round(pca.valid$dunn, 2)) ) + 
-#   guides(size=FALSE) +
-#   theme_minimal() + 
-#   theme(panel.background = element_rect(fill = "white", colour = "grey50"))
-# 
-# pca.valid0 <- pca.valid
 
 # PCA PLOT FOR ALL GENES BUT NO OUTLIER SAMPLES
-# ------------------------------------------------------------------------------
+# ______________________________________________________________________________
 if(ncol(d)>5){
   norm.table <- as.data.frame(d %>% dplyr::select(-cor) %>% column_to_rownames("geneid"))
 #  pca.table <- log2(norm.table[which(apply(norm.table, 1, var) != 0), ]+0.00000001)
   pca.table <- norm.table[which(apply(norm.table, 1, var) != 0), ]
-  pca.table.ids <- rownames(pca.table)
-  #pca.table.symbols <- ensembldb::select(EnsDb.Hsapiens.v86, 
-  #                                       keys=pca.table.ids, 
-  #                                       keytype = "GENEID", 
-  #                                       columns = c("SYMBOL","GENEID"))
-  pca.table.symbols <- merge(data.frame(GENEID=pca.table.ids), 
-                             pca.table.symbols2geneid, 
-                             all.x=TRUE)$SYMBOL
-  rownames(pca.table) <- paste(pca.table.symbols, pca.table.ids, sep="_")
+  pca.table <- pca.table %>% 
+    rownames_to_column(var="gene_id_ver") %>% 
+    left_join(ensembl_ids_full %>% select(gene_id_ver, gene_name) %>% distinct(), by="gene_id_ver") %>% 
+    mutate(rowname=paste(gene_name, gene_id_ver, sep = "_")) %>% 
+    column_to_rownames() %>%
+    select(-gene_id_ver, -gene_name)
+  
+  # pca.table.ids <- rownames(pca.table)
+  # #pca.table.symbols <- ensembldb::select(EnsDb.Hsapiens.v86, 
+  # #                                       keys=pca.table.ids, 
+  # #                                       keytype = "GENEID", 
+  # #                                       columns = c("SYMBOL","GENEID"))
+  # pca.table.symbols <- merge(data.frame(GENEID=pca.table.ids), 
+  #                            pca.table.symbols2geneid, 
+  #                            all.x=TRUE)$SYMBOL
+  # rownames(pca.table) <- paste(pca.table.symbols, pca.table.ids, sep="_")
   pca.table <- t(pca.table)
   res.pca <- PCA(pca.table, scale.unit = TRUE, ncp = 5, graph = FALSE)
   plots_and_valid <- PCA_plots(res.pca, paste0("PCA (all genes, ", n.outliers, " outlier(s) removed):"), control.name, scores.table, design_bias=dataset.p.group.cor)
@@ -434,44 +545,9 @@ if(ncol(d)>5){
   pca.plot1      <- ggplot()
   pca.valid1     <- ggplot()
 }
-  
-
-# var <- get_pca_var(res.pca)
-# 
-# # Screeplot
-# scree.plot1 <- fviz_eig(res.pca, addlabels = TRUE, rotate=T)
-# # Contributions of variables to PC1
-# contrib1.plot1 <- fviz_contrib(res.pca, choice = "var", axes = 1, top = 20, rotate=T)
-# # Contributions of variables to PC2
-# contrib2.plot1 <- fviz_contrib(res.pca, choice = "var", axes = 2, top = 20, rotate=T)
-# # pca and clustering validation indices
-# res.pca.enriched.table <-  as_tibble(res.pca$ind$coord, rownames="id") %>% 
-#   left_join(scores.table, by="id") %>% 
-#   mutate(outlier=ifelse(outlier==1, TRUE, FALSE)) %>% 
-#   mutate(log_p=round(-log10(1-p), digits = 3)) %>% 
-#   mutate(labels=ifelse(outlier==TRUE, paste(id, p, sep="\n"), "")) %>% 
-#   column_to_rownames(var="id")
-# res.pca.enriched.dist <- dist(res.pca.enriched.table[, c("Dim.1", "Dim.2")])
-# clustering.labels <- ifelse(res.pca.enriched.table$group==control.name, 1, 2)
-# pca.valid <- cluster.stats(res.pca.enriched.dist, clustering.labels)
-# # pca plot
-# pca.plot1 <- as_tibble(res.pca$ind$coord, rownames="id") %>% 
-#   left_join(scores.noout.table, by="id") %>% 
-#   mutate(log_p=round(-log10(1-p), digits = 3)) %>% 
-#   ggplot(aes(x = Dim.1, y = Dim.2))+
-#   geom_point(aes(color = group, size = log_p)) +
-#   geom_text_repel(aes(label = paste(id, p, sep="\n")))+
-#   labs(title=paste0("PCA (all genes, ", n.outliers, " outlier(s) removed):", dataid), 
-#        subtitle = paste0("Norm. Gamma: ", round(pca.valid$pearsongamma, 2),  
-#                          ", Dunn index: ", round(pca.valid$dunn, 2)) ) + 
-#   guides(size=FALSE) +
-#   theme_minimal() + 
-#   theme(panel.background = element_rect(fill = "white", colour = "grey50"))
-# 
-# pca.valid1 <- pca.valid
 
 # PCA PLOT OF NON CORRELATED GENES
-# ------------------------------------------------------------------------------
+# ______________________________________________________________________________
 dtmp <- d %>% dplyr::select(-cor)
 dtmp$cor <- cor_coef_noout
 cutoffs.c1 <- quantile(dtmp$cor, probs=c(cutoff_quant, 1-cutoff_quant), na.rm=T)
@@ -495,11 +571,17 @@ if(ncol(d)>5){
  
 #  pca.table <- log2(norm.table[which(apply(norm.table, 1, var) != 0), ]+0.00000001)
   pca.table <- norm.table[which(apply(norm.table, 1, var) != 0), ]
-  pca.table.ids <- rownames(pca.table)
-  pca.table.symbols <- merge(data.frame(GENEID=pca.table.ids), 
-                             pca.table.symbols2geneid, 
-                            all.x=TRUE)$SYMBOL
-  rownames(pca.table) <- paste(pca.table.symbols, pca.table.ids, sep="_")
+  pca.table <- pca.table %>% 
+    rownames_to_column(var="gene_id_ver") %>% 
+    left_join(ensembl_ids_full %>% select(gene_id_ver, gene_name) %>% distinct(), by="gene_id_ver") %>% 
+    mutate(rowname=paste(gene_name, gene_id_ver, sep = "_")) %>% 
+    column_to_rownames() %>%
+    select(-gene_id_ver, -gene_name)
+  # pca.table.ids <- rownames(pca.table)
+  # pca.table.symbols <- merge(data.frame(GENEID=pca.table.ids), 
+  #                            pca.table.symbols2geneid, 
+  #                           all.x=TRUE)$SYMBOL
+  # rownames(pca.table) <- paste(pca.table.symbols, pca.table.ids, sep="_")
   pca.table <- t(pca.table)
   res.pca <- PCA(pca.table, scale.unit = TRUE, ncp = 5, graph = FALSE)
   plot.title <- paste0("PCA (", n.filtered.out.genes, " (",n.pos.cor.genes, "+", n.neg.cor.genes, ") genes and ", n.outliers, " outlier(s) removed): ", dataid)
@@ -518,41 +600,9 @@ if(ncol(d)>5){
 }
 rm(dtmp)
 
-# var <- get_pca_var(res.pca)
-# # Screeplot
-# scree.plot2 <- fviz_eig(res.pca, addlabels = TRUE, rotate=T)
-# # Contributions of variables to PC1
-# contrib1.plot2 <- fviz_contrib(res.pca, choice = "var", axes = 1, top = 20, rotate=T)
-# # Contributions of variables to PC2
-# contrib2.plot2 <- fviz_contrib(res.pca, choice = "var", axes = 2, top = 20, rotate=T)
-# # pca and clustering validation indices
-# res.pca.enriched.table <-  as_tibble(res.pca$ind$coord, rownames="id") %>% 
-#   left_join(scores.table, by="id") %>% 
-#   mutate(outlier=ifelse(outlier==1, TRUE, FALSE)) %>% 
-#   mutate(log_p=round(-log10(1-p), digits = 3)) %>% 
-#   mutate(labels=ifelse(outlier==TRUE, paste(id, p, sep="\n"), "")) %>% 
-#   column_to_rownames(var="id")
-# res.pca.enriched.dist <- dist(res.pca.enriched.table[, c("Dim.1", "Dim.2")])
-# clustering.labels <- ifelse(res.pca.enriched.table$group==control.name, 1, 2)
-# pca.valid <- cluster.stats(res.pca.enriched.dist, clustering.labels)
-# # pca plot
-# pca.plot2 <- as_tibble(res.pca$ind$coord, rownames="id") %>% 
-#   left_join(scores.noout.table, by="id") %>% 
-#   mutate(log_p=round(-log10(1-p), digits = 3)) %>% 
-#   ggplot(aes(x = Dim.1, y = Dim.2))+
-#   geom_point(aes(color = group, size = log_p)) +
-#   geom_text_repel(aes(label = paste(id, p, sep="\n")))+
-#   labs(title=paste0("PCA (", n.filtered.genes, " (",n.pos.cor.genes, "+", n.neg.cor.genes, ") genes and ", n.outliers, " outlier(s) removed): ", dataid), 
-#        subtitle = paste0("Norm. Gamma: ", round(pca.valid$pearsongamma, 2), 
-#                          ", Dunn index: ", round(pca.valid$dunn, 2)) ) + 
-#   guides(size=FALSE) +
-#   theme_minimal() + 
-#   theme(panel.background = element_rect(fill = "white", colour = "grey50"))
-# 
-# pca.valid2 <- pca.valid
 
 # PCA PLOT USING RANDOM GENE SELECTION
-# ------------------------------------------------------------------------------
+# ______________________________________________________________________________
 if(ncol(d)>5){
   random_ids <- sample(d[!zerovar.genes, ]$geneid, n.filtered.genes)
   norm.table <- as.data.frame(d %>% 
@@ -562,19 +612,25 @@ if(ncol(d)>5){
   )
 #  pca.table <- log2(norm.table[which(apply(norm.table, 1, var) != 0), ]+0.00000001)
   pca.table <- norm.table[which(apply(norm.table, 1, var) != 0), ]
-  #pca.table <- pca.table %>% 
-  #  rownames_to_column() %>% 
-  #  sample_n(dim(pca.table)[1] - n.filtered.genes) %>% 
-  #  column_to_rownames()
-  pca.table.ids <- rownames(pca.table)
-  #pca.table.symbols <- ensembldb::select(EnsDb.Hsapiens.v86, 
-  #                                       keys=pca.table.ids, 
-  #                                       keytype = "GENEID", 
-  #                                       columns = c("SYMBOL","GENEID"))
-  pca.table.symbols <- merge(data.frame(GENEID=pca.table.ids), 
-                            pca.table.symbols2geneid, 
-                            all.x=TRUE)$SYMBOL
-  rownames(pca.table) <- paste(pca.table.symbols, pca.table.ids, sep="_")
+  pca.table <- pca.table %>% 
+    rownames_to_column(var="gene_id_ver") %>% 
+    left_join(ensembl_ids_full %>% select(gene_id_ver, gene_name) %>% distinct(), by="gene_id_ver") %>% 
+    mutate(rowname=paste(gene_name, gene_id_ver, sep = "_")) %>% 
+    column_to_rownames() %>%
+    select(-gene_id_ver, -gene_name)
+  # #pca.table <- pca.table %>% 
+  # #  rownames_to_column() %>% 
+  # #  sample_n(dim(pca.table)[1] - n.filtered.genes) %>% 
+  # #  column_to_rownames()
+  # pca.table.ids <- rownames(pca.table)
+  # #pca.table.symbols <- ensembldb::select(EnsDb.Hsapiens.v86, 
+  # #                                       keys=pca.table.ids, 
+  # #                                       keytype = "GENEID", 
+  # #                                       columns = c("SYMBOL","GENEID"))
+  # pca.table.symbols <- merge(data.frame(GENEID=pca.table.ids), 
+  #                           pca.table.symbols2geneid, 
+  #                           all.x=TRUE)$SYMBOL
+  # rownames(pca.table) <- paste(pca.table.symbols, pca.table.ids, sep="_")
   pca.table <- t(pca.table)
   res.pca <- PCA(pca.table, scale.unit = TRUE, ncp = 5, graph = FALSE)
   plot.title <- paste0("PCA (", n.filtered.out.genes, " random genes and ", n.outliers, " outlier(s) removed): ", dataid)
@@ -594,7 +650,7 @@ if(ncol(d)>5){
 
 
 # MEAN AND SD OF PCA CLUSTERING QUALITY USING RANDOM GENE SELECTION
-# ------------------------------------------------------------------------------
+# ______________________________________________________________________________
 if(ncol(d)>5){
 
 dunn1.rand.values <- c()
@@ -609,11 +665,17 @@ for(i in 1:3){
       dplyr::select(-cor)
   )
   pca.table <- norm.table[which(apply(norm.table, 1, var) != 0), ]
-  pca.table.ids <- rownames(pca.table)
-  pca.table.symbols <- merge(data.frame(GENEID=pca.table.ids), 
-                            pca.table.symbols2geneid, 
-                            all.x=TRUE)$SYMBOL
-  rownames(pca.table) <- paste(pca.table.symbols, pca.table.ids, sep="_")
+  pca.table <- pca.table %>% 
+    rownames_to_column(var="gene_id_ver") %>% 
+    left_join(ensembl_ids_full %>% select(gene_id_ver, gene_name) %>% distinct(), by="gene_id_ver") %>% 
+    mutate(rowname=paste(gene_name, gene_id_ver, sep = "_")) %>% 
+    column_to_rownames() %>%
+    select(-gene_id_ver, -gene_name)
+  # pca.table.ids <- rownames(pca.table)
+  # pca.table.symbols <- merge(data.frame(GENEID=pca.table.ids), 
+  #                           pca.table.symbols2geneid, 
+  #                           all.x=TRUE)$SYMBOL
+  # rownames(pca.table) <- paste(pca.table.symbols, pca.table.ids, sep="_")
   pca.table <- t(pca.table)
   res.pca <- PCA(pca.table, scale.unit = TRUE, ncp = 5, graph = FALSE)
   plot.title <- paste0("PCA (", n.filtered.out.genes, " random genes and ", n.outliers, " outlier(s) removed): ", dataid)
@@ -631,29 +693,29 @@ write_tsv(rand.clustering.table, file.path(out.dir.path, paste0(dataid, '.random
 
 
 # SAVE PCA PLOTS AND GENE LISTS
-# ------------------------------------------------------------------------------
-capture.output(suppressWarnings(suppressMessages(
+# ______________________________________________________________________________
+# capture.output(suppressWarnings(suppressMessages(
   ggexport(plotlist = list(scree.plot0, scree.plot1, scree.plot2, scree.plot3, 
                            contrib1.plot0, contrib1.plot1, contrib1.plot2, contrib1.plot3, 
                            contrib2.plot0, contrib2.plot1, contrib2.plot2, contrib2.plot3), 
            nrow = 3, ncol = 4, width=7200, height=7200, res=300, verbose=F,
-           filename = file.path(out.dir.path, paste0(dataid, '.pca_diag.pdf'))
+           filename = file.path(out.dir.path, paste0(dataid, '.pca_diag.png'))
            )
-)),  file='/dev/null')
+# )),  file='/dev/null')
 
-capture.output(suppressWarnings(suppressMessages(
+# capture.output(suppressWarnings(suppressMessages(
   ggexport(plotlist = list(pca.plot0, pca.plot1), 
            nrow = 1, ncol = 2, width=3600, height=1800, res=300, verbose=FALSE,
-           filename=file.path(out.dir.path, paste0(dataid, '.pca.pdf'))
+           filename=file.path(out.dir.path, paste0(dataid, '.pca.png'))
   )
-)),  file='/dev/null')
+# )),  file='/dev/null')
 
-capture.output(suppressWarnings(suppressMessages(
+# capture.output(suppressWarnings(suppressMessages(
   ggexport(plotlist = list(pca.plot2, pca.plot3), 
            nrow = 1, ncol = 2, width=4800, height=2400, res=300, verbose=FALSE,
-           filename=file.path(out.dir.path, paste0(dataid, '.pca.genesout.pdf'))
+           filename=file.path(out.dir.path, paste0(dataid, '.pca.genesout.png'))
   )
-)),  file='/dev/null')
+# )),  file='/dev/null')
 
 dcut2 <- d %>% dplyr::filter(cor<=cutoffs[1] | cor>=cutoffs[2])
 if(length(dcut2$geneid>0)){
@@ -669,9 +731,10 @@ d0tmp$cor <- cor_coef
 write_tsv(d0tmp, file.path(out.dir.path, paste0(dataid, '.cor_genes.tsv')))
 rm(d0tmp)
 
-            
+
+
 # CORRELATION VS DISEASE VS DEG
-# ------------------------------------------------------------------------------
+# ______________________________________________________________________________
 # yaml.file <- yaml.load_file(file.path(projects.dir, dataid, "configs", "config_main.yaml"))
 #dea.table <- read.table(dea.path, header = TRUE, row.names = 1)
 #dea.table <- as_tibble(dea.table, rownames="geneid")
@@ -679,6 +742,9 @@ rm(d0tmp)
 # Merge tables and bin correlations
 tags <- c("[-1|-0.8)","[-0.8|-0.6)", "[-0.6|-0.4)", "[-0.4|-0.2)", "[-0.2|0)", 
           "[0|0.2)","[0.2|0.4)", "[0.4|0.6)","[0.6|0.8)", "[0.8|1)")
+
+# dcor %>% print(n=20)
+
 dcor <- d %>% 
   dplyr::select(geneid, cor) %>%
   dplyr::filter(!is.na(cor)) %>% 
@@ -707,7 +773,21 @@ dcor <- d %>%
   mutate(cor_bin=factor(cor_bin, levels = tags, ordered = FALSE)) %>% 
   mutate(disease_gene=ifelse(gs2d_fdr<=0.05 & gs2d_fc>=2, TRUE, FALSE)) %>%
   mutate(disease_gene=ifelse(is.na(disease_gene), FALSE, disease_gene)) %>% 
-  mutate(diff_gene=padj<=0.05 & abs(log2FoldChange)>=1 )
+  # mutate(diff_gene=padj<=0.05 & abs(log2FoldChange)>=1 )
+  mutate(diff_gene=if_else(padj<=0.05, TRUE, FALSE)) %>% 
+  mutate(diff_gene=ifelse(is.na(diff_gene), FALSE, diff_gene))
+  
+
+# sort(dcor$padj, decreasing = T)[1:10]
+# sum(is.na(dcor$geneid))
+# sum(is.na(dcor$padj))
+# sum(!is.na(dcor$padj))
+# 
+# dcor %>% 
+#   filter(is.na(padj))
+
+# sum(dcor$disease_gene)
+# sum(dcor$diff_gene)
 
 dcor$gs2d_fdr[dcor$gs2d_fdr==0] <-rnorm(1, min(dcor$gs2d_fdr[dcor$gs2d_fdr>0], na.rm=T), min(dcor$gs2d_fdr[dcor$gs2d_fdr>0], na.rm=T)/10)
 dcor$padj[dcor$padj==0] <-rnorm(1, min(dcor$padj[dcor$padj>0], na.rm=T), min(dcor$padj[dcor$padj>0], na.rm=T)/10)
@@ -726,40 +806,40 @@ cor.q.fdr.neg.disgenes <- NA
 
 # Differential statistics on all genes
 if(dim(dcor)[1]>0){
-  cor.q.fdr.allgenes <- cor(abs(dcor$cor), dcor$padj, method="pearson", use="pairwise.complete.obs")
+  cor.q.fdr.allgenes <- cor(abs(dcor$cor), dcor$padj, method=QI_METHOD, use="pairwise.complete.obs")
 }
 if(dim(dcor %>% dplyr::filter(cor>0))[1]>0){
-  cor.q.fdr.pos.allgenes <- cor(abs((dcor %>% dplyr::filter(cor>0))$cor), (dcor %>% dplyr::filter(cor>0))$padj, method="pearson", use="pairwise.complete.obs")
+  cor.q.fdr.pos.allgenes <- cor(abs((dcor %>% dplyr::filter(cor>0))$cor), (dcor %>% dplyr::filter(cor>0))$padj, method=QI_METHOD, use="pairwise.complete.obs")
 }
 if(dim(dcor %>% dplyr::filter(cor<0))[1]>0){
-  cor.q.fdr.neg.allgenes <- cor(abs((dcor %>% dplyr::filter(cor<0))$cor), (dcor %>% dplyr::filter(cor<0))$padj, method="pearson", use="pairwise.complete.obs")
+  cor.q.fdr.neg.allgenes <- cor(abs((dcor %>% dplyr::filter(cor<0))$cor), (dcor %>% dplyr::filter(cor<0))$padj, method=QI_METHOD, use="pairwise.complete.obs")
 }
 
 # Differential genes
 if(dim(dcor %>% dplyr::filter(diff_gene==TRUE))[1]>0){
-  cor.q.fdr.difgenes <- cor(abs((dcor %>% dplyr::filter(diff_gene==TRUE))$cor), -log10((dcor %>% dplyr::filter(diff_gene==TRUE))$padj), method="pearson", use="pairwise.complete.obs")
+  cor.q.fdr.difgenes <- cor(abs((dcor %>% dplyr::filter(diff_gene==TRUE))$cor), -log10((dcor %>% dplyr::filter(diff_gene==TRUE))$padj), method=QI_METHOD, use="pairwise.complete.obs")
 }
 if(dim(dcor %>% dplyr::filter(cor>0 & diff_gene==TRUE))[1]>0){
-  cor.q.fdr.pos.difgenes <- cor(abs((dcor %>% dplyr::filter(cor>0 & diff_gene==TRUE))$cor), -log10((dcor %>% dplyr::filter(cor>0 & diff_gene==TRUE))$padj), method="pearson", use="pairwise.complete.obs")
+  cor.q.fdr.pos.difgenes <- cor(abs((dcor %>% dplyr::filter(cor>0 & diff_gene==TRUE))$cor), -log10((dcor %>% dplyr::filter(cor>0 & diff_gene==TRUE))$padj), method=QI_METHOD, use="pairwise.complete.obs")
 }
 if(dim(dcor %>% dplyr::filter(cor<0 & diff_gene==TRUE))[1]>0){
-  cor.q.fdr.neg.difgenes <- cor(abs((dcor %>% dplyr::filter(cor<0 & diff_gene==TRUE))$cor), -log10((dcor %>% dplyr::filter(cor<0 & diff_gene==TRUE))$padj), method="pearson", use="pairwise.complete.obs")
+  cor.q.fdr.neg.difgenes <- cor(abs((dcor %>% dplyr::filter(cor<0 & diff_gene==TRUE))$cor), -log10((dcor %>% dplyr::filter(cor<0 & diff_gene==TRUE))$padj), method=QI_METHOD, use="pairwise.complete.obs")
 }
 
 # Disease genes
 if(dim(dcor %>% dplyr::filter(disease_gene==TRUE))[1]>0){
-  cor.q.fdr.disgenes <- cor(abs((dcor %>% dplyr::filter(disease_gene==TRUE))$cor), (dcor %>% dplyr::filter(disease_gene==TRUE))$gs2d_fdr, method="pearson", use="pairwise.complete.obs")
+  cor.q.fdr.disgenes <- cor(abs((dcor %>% dplyr::filter(disease_gene==TRUE))$cor), (dcor %>% dplyr::filter(disease_gene==TRUE))$gs2d_fdr, method=QI_METHOD, use="pairwise.complete.obs")
 }
 if(dim(dcor %>% dplyr::filter(cor>0 & disease_gene==TRUE))[1]>0){
-  cor.q.fdr.pos.disgenes <- cor(abs((dcor %>% dplyr::filter(cor>0 & disease_gene==TRUE))$cor), (dcor %>% dplyr::filter(cor>0 & disease_gene==TRUE))$gs2d_fdr, method="pearson", use="pairwise.complete.obs")
+  cor.q.fdr.pos.disgenes <- cor(abs((dcor %>% dplyr::filter(cor>0 & disease_gene==TRUE))$cor), (dcor %>% dplyr::filter(cor>0 & disease_gene==TRUE))$gs2d_fdr, method=QI_METHOD, use="pairwise.complete.obs")
 }
 if(dim(dcor %>% dplyr::filter(cor<0 & disease_gene==TRUE))[1]>0){
-  cor.q.fdr.neg.disgenes <- cor(abs((dcor %>% dplyr::filter(cor<0 & disease_gene==TRUE))$cor), (dcor %>% dplyr::filter(cor<0 & disease_gene==TRUE))$gs2d_fdr, method="pearson", use="pairwise.complete.obs")
+  cor.q.fdr.neg.disgenes <- cor(abs((dcor %>% dplyr::filter(cor<0 & disease_gene==TRUE))$cor), (dcor %>% dplyr::filter(cor<0 & disease_gene==TRUE))$gs2d_fdr, method=QI_METHOD, use="pairwise.complete.obs")
 }
 
 
 # QUALITY VS ALL GENES
-# ------------------------------------------------------------------------------
+# ______________________________________________________________________________
 # General histogram
 cor.genes.plot <- dcor %>% 
   group_by(cor_bin) %>% 
@@ -798,7 +878,7 @@ cor.fc.plot <- dcor %>%
 
 
 # cor vs dea pval
-# cor.q.fdr.allgenes <- cor(abs(dcor$cor), dcor$padj, method="pearson", use="pairwise.complete.obs")
+# cor.q.fdr.allgenes <- cor(abs(dcor$cor), dcor$padj, method=QI_METHOD, use="pairwise.complete.obs")
 # cor.pval.plot <- dcor %>% 
 #   filter(!is.na(padj)) %>% 
 #   # mutate(padj=ifelse(padj<pval_floor, pval_floor, padj)) %>% 
@@ -832,8 +912,9 @@ cor.points.plot <- dcor %>%
        y="-Log10 of False Discovery Rate (FDR)") +
   theme_minimal()  
 
+
 # QUALITY VS DISEASE GENES
-# ------------------------------------------------------------------------------
+# ______________________________________________________________________________
 # cor vs disease genes
 cor.dis.plot <- dcor %>% 
   group_by(cor_bin) %>% 
@@ -858,7 +939,7 @@ cor.dis.perc.plot <- dcor %>%
   geom_text(aes(label=label), position=position_dodge(width=0.9), vjust=-0.25) +
   theme_minimal()   
 
-# cor.q.fdr.disgenes <- cor(abs((dcor %>% dplyr::filter(disease_gene==TRUE))$cor), (dcor %>% dplyr::filter(disease_gene==TRUE))$gs2d_fdr, method="pearson", use="pairwise.complete.obs")
+# cor.q.fdr.disgenes <- cor(abs((dcor %>% dplyr::filter(disease_gene==TRUE))$cor), (dcor %>% dplyr::filter(disease_gene==TRUE))$gs2d_fdr, method=QI_METHOD, use="pairwise.complete.obs")
 # missing_categories <- setdiff(tags, unique((dcor %>% dplyr::filter(disease_gene==TRUE))$cor_bin))
 # missing_categ_rows <- tibble(cor_bin=missing_categories, gs2d_fdr=1, disease_gene=TRUE)
 # dcor2 <- rbind(dcor %>% select(cor_bin, gs2d_fdr, disease_gene), missing_categ_rows)
@@ -894,8 +975,9 @@ cor.dis.points.plot <- dcor %>%
        y="-Log10 of False Discovery Rate (FDR)") +
   theme_minimal()  
 
+
 # QUALITY VS DIFFERENTIALLY EXPRESSED GENES
-# ------------------------------------------------------------------------------
+# ______________________________________________________________________________
 # cor vs dea genes
 cor.deg.plot <- dcor %>%
   dplyr::filter(!is.na(padj)) %>% 
@@ -922,7 +1004,7 @@ cor.deg.perc.plot <- dcor %>%
   geom_text(aes(label=label), position=position_dodge(width=0.9), vjust=-0.25) +
   theme_minimal()   
 
-# cor.q.fdr.difgenes <- cor(abs((dcor %>% dplyr::filter(diff_gene==TRUE))$cor), -log10((dcor %>% dplyr::filter(diff_gene==TRUE))$padj), method="pearson", use="pairwise.complete.obs")
+# cor.q.fdr.difgenes <- cor(abs((dcor %>% dplyr::filter(diff_gene==TRUE))$cor), -log10((dcor %>% dplyr::filter(diff_gene==TRUE))$padj), method=QI_METHOD, use="pairwise.complete.obs")
 # missing_categories <- setdiff(tags, unique((dcor %>% dplyr::filter(diff_gene==TRUE))$cor_bin))
 # missing_categ_rows <- tibble(cor_bin=missing_categories, padj=1, diff_gene=TRUE)
 # dcor2 <- rbind(dcor %>% select(cor_bin, padj, diff_gene), missing_categ_rows)
@@ -960,19 +1042,19 @@ cor.deg.points.plot <- dcor %>%
        y="-Log10 of False Discovery Rate (FDR)") +
   theme_minimal()  
 
-capture.output(suppressWarnings(suppressMessages(
+# capture.output(suppressWarnings(suppressMessages(
   ggexport(plotlist = list(cor.genes.plot, cor.dis.plot,      cor.deg.plot, 
                            cor.fc.plot,    cor.dis.perc.plot, cor.deg.perc.plot, 
                            cor.points.plot,  cor.dis.points.plot,  cor.deg.points.plot), 
            # cor.pval.plot,  cor.dis.box.plot,  cor.deg.box.plot), 
            nrow = 3, ncol = 3, width=6200, height=4800, res=300, verbose=F,
-           filename = file.path(out.dir.path, paste0(dataid, '.cor.pdf'))
+           filename = file.path(out.dir.path, paste0(dataid, '.cor.png'))
            )
-)), file='/dev/null')
+# )), file='/dev/null')
 
 
 # QUALITY VS BATCH
-# ------------------------------------------------------------------------------
+# ______________________________________________________________________________
 
 # cor.p.batch <- NA
 pval.p.batch <- NA
@@ -1026,7 +1108,7 @@ if(!is.na(sum(scores.table$batch)) & length(unique(scores.table$batch))>1){
   capture.output(suppressWarnings(suppressMessages(
     ggexport(cor.p.batch.plot, nrow = 1, ncol = 1, width=2400, height=2400, 
              res=300, verbose=F, 
-             filename = file.path(out.dir.path, paste0(dataid, '.batch.pdf'))
+             filename = file.path(out.dir.path, paste0(dataid, '.batch.png'))
     )
   )), file='/dev/null')
   
@@ -1040,7 +1122,7 @@ if(!is.na(sum(scores.table$batch)) & length(unique(scores.table$batch))>1){
       ) 
       , nrow = 1, ncol = 1, width=4800, height=4800, 
       res=300, verbose=F, 
-      filename = file.path(out.dir.path, paste0(dataid, '.diag.batch.pdf'))
+      filename = file.path(out.dir.path, paste0(dataid, '.diag.batch.png'))
     )
   )), file='/dev/null')
   
@@ -1049,10 +1131,11 @@ if(!is.na(sum(scores.table$batch)) & length(unique(scores.table$batch))>1){
 }
 
 # TABLE OF STATISTICS
-# ------------------------------------------------------------------------------
+# ______________________________________________________________________________
 n.samples <- nrow(scores.table)
 if(ncol(d)>5){ dataset.stats.table <- data.frame(dataset=dataid,
                                  p_group_cor=dataset.p.group.cor,
+                                 p_group_test=dataset.p.group.test, # !!!!!!!!!!!!!!!!!!!!!!!
                                  p_group_cor_batched=dataset.p.group.cor.batched,
                                  p_bases_cor=dataset.p.bases.cor, 
                                  p_bases_cor_ctrl=dataset.p.bases.ctrol.cor,
@@ -1092,6 +1175,7 @@ if(ncol(d)>5){ dataset.stats.table <- data.frame(dataset=dataid,
                                  n_degs_fdr_only=n.degs.FdrOnly)
 }else{dataset.stats.table <- data.frame(dataset=dataid,
                                     p_group_cor=dataset.p.group.cor, 
+                                    p_group_test=dataset.p.group.test, # !!!!! => OK
                                     p_group_cor_batched=dataset.p.group.cor.batched,
                                     p_bases_cor=dataset.p.bases.cor, 
                                     p_bases_cor_ctrl=dataset.p.bases.ctrol.cor,
@@ -1156,23 +1240,23 @@ gsea_analysis <- function(gene_rank_table,
                           plot.cutoff=0.15,
                           genesets) {
   
-#   gene_rank_table = pos_genes
-#   out.file.prefix="pos.kegg"
-#   filename="pos"
-#   out.dir=out.dir.path
-#   top_n_to_plot=40
-#   table.cutoff=1
-#   plot.cutoff=0.15
-#   genesets = msigdb.kegg.path
+  # gene_rank_table = pos_genes
+  # out.file.prefix="pos.kegg"
+  # out.dir=out.dir.path
+  # top_n_to_plot=40
+  # table.cutoff=1
+  # plot.cutoff=0.15
+  # genesets = msigdb.kegg.path
 
   path0 <- file.path(out.dir, paste0(out.file.prefix, ".gsea.sets.tsv"))
-  path1 <- file.path(out.dir, paste0(out.file.prefix, ".gsea.plot.pdf"))
+  path1 <- file.path(out.dir, paste0(out.file.prefix, ".gsea.plot.png"))
   path2 <- file.path(out.dir, paste0(out.file.prefix, ".gsea.genes.annot.tsv"))
   
 #  ranks <- deframe(gene_rank_table)
   ranks <- deframe(gene_rank_table[!duplicated(gene_rank_table$symbol),])
   pathways <- gmtPathways(genesets)
-  fgseaRes <- fgsea(pathways=pathways, stats=ranks, nperm=1000) # Examples of fgsea at https://stephenturner.github.io/deseq-to-fgsea/
+  # fgseaRes <- fgsea(pathways=pathways, stats=ranks, nperm=1000) # Examples of fgsea at https://stephenturner.github.io/deseq-to-fgsea/
+  fgseaRes <- fgseaSimple(pathways=pathways, stats=ranks, nperm=1000, scoreType = "pos") # Examples of fgsea at https://stephenturner.github.io/deseq-to-fgsea/
   fgseaResTidy <- fgseaRes %>%
     as_tibble() %>%
     dplyr::select(-leadingEdge, -ES, -nMoreExtreme) %>%
@@ -1206,15 +1290,207 @@ gsea_analysis <- function(gene_rank_table,
     }
 }
 
-pos_genes <- dcor %>% ungroup() %>% select(symbol, log2FoldChange) %>% filter(log2FoldChange>0)
-neg_genes <- dcor %>% ungroup() %>% select(symbol, log2FoldChange) %>% filter(log2FoldChange<0) %>% mutate(log2FoldChange=abs(log2FoldChange))
+pos_genes <- dcor %>% 
+  ungroup() %>% 
+  filter(padj<0.05) %>% 
+  select(symbol, log2FoldChange) %>% 
+  filter(log2FoldChange>0) %>% 
+  group_by(symbol) %>% 
+  slice_max(order_by=log2FoldChange, n=1, with_ties = FALSE) %>% 
+  ungroup() %>% 
+  arrange(desc(log2FoldChange))
 
-gsea_analysis(pos_genes, "pos.kegg", out.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.kegg.path)
-gsea_analysis(neg_genes, "neg.kegg", out.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.kegg.path)
-gsea_analysis(pos_genes, "pos.posi", out.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.posi.path)
-gsea_analysis(neg_genes, "neg.posi", out.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.posi.path)
-gsea_analysis(pos_genes, "pos.gs2d", out.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.gs2d.path)
-gsea_analysis(neg_genes, "neg.gs2d", out.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.gs2d.path)
+neg_genes <- dcor %>% 
+  ungroup() %>% 
+  filter(padj<0.05) %>% 
+  select(symbol, log2FoldChange) %>% 
+  filter(log2FoldChange<0) %>% 
+  mutate(log2FoldChange=abs(log2FoldChange)) %>% 
+  group_by(symbol) %>% 
+  slice_max(order_by=log2FoldChange, n=1, with_ties = FALSE) %>% 
+  ungroup() %>% 
+  arrange(desc(log2FoldChange))
+posneg_genes <- bind_rows(pos_genes, neg_genes) %>% arrange(desc(log2FoldChange))
 
 
+# gsea.table.cutoff <- 0.5
+if(nrow(pos_genes)>50){gsea_analysis(pos_genes, "posLFC.kegg", out.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.kegg.path)}
+if(nrow(neg_genes)>50){gsea_analysis(neg_genes, "negLFC.kegg", out.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.kegg.path)}
+if(nrow(pos_genes)>50){gsea_analysis(pos_genes, "posLFC.posi", out.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.posi.path)}
+if(nrow(neg_genes)>50){gsea_analysis(neg_genes, "negLFC.posi", out.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.posi.path)}
+if(nrow(pos_genes)>50){gsea_analysis(pos_genes, "posLFC.gs2d", out.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.gs2d.path)}
+if(nrow(neg_genes)>50){gsea_analysis(neg_genes, "negLFC.gs2d", out.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.gs2d.path)}
+
+if(nrow(posneg_genes)>50){gsea_analysis(posneg_genes, "posnegLFC.kegg", out.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.kegg.path)}
+if(nrow(posneg_genes)>50){gsea_analysis(posneg_genes, "posnegLFC.posi", out.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.posi.path)}
+if(nrow(posneg_genes)>50){gsea_analysis(posneg_genes, "posnegLFC.gs2d", out.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.gs2d.path)}
+
+
+
+# ______________________________________________________________________________
+# ORA FUNCTION
+# ______________________________________________________________________________
+# FUNCTION
+# Computes gene set enrichment analysis (GSEA). If significant results are found:
+# writes results in 2 tables and 1 plot on disk, and returns the plot as ggplot object. 
+#
+# genes: vector of strings as gene symbols (foreground set)
+# universe: vector of strings as gene symbols (background set)
+# out.file.prefix: string - file name prefix (not including file extension)
+# out.dir: output directory
+# top_n_to_plot: max number of enrichment (or gene sets / pathways) terms to plot
+# enrich.cutoff: minumin percentage of pathway genes in the input gene list
+# table.cutoff: Adjusted p-value cutoff to limit output table
+# plot.cutoff: Adjusted p-value cutoff to color enriched terms on plot
+# genesets: local path to MSigDB genesets file (download at https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.0/)
+# create.default.files: if TRUE it creates empty files when the analysis has no significant results, if FALSE it creates non-empty files only for significant results
+
+# RETURNS: ggplot object
+ora_analysis <- function(plot.title="Gene Set Enrichment Analysis",
+                         plot.subtitle="",
+                         genes,
+                         universe,
+                         out.file.prefix="mygsea",
+                         out.dir=".",
+                         top_n_to_plot=40,
+                         table.cutoff=0.15,
+                         plot.cutoff=0.15,
+                         genesets,
+                         path.enrich.cutoff=0.01,
+                         genes.enrich.cutoff=0.1,
+                         create.default.files=FALSE) {
+  
+  #   genes = pos_genes$genes[1:100]
+  #   universe = pos_genes$genes
+  #   out.file.prefix="pos.posi"
+  #   out.dir=out.dir.path
+  #   top_n_to_plot=40
+  #   table.cutoff=gsea.table.cutoff
+  #   plot.cutoff=gsea.plot.cutoff
+  #   genesets = msigdb.posi.path
+  #   path.enrich.cutoff=gsea.pathway.perc.cutoff
+  #   genes.enrich.cutoff=gsea.input.perc.cutoff
+  #   create.default.files=FALSE
+  
+  path0 <- file.path(out.dir, paste0(out.file.prefix, ".gsea.sets.tsv"))
+  path1 <- file.path(out.dir, paste0(out.file.prefix, ".gsea.plot.png"))
+  path2 <- file.path(out.dir, paste0(out.file.prefix, ".gsea.genes.annot.tsv"))
+  pathways <- gmtPathways(genesets)
+  pathways.universe <- unique(unlist(pathways))
+  pathways.universe <- pathways.universe[ pathways.universe %in% universe ]
+  
+  pathways_tibble <- enframe(pathways) %>% 
+    unnest_longer(value)
+  pathways_tibble <- pathways_tibble[ pathways_tibble$value %in% universe, ]
+  pathways_tibble <- pathways_tibble %>%
+    group_by(name) %>%
+    filter(n()>=5)
+  pathways2 <- deframe(pathways_tibble %>% nest(data=c(value)))
+  pathways2 <- lapply(pathways2, function(x) x$value )
+  
+  foraRes <- fora(pathways2, genes , universe)
+  foraResTidy <- foraRes %>%
+    as_tibble() %>%
+    mutate(input_genes=length(genes)) %>%
+    mutate(universe_genes=length(universe)) %>%
+    filter(padj<table.cutoff) %>%
+    filter((overlap/input_genes)>genes.enrich.cutoff) %>%
+    filter((overlap/size)>path.enrich.cutoff) %>%
+    mutate(significant=padj<plot.cutoff) %>%
+    mutate(fold_change= round((overlap/input_genes) / (size/universe_genes), 2)) %>%
+    arrange(desc(fold_change))
+  
+  gsea.plot <- ggplot() +
+    labs(x="Top pathways", y="Fold change",
+         title=paste(plot.title),
+         subtitle=paste(plot.subtitle)
+    ) + theme_void()
+  if(dim(foraResTidy)[1]>0){
+    
+    write_tsv(foraResTidy, path0)
+    
+    gsea.plot <- foraResTidy %>% 
+      filter(padj<plot.cutoff) %>%
+      slice_max(fold_change, n=top_n_to_plot) %>%
+      # ggplot(aes(reorder(pathway, fold_change), fold_change)) +
+      mutate(pathway=str_to_lower(str_wrap(str_replace_all(str_trunc(pathway, 60), "_", " "), 60))) %>% 
+      ggplot(aes(reorder(pathway, fold_change), fold_change)) +
+      geom_col(aes(fill=-log10(padj))) +
+      coord_flip() +
+      labs(x="Top pathways", y="Fold change",
+           title=paste(plot.title),
+           subtitle=paste(plot.subtitle)
+      ) +
+      # theme_minimal(base_size = 10)
+      theme_minimal()
+    ggsave(filename=path1, plot=gsea.plot, width=8, height=8)
+    
+    fgseaGenesAnnot <-  pathways %>%
+      enframe("pathway", "SYMBOL") %>%
+      unnest(cols = c(SYMBOL)) %>%
+      inner_join(data.frame(genes=genes), by=c("SYMBOL"="genes"))  %>%
+      filter(pathway %in% foraResTidy$pathway)
+    write_tsv(fgseaGenesAnnot, path2)
+  } else{
+    if(create.default.files==TRUE){
+      print("quality_correlated_genes.r: no correlated genes passed the cutoff")
+      file.create(path0)
+      file.create(path1)
+      file.create(path2)  
+    }
+  }
+  return(gsea.plot)
+}
+
+# ______________________________________________________________________________
+# ORA ANALYSIS
+# ______________________________________________________________________________
+
+ora.gene.universe <- unique(dcor[!is.na(dcor$baseMean),]$symbol)
+
+pos_genes <- dcor %>% 
+  filter(!is.na(baseMean)) %>% 
+  ungroup() %>% 
+  filter(padj<0.05) %>% 
+  select(symbol, log2FoldChange) %>% 
+  filter(log2FoldChange>0) %>% 
+  mutate(log2FoldChange=abs(log2FoldChange)) %>% 
+  group_by(symbol) %>% 
+  slice_max(order_by=log2FoldChange, n=1, with_ties = FALSE) %>% 
+  ungroup() %>% 
+  arrange(desc(log2FoldChange))
+
+neg_genes <- dcor %>% 
+  filter(!is.na(baseMean)) %>% 
+  ungroup() %>% 
+  filter(padj<0.05) %>% 
+  select(symbol, log2FoldChange) %>% 
+  filter(log2FoldChange<0) %>% 
+  mutate(log2FoldChange=abs(log2FoldChange)) %>% 
+  group_by(symbol) %>% 
+  slice_max(order_by=log2FoldChange, n=1, with_ties = FALSE) %>% 
+  ungroup() %>% 
+  arrange(desc(log2FoldChange))
+posneg_genes <- bind_rows(pos_genes, neg_genes) %>% arrange(desc(log2FoldChange))
+
+
+# fgsea.dir.path
+
+top_pos_genes <- pos_genes$symbol[1:min(gsea.input_genes, nrow(pos_genes))]
+top_neg_genes <- neg_genes$symbol[1:min(gsea.input_genes, nrow(neg_genes))]
+gsea.pos.noBias.hall.plot <- ora_analysis("Hallmark pathways enrichment", "Positively Regulated Genes", top_pos_genes, ora.gene.universe, "fgsea.pos.hall", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.hallmark.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
+gsea.pos.noBias.posi.plot <- ora_analysis("Chromosomes enrichment", "Positively Regulated Genes", top_pos_genes, ora.gene.universe, "fgsea.pos.posi", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.posi.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff, create.default.files=F)
+gsea.pos.noBias.cure.plot <- ora_analysis("Curated pathways enrichment", "Positively Regulated Genes", top_pos_genes, ora.gene.universe, "fgsea.pos.cure", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.curated.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff, create.default.files=T)
+gsea.pos.noBias.path.plot <- ora_analysis("Canonical pathways enrichment", "Positively Regulated Genes", top_pos_genes, ora.gene.universe, "fgsea.pos.path", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.curated.cp.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff, create.default.files=F)
+gsea.pos.noBias.regu.plot <- ora_analysis("Regulatory target genes enrichment", "Positively Regulated Genes", top_pos_genes, ora.gene.universe, "fgsea.pos.regu", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.regulatory.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
+gsea.pos.noBias.cell.plot <- ora_analysis("Cell type signature genes enrichment", "Positively Regulated Genes", top_pos_genes, ora.gene.universe, "fgsea.pos.cell", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.cells.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
+gsea.pos.noBias.gs2d.plot <- ora_analysis("Disease genes enrichment", "Positively Regulated Genes", top_pos_genes, ora.gene.universe, "fgsea.pos.gs2d", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.gs2d.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
+
+gsea.neg.noBias.hall.plot <- ora_analysis("Hallmark pathways enrichment", "Negatively Regulated Genes", top_neg_genes, ora.gene.universe, "fgsea.neg.hall", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.hallmark.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
+gsea.neg.noBias.posi.plot <- ora_analysis("Chromosomes enrichment", "Negatively Regulated Genes", top_neg_genes, ora.gene.universe, "fgsea.neg.posi", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.posi.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff, create.default.files=F)
+gsea.neg.noBias.cure.plot <- ora_analysis("Curated pathways enrichment", "Negatively Regulated Genes", top_neg_genes, ora.gene.universe, "fgsea.neg.cure", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.curated.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff, create.default.files=T)
+gsea.neg.noBias.path.plot <- ora_analysis("Canonical pathways enrichment", "Negatively Regulated Genes", top_neg_genes, ora.gene.universe, "fgsea.neg.path", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.curated.cp.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff, create.default.files=F)
+gsea.neg.noBias.regu.plot <- ora_analysis("Regulatory target genes enrichment", "Negatively Regulated Genes", top_neg_genes, ora.gene.universe, "fgsea.neg.regu", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.regulatory.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
+gsea.neg.noBias.cell.plot <- ora_analysis("Cell type signature genes enrichment", "Negatively Regulated Genes", top_neg_genes, ora.gene.universe, "fgsea.neg.cell", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.cells.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
+gsea.neg.noBias.gs2d.plot <- ora_analysis("Disease genes enrichment", "Negatively Regulated Genes", top_neg_genes, ora.gene.universe, "fgsea.neg.gs2d", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.gs2d.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
 
