@@ -17,7 +17,8 @@ suppressMessages(library(ggpmisc, warn.conflicts = FALSE, quietly = TRUE, verbos
 suppressMessages(library(ggpubr, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 
 options(readr.num_columns = 0)
-
+options(ggplot2.discrete.colour= c("#295D8A", "#A41720", "#4E4459"))
+options(ggplot2.discrete.fill= c("#295D8A", "#A41720", "#4E4459"))
 
 # ______________________________________________________________________________
 # ARGUMENTS ====
@@ -95,8 +96,8 @@ datasets.table <- read_csv(datasets.path, show_col_types=F) %>%
   filter(select==1 & batches==0)
 dataids.list <- datasets.table$GEO_Series
 #dataids.list <- (datasets.table %>% filter(select==1 & batches==0 & curators=="JF"))$GEO_Series
-
-# datasets.table
+# remove subsets
+dataids.list <- dataids.list[!grepl("sub", dataids.list)]
 
 # datasets deg
 # ------------------------------------------------------------------------------
@@ -1197,6 +1198,121 @@ plot <- datasets.stats %>%
 # plot
 ggsave(filename=path, plot=plot, width=6, height=5)
 
+# plot figure 1
+path <- file.path(out.dir.path, "figure-1-cor.group.pdf")
+bias_deg.all.cor <- round(cor(datasets.stats$p_group_cor, datasets.stats$n_degs, use="pairwise.complete.obs"), 2)
+bias_deg.selection.cor <- round(cor(datasets.stats[datasets.stats$selected==TRUE,]$p_group_cor, datasets.stats[datasets.stats$selected==TRUE,]$n_degs), 2)
+
+plot.cor <- datasets.stats %>%
+  select(dataset, p_group_cor, `Exceeds Threshold`, n_degs) %>% 
+  mutate(`Quality Imbalance` = ifelse(
+    p_group_cor >= bias.high.cutoff, "high", ifelse(
+      p_group_cor <= bias.low.cutoff, "low", "medium"
+  ))) %>%
+  ggplot(aes(x=reorder(dataset, -p_group_cor), y=p_group_cor, fill=`Quality Imbalance`)) +
+  geom_bar(stat='identity') +
+  ylim(c(0, 1.1)) +
+  geom_text(aes(label=n_degs), hjust=-0.25, size=5) +
+  # geom_hline(yintercept = dataset_p_group_cor_cutoff, col="gray") +
+  coord_flip() +
+  labs(#title=paste("Datasets Selection"), 
+      #  subtitle = paste0("dataset bias<", dataset_p_group_cor_cutoff, 
+      #                   " &  diff. expressed genes (degs)\u2265", dataset_n_deg_cutoff,
+      #                   "\nbias-degs cor=", bias_deg.all.cor,
+      #                   "| bias-degs cor (selected datasets)=", bias_deg.selection.cor),
+       x="Datasets", 
+       y="Quality Imbalance") +
+  theme_minimal(base_size = 16) +
+  theme(legend.position = "bottomleft", legend.direction = "horizontal") +
+  scale_fill_manual(values=list("high"= "#A41720",
+                          "low" = "#295D8A",
+                          "medium" = "#4E4459"))
+
+ggsave(filename=path, plot=plot.cor, width=13, height=17)
+
+# options(ggplot2.discrete.fill= c("#295D8A", "#A41720", "#4E4459"))
+
+# plot statistics
+meta_inp <- datasets.table %>% 
+  filter(!grepl("sub", GEO_Series)) %>%
+  filter(select == 1) %>%
+  mutate(mesh_terms_simp = str_split(mesh_terms, "\\|", simplify = TRUE)[, 1])  
+
+
+sapply(strsplit(meta_inp$mesh_terms, "\\|"), function(x) ifelse(length(x) > 1, x[1], x))
+
+path <- file.path(out.dir.path, "test_bar_samples_pairing.pdf")
+bar_samples_pairing <- meta_inp %>%
+  mutate(SamplesPairing=ifelse(SamplesPairing==1, "TRUE", "FALSE")) %>%
+  ggplot(aes(x=SamplesPairing)) +
+  geom_bar(fill="#4E4459") +
+  labs(x="Samples Pairing", y=NULL) +
+    theme_minimal(base_size = 16) 
+
+ggsave(filename=path, plot=bar_samples_pairing, width=2, height=4)
+
+path <- file.path(out.dir.path, "test_bar_single-paired-end.pdf")
+bar_reads <- meta_inp %>%
+  ggplot(aes(x=LibraryLayout)) +
+  geom_bar(fill="#4E4459") +
+  labs(x="Library Layout", y=NULL) +
+    theme_minimal(base_size = 16)
+
+ggsave(filename=path, plot=bar_reads, width=2, height=4)
+
+
+path <- file.path(out.dir.path, "test_dist-IF.pdf")
+if_dens <- meta_inp %>%
+  ggplot(aes(x=`2-YEAR-IF2020`)) +
+  # geom_histogram() +
+  geom_density(color="#4E4459") +
+  labs(x="2 Year Impact Factor 2020", y=NULL) +
+    theme_minimal(base_size = 16) 
+
+ggsave(filename=path, plot=if_dens, width=2, height=4)
+
+path <- file.path(out.dir.path, "test_bar_diseases.pdf")
+# bar_disease <- meta_inp %>%
+#   ggplot(aes(x="", y=mesh_terms_simp, fill=mesh_terms_simp)) +
+#   geom_bar(width=1, stat="identity") +
+#   #coord_polar("y", start=0) +
+#   guides(fill="none")
+bar_disease <- meta_inp %>%
+  group_by(mesh_terms_simp) %>%
+  summarise(count = n()) %>%
+  ungroup() %>%
+  arrange(count) %>%
+  ggplot(aes(x = "", y = count,  label = mesh_terms_simp)) +
+  geom_bar(stat = "identity",fill = "#4E4459",  color = "#295D8A") +
+  geom_text(aes(label = mesh_terms_simp), color='lightgrey', position = position_stack(vjust = 0.5)) +
+  labs(x = "Distribution of diseases", y = NULL, fill = "Mesh terms") + 
+    theme_minimal(base_size = 16) +
+  guides(fill="none") 
+
+ggsave(filename=path, plot=bar_disease, width=4, height=8)
+
+# dist DEGs
+path <- file.path(out.dir.path, "test_hist_degs.pdf")
+degs <- datasets.stats  %>%
+  ggplot(aes(x=n_degs)) +
+  geom_histogram(fill="#4E4459") +
+  labs(x="Number of DEGs", y=NULL) +
+  theme_minimal(base_size = 16) 
+
+ggsave(filename=path, plot=degs, width=4, height=8)
+
+
+# figure-1-composit
+figure <- ggarrange(plot.cor, bar_disease,
+          ggarrange(bar_reads, bar_samples_pairing, degs, if_dens, ncol = 1, nrow = 4, labels =c("C", "D", "E", "F")), 
+          labels = c("A", "B"),
+          widths = c(2, 1.5, 1.5),
+          heights = c(100, 1, 1),
+          ncol = 3, nrow = 3,
+          common.legend = TRUE, legend = "none")
+
+path <- file.path(out.dir.path, "figure-1-composit.pdf")
+ggsave(filename=path, plot=figure, width=14, height=14)
 
 
 
@@ -1205,6 +1321,8 @@ ggsave(filename=path, plot=plot, width=6, height=5)
 # DEGs vs SAMPLES
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
+options(ggplot2.discrete.colour= c("#A41720","#295D8A", "#4E4459"))
+
 my.formula <- y ~ x
 
 
@@ -1451,7 +1569,29 @@ plot.deg.vs.samples.composition <- ggarrange(
 # plot.deg.vs.samples.composition
 path <- file.path(out.dir.path, "figure.deg.vs.samples.png")
 ggsave(filename=path, plot=plot.deg.vs.samples.composition, width=18, height=12)
+# Figure 3
+figure <- ggarrange(
+  plot.deg.vs.samples.paired.unpaired.fdr,
+  plot.deg.vs.samples.paired.unpaired.fdr.lfc,
+  labels = c("A", "B"),
+  font.label = list(size = 20, color = "black", face = "bold", family = NULL),
+  common.legend = TRUE, legend = "bottom",
+  ncol = 2, nrow = 1)
+path <- file.path(out.dir.path, "figure-3.pdf")
+ggsave(filename=path, plot=figure, width=13, height=6.5)
 
+# suppl figure S2
+figure <- ggarrange(
+  plot.deg.vs.samples.unpaired.fdr,
+  plot.deg.vs.samples.unpaired.fdr.lfc,
+  plot.deg.vs.samples.paired.fdr,
+  plot.deg.vs.samples.paired.fdr.lfc,
+  labels = c("A", "B", "C", "D"),
+  font.label = list(size = 20, color = "black", face = "bold", family = NULL),
+  common.legend = TRUE, legend = "bottom",
+  ncol = 2, nrow = 2)
+path <- file.path(out.dir.path, "suppl-figure-S2.pdf")
+ggsave(filename=path, plot=figure, width=13, height=13)
 
 
 
@@ -1566,6 +1706,8 @@ plot <- datasets.stats %>%
 # SEE WARNINGS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ggsave(filename=path, plot=plot, width=12, height=10)
 
+# switch color back
+options(ggplot2.discrete.colour= c("#295D8A","#A41720", "#4E4459"))
 
 # SAMPLES vs BIAS
 # # ------------------------------------------------------------------------------
@@ -2113,3 +2255,416 @@ plot <- plot+
 ggsave(filename=path, plot=plot, width=10, height=5)
 
 
+
+################################################################################
+## Subset Analysis
+################################################################################
+datasets.table <- read_csv(datasets.path, show_col_types=F) %>% 
+  rename(mesh_terms=`mesh_terms (pipe-separated list)`)
+dataids.list <- (datasets.table %>% filter(select==1 & (batches==0 | is.na(batches))))$GEO_Series
+# take only subsets
+dataids.list <- dataids.list[grepl("sub", dataids.list)]
+
+datasets.stats0 <- tibble()
+for(DATAID in dataids.list){
+  file <- file.path("output", "main", "qualityVsExp", DATAID, paste0(DATAID, ".cor.tsv"))
+  if (file.exists(file)){
+    datasets.stats0 <- bind_rows(list(datasets.stats0, read_tsv(file, show_col_types=F)))
+  }
+}
+
+datasets.stats <- datasets.stats0 %>% 
+  # left_join(deg.stats.table, by="dataset") %>% 
+  mutate(n_degs=if_else(is.na(n_degs), 0, n_degs)) %>%
+  mutate(n_degs_fdr_only=if_else(is.na(n_degs_fdr_only), 0, n_degs_fdr_only)) %>%
+  filter(n_degs>0) %>% 
+  # mutate(selected=!(n_degs<dataset_n_deg_cutoff | p_group_cor>=dataset_p_group_cor_cutoff))
+  mutate(selected=n_degs>=dataset_n_deg_cutoff & p_group_cor<dataset_p_group_cor_cutoff) %>% 
+  # mutate(selected_krusk=n_degs>=dataset_n_deg_cutoff & p_group_kruskal>0.05) %>% 
+  left_join(datasets.table %>% rename(dataset=GEO_Series) , by = "dataset")
+
+# DEGs vs BIAS
+# ------------------------------------------------------------------------------
+# fomrula
+my.formula <- y ~ x
+poly.formula <- y ~ poly(x, 3, raw=T)
+
+# path <- file.path(out.dir.path, "deg.plow.homogen.pdf")
+# plot <- datasets.stats %>%
+#   filter(n_degs>=dataset_n_deg_cutoff) %>%
+#   filter(n_samples>=samples.cutoff) %>%
+#   filter(`Samples homogeneity`==TRUE) %>%
+#   select(dataset, p_group_cor, selected, n_degs, n_samples) %>% 
+#   mutate(data=as.factor(if_else(n_samples>n_samples.big, "big data", if_else(n_samples>=n_samples.medium, "medium data", "small data")))) %>% 
+#   rename(samples=n_samples) %>% 
+#   ggplot(aes(y=n_degs, x=p_group_cor, size=samples, color=data)) +
+#   geom_point() +
+#   geom_smooth(method="glm", formula=my.formula) +
+#   stat_poly_eq(formula = my.formula, 
+#                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+#                size = rel(6),
+#                parse = TRUE) +  
+#   labs(title=paste("Differential Genes vs Dataset Bias - `Samples homogeneity`"), 
+#        subtitle = paste0("Datasets selection: diff genes\u2265", dataset_n_deg_cutoff,
+#                         " and samples\u2265", samples.cutoff,
+#                         "\nData size: ", "small<", n_samples.medium, " | big>", n_samples.big, " samples"
+#        ),
+#        y="Differential genes", 
+#        x="Dataset Bias") +
+#   theme_minimal(base_size = 20)
+# ggsave(filename=path, plot=plot, width=12, height=10)
+
+# path <- file.path(out.dir.path, "deg.plow.subsets.poly.pdf")
+# plot <- datasets.stats %>%
+#   mutate(simi=ifelse(str_detect(dataset, "simi"), "simi", "diff")) %>%
+#   # filter(n_degs>=dataset_n_deg_cutoff) %>%
+#   filter(n_samples>=samples.cutoff) %>%
+#   select(dataset, p_group_cor, selected, n_degs, n_samples, simi) %>% 
+#   mutate(data=as.factor(if_else(n_samples>n_samples.big, "big data", if_else(n_samples>=n_samples.medium, "medium data", "small data")))) %>% 
+#   rename(samples=n_samples) %>% 
+#   ggplot(aes(y=n_degs, x=p_group_cor, color=simi)) +
+#   geom_point() +
+#   geom_smooth(method="glm", formula=poly.formula) +
+#   stat_poly_eq(formula = poly.formula, 
+#                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+#                size = rel(6),
+#                parse = TRUE) +  
+#   labs(title=paste("Differential Genes vs Dataset Bias - Regress All"), 
+#        subtitle = paste0("Datasets selection: diff genes\u2265", dataset_n_deg_cutoff,
+#                         " and samples\u2265", samples.cutoff,
+#                         "\nData size: ", "small<", n_samples.medium, " | big>", n_samples.big, " samples"
+#        ),
+#        y="Differential genes", 
+#        x="Dataset Bias") +
+#   theme_minimal(base_size = 20)
+# ggsave(filename=path, plot=plot, width=12, height=10)
+
+
+path <- file.path(out.dir.path, "deg.plow.subsets.pdf")
+plot <- datasets.stats %>%
+  mutate(simi=ifelse(str_detect(dataset, "simi"), "simi", "diff")) %>%
+  # filter(n_degs>=dataset_n_deg_cutoff) %>%
+  filter(n_samples>=samples.cutoff) %>%
+  select(dataset, p_group_cor, selected, n_degs, n_samples, simi) %>% 
+  mutate(data=as.factor(if_else(n_samples>n_samples.big, "big data", if_else(n_samples>=n_samples.medium, "medium data", "small data")))) %>% 
+  rename(samples=n_samples) %>% 
+  ggplot(aes(y=n_degs, x=p_group_cor, color=simi)) +
+  geom_point() +
+  # geom_smooth(method="glm", formula=my.formula) +
+  # stat_poly_eq(formula = my.formula, 
+  #              aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+  #              size = rel(6),
+  #              parse = TRUE) +  
+  labs(title=paste("Differential Genes vs Quality Imbalance - Regress All"), 
+       subtitle = paste0("Datasets selection: diff genes\u2265", dataset_n_deg_cutoff,
+                        " and samples\u2265", samples.cutoff,
+                        "\nData size: ", "small<", n_samples.medium, " | big>", n_samples.big, " samples"
+       ),
+       y="Differential genes", 
+       x="Quality Imbalance") +
+  theme_minimal(base_size = 20)
+ggsave(filename=path, plot=plot, width=12, height=10)
+
+path <- file.path(out.dir.path, "deg.plow.subsets.color.pdf")
+plot <- datasets.stats %>%
+  filter(n_degs>=dataset_n_deg_cutoff) %>%
+  filter(n_samples>=samples.cutoff) %>%
+  select(dataset, p_group_cor, selected, n_degs, n_samples) %>% 
+  #mutate(data=as.factor(if_else(n_samples>n_samples.big, "big data", if_else(n_samples>=n_samples.medium, "medium data", "small data")))) %>% 
+  mutate(data_origin = str_extract(dataset, "GSE[0-9]*")) %>%
+  mutate(subset = str_extract(dataset, "sub_[a-z,_]*[0-9]*")) %>%
+  rename(samples=n_samples) %>% 
+  ggplot(aes(y=n_degs, x=p_group_cor, color=subset)) +
+  geom_point() +
+  labs(title=paste("Differential Genes vs Quality Imbalance"), 
+       subtitle = paste0("Datasets selection: diff genes\u2265", dataset_n_deg_cutoff,
+                        " and samples\u2265", samples.cutoff,
+                        "\nData size: ", "small<", n_samples.medium, " | big>", n_samples.big, " samples"
+       ),
+       y="Differential genes", 
+       x="Quality Imbalance") +
+  theme_minimal(base_size = 20)
+ggsave(filename=path, plot=plot, width=12, height=10)
+
+path <- file.path(out.dir.path, "deg.plow.subsets.regr.color.pdf")
+plot <- datasets.stats %>%
+  filter(n_degs>=dataset_n_deg_cutoff) %>%
+  filter(n_samples>=samples.cutoff) %>%
+  select(dataset, p_group_cor, selected, n_degs, n_samples) %>% 
+  #mutate(data=as.factor(if_else(n_samples>n_samples.big, "big data", if_else(n_samples>=n_samples.medium, "medium data", "small data")))) %>% 
+  mutate(data_origin = str_extract(dataset, "GSE[0-9]*")) %>%
+    mutate(subset = str_extract(dataset, "sub_[a-z,_]*[0-9]*")) %>%
+  rename(samples=n_samples) %>% 
+  ggplot(aes(y=n_degs, x=p_group_cor, color=subset)) +
+  geom_point() +
+  geom_smooth(method="glm", formula=my.formula) +
+  stat_poly_eq(formula = my.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               size = rel(6),
+               parse = TRUE) +  
+  labs(
+      #  title=paste("Differential Genes vs Quality Imbalance"), 
+      #  subtitle = paste0("Datasets selection: diff genes\u2265", dataset_n_deg_cutoff,
+      #                   " and samples\u2265", samples.cutoff,
+      #                   "\nData size: ", "small<", n_samples.medium, " | big>", n_samples.big, " samples"
+      #  ),
+       y="Differential genes", 
+       x="Quality Imbalance") +
+  theme_minimal(base_size = 20)
+ggsave(filename=path, plot=plot, width=12, height=10)
+
+path <- file.path(out.dir.path, "figure-2-deg.plow.subsets.regr.facet.fullgrid.pdf")
+plot <- datasets.stats %>%
+  # filter(n_degs>=dataset_n_deg_cutoff) %>%
+  # filter(n_samples>=samples.cutoff) %>%
+  select(dataset, p_group_cor, selected, n_degs, n_samples) %>% 
+  #mutate(data=as.factor(if_else(n_samples>n_samples.big, "big data", if_else(n_samples>=n_samples.medium, "medium data", "small data")))) %>% 
+  mutate(data_origin = str_extract(dataset, "GSE[0-9]*")) %>%
+  rename(samples=n_samples) %>% 
+  ggplot(aes(y=n_degs, x=p_group_cor)) +
+  geom_point(color="#295D8A") +
+  geom_smooth(method="glm", formula=my.formula, color="#295D8A") +
+  stat_poly_eq(formula = my.formula, 
+               aes(label = ..eq.label..), 
+               size = rel(6),
+               parse = TRUE,
+               color="#295D8A") +
+  stat_poly_eq(formula = my.formula, 
+               aes(label = ..rr.label..), 
+               size = rel(6),
+               parse = TRUE,
+               vjust= 2.2,
+               color="#295D8A") +  
+  labs(
+       # title=paste("Differential Genes vs Quality Imbalance"), 
+       # subtitle = expression('Datasets selection: Subsets stratified by P'[low]),
+       y="Differential genes", 
+       x="Quality Imbalance") +
+  facet_wrap(~ data_origin, scales="free_y") +
+  theme_minimal(base_size = 22) +
+  theme(aspect.ratio = 1)
+ggsave(filename=path, plot=plot, width=15, height=7)
+
+
+path <- file.path(out.dir.path, "figure-2-deg.plow.subsets.regr.facet.pdf")
+plot <- datasets.stats %>%
+  # filter(n_degs>=dataset_n_deg_cutoff) %>%
+  # filter(n_samples>=samples.cutoff) %>%
+  select(dataset, p_group_cor, selected, n_degs, n_samples) %>% 
+  #mutate(data=as.factor(if_else(n_samples>n_samples.big, "big data", if_else(n_samples>=n_samples.medium, "medium data", "small data")))) %>% 
+  mutate(data_origin = str_extract(dataset, "GSE[0-9]*")) %>%
+  filter(data_origin %in% c("GSE105130", "GSE54456", "GSE174330")) %>%
+  rename(samples=n_samples) %>% 
+  ggplot(aes(y=n_degs, x=p_group_cor)) +
+  geom_point(color="#295D8A") +
+  geom_smooth(method="glm", formula=my.formula, color="#295D8A") +
+  stat_poly_eq(formula = my.formula, 
+               aes(label = ..eq.label..), 
+               size = rel(6),
+               parse = TRUE,
+               color="#295D8A") +
+  stat_poly_eq(formula = my.formula, 
+               aes(label = ..rr.label..), 
+               size = rel(6),
+               parse = TRUE,
+               vjust= 2.2,
+               color="#295D8A") +  
+  labs(
+       # title=paste("Differential Genes vs Quality Imbalance"), 
+       # subtitle = expression('Datasets selection: Subsets stratified by P'[low]),
+       y="Differential genes", 
+       x="Quality Imbalance") +
+  facet_wrap(~ data_origin, scales="free_y") +
+  theme_minimal(base_size = 22) +
+  theme(aspect.ratio = 1)
+ggsave(filename=path, plot=plot, width=15, height=7)
+
+
+
+################################################################################
+## Whole set plus  Subset Analysis
+################################################################################
+datasets.table <- read_csv(datasets.path, show_col_types=F) %>% 
+  rename(mesh_terms=`mesh_terms (pipe-separated list)`)
+dataids.list <- (datasets.table %>% filter(select==1 & batches==0))$GEO_Series
+
+# dataids.list <- dataids.list[grepl("sub", dataids.list)]
+
+
+datasets.stats0 <- tibble()
+for(DATAID in dataids.list){
+  file <- file.path("output", "main", "qualityVsExp", DATAID, paste0(DATAID, ".cor.tsv"))
+  if (file.exists(file)){
+    datasets.stats0 <- bind_rows(list(datasets.stats0, read_tsv(file, show_col_types=F)))
+  }
+}
+
+datasets.stats <- datasets.stats0 %>% 
+  # left_join(deg.stats.table, by="dataset") %>% 
+  mutate(n_degs=if_else(is.na(n_degs), 0, n_degs)) %>%
+  mutate(n_degs_fdr_only=if_else(is.na(n_degs_fdr_only), 0, n_degs_fdr_only)) %>%
+  filter(n_degs>0) %>% 
+  # mutate(selected=!(n_degs<dataset_n_deg_cutoff | p_group_cor>=dataset_p_group_cor_cutoff))
+  mutate(selected=n_degs>=dataset_n_deg_cutoff & p_group_cor<dataset_p_group_cor_cutoff) %>% 
+  # mutate(selected_krusk=n_degs>=dataset_n_deg_cutoff & p_group_kruskal>0.05) %>% 
+  left_join(datasets.table %>% rename(dataset=GEO_Series) , by = "dataset")
+
+
+# options(ggplot2.discrete.colour= c("#A41720","#295D8A", "#4E4459"))
+
+# path <- file.path(out.dir.path, "deg.samples.wholeset.pdf")
+# my.formula <- y ~ x
+
+# deg.samples <-  datasets.stats %>% 
+#   filter(n_degs>=dataset_n_deg_cutoff) %>%
+#   filter(n_samples>=samples.cutoff) %>%
+#   select(dataset, p_group_cor, selected, n_degs, n_samples) %>% 
+#   rename(bias=p_group_cor) %>% 
+#   mutate(Imbalance=as.factor(if_else(bias>bias.high.cutoff, "true", "false"))) %>% 
+#   ggplot(aes(y=n_degs, x=bias, size=n_samples, color=Imbalance)) +
+#   geom_point() +
+#   geom_smooth(method="glm", formula=my.formula <- y ~ x) +
+#   stat_poly_eq(formula = my.formula, 
+#                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+#                size = rel(6),
+#                parse = TRUE) +  
+#   labs(title=paste("FDR and fold change"), 
+#       #  subtitle = paste0(
+#       #    "Diff. genes defined by FDR and fold change",
+#       #   #  "\nDatasets selection: diff genes\u2265", dataset_n_deg_cutoff,
+#       #   #  " and samples\u2265", samples.cutoff,
+#       #    "\nQuality Imbalance: low \u2264 ", bias.high.cutoff, "< high imbalance"
+#       #  ),
+#        y="Differential genes", 
+#        x="Samples",
+#        size="QI Index",
+#        color="High QI") +
+#   theme_minimal(base_size = 20) +
+#   scale_color_manual(values=list("false"="#295D8A", "true"="#A41720")) 
+
+# ggsave(filename=path, plot=deg.samples, width=12, height=10)
+
+
+# path <- file.path(out.dir.path, "deg.fdrOnly.samples.wholeset.pdf")
+
+# deg.fdrOnly.samples <-  datasets.stats %>% 
+#   filter(n_degs>=dataset_n_deg_cutoff) %>%
+#   filter(n_samples>=samples.cutoff) %>%
+#   select(dataset, p_group_cor, selected, n_degs_fdr_only, n_samples, SamplesPairing) %>% 
+#   rename(bias=p_group_cor) %>% 
+#   mutate(Imbalance=as.factor(if_else(bias>bias.high.cutoff, "true", "false"))) %>% 
+# #  mutate(Imbalance=if_else(bias>bias.high.cutoff, "true", "false")) %>% 
+# #  mutate(SamplesPairing=if_else(SamplesPairing==1, "paired samples", "non-paired samples")) %>% 
+# #  mutate(Imbalance=as.factor(paste(SamplesPairing, data, sep=" | "))) %>% 
+#   ggplot(aes(y=n_degs_fdr_only, x=n_samples, size=bias, color=Imbalance)) +
+#   geom_point() +
+#   geom_smooth(method="glm", formula=my.formula <- y ~ x) +
+#   stat_poly_eq(formula = my.formula, 
+#                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+#                size = rel(6),
+#                parse = TRUE) +  
+#   labs(title=paste("FDR only"), 
+#       #  subtitle = paste0(
+#       #    #"Max correlation coeff.:", dataset_p_group_cor_cutoff, 
+#       #    "Diff. genes defined by FDR only",
+#       #   #  "\nDatasets selection: diff genes\u2265", dataset_n_deg_cutoff,
+#       #   #  " and samples\u2265", samples.cutoff,
+#       #     "\nQuality Imbalance: low \u2264 ", bias.high.cutoff, "< high imbalance"
+#       #    # ,
+#       #    #                        "\nsamples-genes cor: ", sample_deg.all.cor,
+#       #    # "samples-genes cor: ", sample_deg.all.cor,
+#       #    # "| samples-genes cor (selected datasets): ", sample_deg.selection.cor
+#       #  ),
+#        y="Differential genes", 
+#        x="Samples",
+#        size="QI Index",
+#        color="High QI") +
+#   theme_minimal(base_size = 20)+
+#   scale_color_manual(values=list("false"="#295D8A", "true"="#A41720"))
+
+# ggsave(filename=path, plot=deg.fdrOnly.samples, width=12, height=10)
+
+
+# figure <- ggarrange(
+#   deg.fdrOnly.samples,
+#   deg.samples,
+#   labels = c("A", "B"),
+#   font.label = list(size = 20, color = "black", face = "bold", family = NULL),
+#   common.legend = TRUE, legend = "bottom",
+#   ncol = 2, nrow = 1)
+# path <- file.path(out.dir.path, "figure-wholeset-3.pdf")
+# ggsave(filename=path, plot=figure, width=13, height=6.5)
+
+
+
+#### additional histos etc
+sra.table <- read_csv(sra.path, show_col_types=F) 
+big_sets <- c("GSE105130", "GSE144269", "GSE133039",
+               "GSE114564", "GSE77314", "GSE174330",
+               "GSE85567", "GSE54456")
+sra.table <- sra.table %>% filter(GEO_Series %in% big_sets)   
+
+for (i in 1:length(big_sets)) {
+   p.low.path <- file.path(".", "output", "main", "scores", paste0(big_sets[[i]], ".scores.txt"))
+
+   p.low <- read_delim(p.low.path, delim="\t", col_names=F)
+   print(p.low)
+   p.low <- p.low %>% dplyr::select(-X3)
+   colnames(p.low) <- c("Run", "P_low")
+
+   ##### 
+   sra.table$P_low <- ifelse(!is.na(match(sra.table$Run, p.low$Run)),
+                             p.low$P_low[match(sra.table$Run, p.low$Run)],
+                             sra.table$P_low)
+}
+
+path <- file.path(out.dir.path, "histograms-big-sets.pdf")
+plot <- sra.table %>%
+          filter(GEO_Series %in% big_sets) %>%
+          select(P_low, GEO_Series, group) %>%
+          ggplot(aes(x=P_low, fill=group)) +
+          geom_histogram(binwidth=0.05) +
+          facet_wrap(vars(GEO_Series))
+ggsave(filename=path, plot=plot, width=13, height=6.5)
+
+
+# plot s5
+sra.table <- read_csv(sra.path, show_col_types=F) 
+plot_sets <- c("GSE144269", "GSE133039", "GSE135036",
+              "GSE119834", "GSE85567", "GSE54456", 
+              "GSE117875", "GSE159851", "GSE164213")
+scores.table <- sra.table %>% filter(GEO_Series %in% plot_sets)
+
+for (i in 1:length(plot_sets)) {
+   p.low.path <- file.path(".", "output", "main", "scores", paste0(plot_sets[[i]], ".scores.txt"))
+
+   p.low <- read_delim(p.low.path, delim="\t", col_names=F)
+   print(p.low)
+   p.low <- p.low %>% dplyr::select(-X3)
+   colnames(p.low) <- c("Run", "P_low")
+
+   ##### 
+   scores.table$P_low <- ifelse(!is.na(match(scores.table$Run, p.low$Run)),
+                             p.low$P_low[match(scores.table$Run, p.low$Run)],
+                             scores.table$P_low)
+}
+
+scores.table <- scores.table %>% left_join(datasets.stats, by=c("GEO_Series"="dataset"))
+
+to_filter <- datasets.table %>% filter(GEO_Series %in% plot_sets)
+
+plot <- scores.table %>% filter(Selected==1) %>%
+  mutate(group_code = ifelse(group %in% to_filter$Treat, "Treat", "Control")) %>%
+  mutate(subtitle = paste0(GEO_Series, " QI: ", round(p_group_cor, 3))) %>%
+  ggplot(aes(x=reorder(Run, P_low), y=P_low, fill=group_code)) + 
+  geom_bar(stat="identity") +
+  coord_flip() +
+  theme_minimal() +
+  facet_wrap(vars(subtitle), scales="free") + 
+  labs(title="Sample quality by biological group",
+      y="Low Quality Probablity (P_low)",
+      x="Patient Samples")
+
+
+path <- file.path(out.dir.path, "figure-S5.pdf")
+ggsave(filename=path, plot=plot, width=10, height=10)
