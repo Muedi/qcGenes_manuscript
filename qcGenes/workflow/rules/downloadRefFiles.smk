@@ -8,8 +8,10 @@ rule downloadRefFiles:
     input:
         config["GS2D_PATH"],
         config["GS2D_MSIGDB_PATH"],
+        config["GS2D_ENSEMBL_PATH"],
         config["ANNOT_PATH"],
         config["ENSID_PATH"],
+        config["ENSIDFULLVER_PATH"],
         config["TRANS_PATH"],
         config["GENOM_PATH"],
         config["BOWTIE_IDX_FILE1"],
@@ -30,8 +32,6 @@ rule get_gs2d_ref:
         "downloadRefFiles"
     log:
         "output/logs/ref/get_gs2d_ref.log"
-    conda:
-        "../envs/linux.yaml"
     params:
         url=config["GS2D_URL"]
     shell:
@@ -48,10 +48,22 @@ rule gs2d_2_msigdb:
         "downloadRefFiles"
     log:
         "output/logs/ref/get_gs2d_msigdb_ref.log"
-    conda:
-        "../envs/tidyverse.yaml"
     shell:
-        "Rscript workflow/scripts/gs2d_2_msigdb.r > {log} 2>&1"
+        "Rscript workflow/scripts/gs2d_2_msigdb.r {input} {output} > {log} 2>&1"
+
+# GS2D_2_ENSEMBL
+# ------------------------------------------------------------------------------
+rule gs2d_2_ensembl:
+    input:
+        config["GS2D_PATH"]
+    output:
+        config["GS2D_ENSEMBL_PATH"]
+    group:
+        "downloadRefFiles"
+    log:
+        "output/logs/ref/get_gs2d_ensembl_ref.log"
+    shell:
+        "Rscript workflow/scripts/gs2d_2_ensembl.r {input} {output} > {log} 2>&1"
 
 # GENOME
 # ------------------------------------------------------------------------------
@@ -62,8 +74,6 @@ rule get_annot_ref:
         "downloadRefFiles"
     log:
         "output/logs/ref/get_annot_ref.log"
-    conda:
-        "../envs/linux.yaml"
     params:
         url=config["ANNOT_URL"]
     shell:
@@ -74,16 +84,16 @@ rule gene_ids_file:
         config["ANNOT_PATH"]
     output:
         gene2tx=config["ENSID_PATH"],
-	gene2tx2ver=config["ENSIDVER_PATH"]
+        gene2tx2ver=config["ENSIDVER_PATH"],
+        gene2tx2full=config["ENSIDFULLVER_PATH"]
     group:
         "downloadRefFiles" 
     log:
         "output/logs/ref/gene_ids_file.log"
-    conda:
-        "../envs/qualityAnalysis.yaml"
     shell:
         "Rscript workflow/scripts/gene_ids_file.r > {log} 2>&1 && "
-        "Rscript workflow/scripts/gene_ids_versions_file.r >> {log} 2>&1"
+        "Rscript workflow/scripts/gene_ids_versions_file.r >> {log} 2>&1 && "
+        "Rscript workflow/scripts/gene_ids_full_versions_file.r {input} {output.gene2tx2full} >> {log} 2>&1 "
 
 rule get_trans_ref:
     output:
@@ -92,8 +102,6 @@ rule get_trans_ref:
         "downloadRefFiles"
     log:
         "output/logs/ref/get_trans_ref.log"
-    conda:
-        "../envs/linux.yaml"
     params:
         url=config["TRANS_URL"]
     shell:
@@ -106,8 +114,6 @@ rule get_genom_ref:
         "downloadRefFiles"
     log:
         "output/logs/ref/get_genom_ref.log"
-    conda:
-        "../envs/linux.yaml"
     params:
         url=config["GENOM_URL"]
     shell:
@@ -122,8 +128,6 @@ rule get_bowtie_idx:
         "downloadRefFiles"
     log:
         "output/logs/ref/get_bowtie_idx.log"
-    conda:
-        "../envs/linux.yaml"
     params:
         url=config["BOWTIE_IDX_URL"]
     shell:
@@ -131,15 +135,14 @@ rule get_bowtie_idx:
 
 rule extract_bowtie_idx:
     input:
-        config["BOWTIE_IDX_PATH"]
+        # config["BOWTIE_IDX_PATH"]
+        rules.get_bowtie_idx.output
     output:
         config["BOWTIE_IDX_FILE1"]
     group:
         "downloadRefFiles"
     log:
         "output/logs/ref/extract_bowtie_idx.log"
-    conda:
-        "../envs/linux.yaml"
     params:
         dir=config["BOWTIE_IDX_DIR"],
         ext=os.path.splitext(config["BOWTIE_IDX_PATH"])[1]
@@ -161,8 +164,6 @@ rule get_picard_ref:
         "downloadRefFiles"
     log:
         "output/logs/ref/get_picard_ref.log"
-    conda:
-        "../envs/linux.yaml"
     params:
         url=config["PICARD_REFFLAT_URL"]
     shell:
@@ -177,8 +178,6 @@ rule extract_picard_ref:
         "downloadRefFiles"
     log:
         "output/logs/ref/extract_picard_ref.log"
-    conda:
-        "../envs/linux.yaml"
     params:
         dir=config["PICARD_DIR"],
         ext=os.path.splitext(config["PICARD_REFFLAT_PATH"])[1]
@@ -199,8 +198,6 @@ rule get_msigdb_ref:
         "downloadRefFiles"
     log:
         "output/logs/ref/get_msigdb_ref.log"
-    conda:
-        "../envs/linux.yaml"
     params:
         url_hall=config["MSIGDB_HALLMARK_URL"],
         url_posi=config["MSIGDB_POSITIONAL_URL"],
@@ -215,4 +212,3 @@ rule get_msigdb_ref:
         "wget -nv -m -nH -nv -O {output.path_cucp} {params.url_cucp} > {log} 2>&1 && "
         "wget -nv -m -nH -nv -O {output.path_regu} {params.url_regu} > {log} 2>&1 && "
         "wget -nv -m -nH -nv -O {output.path_cell} {params.url_cell} > {log} 2>&1 "
-

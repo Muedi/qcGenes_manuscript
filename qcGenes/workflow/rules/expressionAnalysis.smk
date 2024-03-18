@@ -14,8 +14,8 @@ rule expressionAnalysis:
         
 rule quantification:
     input:
-        # expand("data/output/{dataid}/salmon/{sample}/quant.sf", zip, dataid=SAMPLES_ALL_GEO_COL, sample=SAMPLES_ALL_RUN_COL),
-        expand("data/output/{dataid}/salmon/{sample}_tpm.tsv", zip, dataid=SAMPLES_ALL_GEO_COL, sample=SAMPLES_ALL_RUN_COL)
+        # expand("data/output/{dataid}/salmon/{sample}/quant.sf", zip, dataid=SAMPLES_MAIN_GEO_COL, sample=SAMPLES_MAIN_RUN_COL),
+        expand("data/output/{dataid}/salmon/{sample}_tpm.tsv", zip, dataid=SAMPLES_MAIN_GEO_COL, sample=SAMPLES_MAIN_RUN_COL)
 
 # rule pipeline:
 #     input:
@@ -116,28 +116,24 @@ rule quantify_sample:
         read1="data/datasets/{dataid}/{sampleid}_1.fastq.gz",
         index=rules.salmon_index.output.index,
         info=rules.salmon_index.output.info,
-	gtf=config["ENSIDVER_PATH"]
+        gtf=config["ENSIDVER_PATH"]
     output:
-         tpm="data/output/{dataid}/salmon/{sampleid}_tpm.tsv"
-#        quant_dir=directory("output/{analysis}/RASflowResults/{dataid}/trans/quant/{sampleid}"),
-#        tpm="output/{analysis}/RASflowResults/{dataid}/trans/tpmFile/{sampleid}_tpm.tsv"
+         #tpm="data/output/{dataid}/salmon/{sampleid}_tpm.tsv",
+         quant="data/output/{dataid}/salmon/{sampleid}/quant.sf"
     group:
         "expressionAnalysis"
     log:
         "output/logs/expression/{dataid}.{sampleid}.quantify_sample.log"
     benchmark:
         "output/logs/expression/{dataid}.{sampleid}.quantify_sample.bench"
-    conda:
-       "../envs/salmon.yaml"
     threads:
        config['SALMON_THREADS']
     params:
         quant_dir="data/output/{dataid}/salmon/{sampleid}",
         read2="data/datasets/{dataid}/{sampleid}_2.fastq.gz",
-	    tmp_dir="data/output/{dataid}/reads",
+        tmp_dir="data/output/{dataid}/reads",
         tmp_fq_1="data/output/{dataid}/reads/{sampleid}.1.fastq.gz",
         tmp_fq_2="data/output/{dataid}/reads/{sampleid}.2.fastq.gz",
-#        gtf=config["ANNOT_PATH"],
         max_reads=config['SALMON_MAX_READS']
     shell:
         """
@@ -147,19 +143,12 @@ rule quantify_sample:
         if [ -f "{params.read2}" ]; then
             if [ {params.max_reads} -gt 0 ] ; then seqtk sample -s 100 {params.read2} {params.max_reads} 2>> {log} | gzip -1 > {params.tmp_fq_2} 2>> {log}; fi
             if [ {params.max_reads} -lt 0 ] ; then cp -f {params.read2} {params.tmp_fq_2} >> {log} 2>&1; fi
-#            salmon quant -l A -1 {params.tmp_fq_1} -2 {params.tmp_fq_2} -o {params.quant_dir} -i {input.index} -g {input.gtf} -p {threads} --seqBias --gcBias --posBias >> {log} 2> /dev/null
             salmon quant -l A -1 {params.tmp_fq_1} -2 {params.tmp_fq_2} -o {params.quant_dir} -i {input.index} -g {input.gtf} -p {threads} --seqBias --gcBias --posBias --reduceGCMemory >> {log} 2> /dev/null
-#            salmon quant -l A -1 {input.read1} -2 {params.read2} -o {params.quant_dir} -i {input.index} -g {input.gtf} -p {threads} --seqBias --gcBias --posBias --reduceGCMemory >> {log} 2> /dev/null
-            awk 'NR==1{{next}}{{print $1"\\t"$4}}' {params.quant_dir}/quant.sf > {output.tpm}
         else 
-#            salmon quant -l A -r {params.tmp_fq_1} -o {params.quant_dir} -i {input.index} -g {input.gtf} -p {threads} --seqBias --gcBias --posBias >> {log} 2> /dev/null
             salmon quant -l A -r {params.tmp_fq_1} -o {params.quant_dir} -i {input.index} -g {input.gtf} -p {threads} --seqBias --gcBias --posBias --reduceGCMemory >> {log} 2> /dev/null
-#            salmon quant -l A -r {input.read1} -o {params.quant_dir} -i {input.index} -g {input.gtf} -p {threads} --seqBias --gcBias --posBias --reduceGCMemory 2> /dev/null
-            awk 'NR==1{{next}}{{print $1"\\t"$4}}' {params.quant_dir}/quant.sf > {output.tpm}
         fi
         rm -f {params.tmp_fq_1} {params.tmp_fq_2} >> {log} 2>&1
         """
-
 
 rule extract_counts_from_quant:
     input:

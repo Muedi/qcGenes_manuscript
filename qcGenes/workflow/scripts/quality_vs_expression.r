@@ -6,7 +6,7 @@
 # LIBRARIES AND SYSTEM OPTIONS
 # ______________________________________________________________________________
 # install.packages(c("FactoMineR", "factoextra", "fpc"))
-# BiocManager::install(c("fgsea"), ask = F, update = FALSE)
+# BiocManager::install(c("fgsea", "fpc"), ask = F, update = FALSE)
 #suppressMessages(library(EnsDb.Hsapiens.v86, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 suppressMessages(library(tidyverse, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 suppressMessages(library(yaml, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))

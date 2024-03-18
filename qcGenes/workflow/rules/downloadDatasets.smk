@@ -5,7 +5,7 @@
 # ------------------------------------------------------------------------------
 rule downloadDatasets:
     input:
-        expand("data/datasets/{dataid}/{sample}_1.fastq.gz", zip, dataid=SAMPLES_ALL_GEO_COL, sample=SAMPLES_ALL_RUN_COL)
+        expand("data/datasets/{dataid}/{sample}_1.fastq.gz", zip, dataid=SAMPLES_MAIN_GEO_COL, sample=SAMPLES_MAIN_RUN_COL)
 
 # ------------------------------------------------------------------------------
 rule download_sample:

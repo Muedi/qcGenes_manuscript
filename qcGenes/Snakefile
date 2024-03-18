@@ -42,7 +42,7 @@ rule all:
         "output/main/draft.html",
         "output/main/config/config.yaml",
         "output/main/config/Datasets.csv",
-        "output/main/config/Mega_SRARunTable.csv"
+        "output/main/config/Mega_SraRunTable.csv"
 
 rule config_backup:
     input:
@@ -52,7 +52,7 @@ rule config_backup:
     output:
         cfg_out_path="output/{analysis}/config/config.yaml",
         dts_out_path="output/{analysis}/config/Datasets.csv",
-        smp_out_path="output/{analysis}/config/Mega_SRARunTable.csv"
+        smp_out_path="output/{analysis}/config/Mega_SraRunTable.csv"
     log:
         "output/logs/{analysis}/config_backup.log"
     shell:

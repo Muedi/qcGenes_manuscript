@@ -2,8 +2,10 @@
 # INIT ====
 # ______________________________________________________________________________
 suppressMessages(library(tidyverse, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
-suppressMessages(library(ggpmisc, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
+suppressMessages(library(
+  , warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 suppressMessages(library(ggpubr, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
+suppressMessages(library(ggpmisc, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 suppressMessages(library(yaml, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 suppressMessages(library(stringi, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 

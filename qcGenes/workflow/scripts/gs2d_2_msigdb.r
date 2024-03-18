@@ -1,12 +1,14 @@
 suppressMessages(library(tidyverse, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 suppressMessages(library(yaml, warn.conflicts = FALSE, quietly = TRUE, verbose = FALSE))
 
-config.path                   <- file.path(".", "config", "config.yaml")
-config.data                   <- yaml.load_file(config.path)
-gs2d.path                     <- file.path(".", config.data$GS2D_PATH)
-gs2d.msigdb.path              <- file.path(".", config.data$GS2D_MSIGDB_PATH)
+args = commandArgs(trailingOnly=TRUE)
+if (length(args)!=2) {
+  stop("Please provide input and output file paths", call.=FALSE)
+}
+input.path <- args[1]
+output.path <- args[2]
 
-d<- read_tsv(gs2d.path)
+d<- read_tsv(input.path)
 
 d2 <- d %>% 
   filter(fdr<0.05 & fold_change>1.5 & count_name_in_gene_set>5) %>%
@@ -16,4 +18,4 @@ d2 <- d %>%
   filter(n>10) %>%
   select(name, url, symbols)
 
-write_tsv(d2, gs2d.msigdb.path, col_names=FALSE)
+write_tsv(d2, output.path, col_names=FALSE)
