@@ -28,7 +28,7 @@ if (length(args)<1 | length(args)>1) {
   stop("Wrong number of parameters", call.=FALSE)
 }
 
-# args <- c(file.path("output", "main", "qualityCorGenes"))
+# args <- c(file.path("output", "main", "qualityCorGenes_test"))
 
 out.dir.path <- args[1]
 fgsea.dir.path <- file.path(out.dir.path, "fgsea")
@@ -93,7 +93,7 @@ sra.table <- read_csv(sra.path, show_col_types=F) %>%
 # dataids.list <- unique(sra.table$GEO_Series)
 datasets.table <- read_csv(datasets.path, show_col_types=F) %>% 
   rename(mesh_terms=`mesh_terms (pipe-separated list)`) %>% 
-  filter(select==1 & batches==0)
+  filter(select==1) # & batches==0)
 dataids.list <- datasets.table$GEO_Series
 #dataids.list <- (datasets.table %>% filter(select==1 & batches==0 & curators=="JF"))$GEO_Series
 # remove subsets
@@ -205,7 +205,7 @@ a <- pos_genes %>%
   arrange(desc(datasets)) %>% 
   slice_head(n=25) %>% 
   ggplot(aes(x=reorder(gene, datasets), y=datasets)) +
-  geom_bar(stat='identity', fill="#00BFC4") +
+  geom_bar(stat='identity', fill="#295D8A") +
   labs(title="Low-quality markers in low-bias datasets",
        subtitle=paste0(
          "Datasets selection (n=", 
@@ -227,7 +227,7 @@ path <- file.path(out.dir.path, paste0("pos.cor.all.genes.png"))
 a <- pos_genes %>% 
   rename(gene=genes, datasets=n) %>% 
   ggplot(aes(x=reorder(gene, datasets), y=datasets)) +
-  geom_bar(stat="identity", fill="#00BFC4") +
+  geom_bar(stat="identity", fill="#295D8A") +
   # labs(title=paste("Distribution of", nrow(pos_genes) ,"pos. correlated genes in low-bias datasets"), 
        # subtitle=paste0("Datasets selection (n=", length(dataids.list), "): bias\u22640.2 and samples\u2265", samples.cutoff), 
        # x="genes") +
@@ -274,7 +274,7 @@ b <- neg_genes %>%
   slice_head(n=25) %>% 
   # arrange(datasets) %>% 
   ggplot(aes(x=reorder(gene, datasets), y=datasets)) +
-  geom_bar(stat='identity', fill="#00BFC4") +
+  geom_bar(stat='identity', fill="#295D8A") +
   # labs(title="Top neg. correlated genes in low-bias datasets", 
        # subtitle=paste0("Datasets selection (n=", length(dataids.list), "): bias\u22640.2 and samples\u2265", samples.cutoff), 
        # x="genes") +
@@ -299,7 +299,7 @@ path <- file.path(out.dir.path, paste0("neg.cor.all.genes.png"))
 b <- neg_genes %>% 
   rename(gene=genes, datasets=n) %>% 
   ggplot(aes(x=reorder(gene, datasets), y=datasets)) +
-  geom_bar(stat='identity', fill="#00BFC4") +
+  geom_bar(stat='identity', fill="#295D8A") +
   # labs(title=paste("Distribution of", nrow(neg_genes) ,"neg. correlated genes in low-bias datasets"), 
        # subtitle=paste0("Datasets selection (n=", length(dataids.list), "): bias\u22640.2 and samples\u2265", samples.cutoff), 
        # x="genes") +
@@ -359,13 +359,13 @@ out.file1 <- file.path(out.dir.path, "pos.cor.genes.noBias.tsv")
 write_tsv(pos_genes_noBias, out.file1)
 
 path <- file.path(out.dir.path, paste0("pos.cor.genes.noBias.png"))
-a <- pos_genes_noBias %>% 
+pos.cor.genes.noBias <- pos_genes_noBias %>% 
   rename(gene=genes, datasets=n) %>% 
   # top_n(20,datasets) %>%
   arrange(desc(datasets)) %>% 
   slice_head(n=25) %>% 
   ggplot(aes(x=reorder(gene, datasets), y=datasets)) +
-  geom_bar(stat='identity', fill="#00BFC4") +
+  geom_bar(stat='identity', fill="#295D8A") +
   # labs(title="Top pos. correlated genes in no-bias datasets",
        # subtitle=paste0("Datasets selection (n=", length(dataids.list), "): bias\u2264", bias.low.cutoff," and samples\u2265", samples.cutoff), 
        # x="genes") +
@@ -384,13 +384,13 @@ a <- pos_genes_noBias %>%
   coord_flip() +
   theme_minimal()
 # a
-ggsave(filename=path, plot=a, device='png', width=5, height=5)
+ggsave(filename=path, plot=pos.cor.genes.noBias, device='png', width=5, height=5)
 
 path <- file.path(out.dir.path, paste0("pos.cor.all.genes.noBias.png"))
 a <- pos_genes_noBias %>% 
   rename(gene=genes, datasets=n) %>% 
   ggplot(aes(x=reorder(gene, datasets), y=datasets)) +
-  geom_bar(stat="identity", fill="#00BFC4") +
+  geom_bar(stat="identity", fill="#295D8A") +
   # labs(title=paste("Distribution of", nrow(pos_genes_noBias) ,"pos. correlated genes in no-bias datasets"), 
        # subtitle=paste0("Datasets selection (n=", length(dataids.list), "): bias\u2264", bias.low.cutoff," and samples\u2265", samples.cutoff), 
        # x="genes") +
@@ -434,14 +434,14 @@ out.file2 <- file.path(out.dir.path, "neg.cor.genes.noBias.tsv")
 write_tsv(neg_genes_noBias, out.file2)
 
 path <- file.path(out.dir.path, paste0("neg.cor.genes.noBias.png"))
-b <- neg_genes_noBias %>% 
+neg.cor.genes.noBias <- neg_genes_noBias %>% 
   rename(gene=genes, datasets=n) %>% 
   # top_n(20,datasets) %>%
   arrange(desc(datasets)) %>% 
   slice_head(n=25) %>% 
   arrange(datasets) %>% 
   ggplot(aes(x=reorder(gene, datasets), y=datasets)) +
-  geom_bar(stat='identity', fill="#00BFC4") +
+  geom_bar(stat='identity', fill="#295D8A") +
   # labs(title="Top neg. correlated genes in no-bias datasets", 
        # subtitle=paste0("Datasets selection (n=", length(dataids.list), "): bias\u2264", bias.low.cutoff," and samples\u2265", samples.cutoff), 
        # x="genes") +
@@ -460,13 +460,13 @@ b <- neg_genes_noBias %>%
   
   coord_flip() +
   theme_minimal()
-ggsave(filename=path, plot=b, device='png', width=5, height=5)
+ggsave(filename=path, plot=neg.cor.genes.noBias, device='png', width=5, height=5)
 
 path <- file.path(out.dir.path, paste0("neg.cor.all.genes.noBias.png"))
 b <- neg_genes_noBias %>% 
   rename(gene=genes, datasets=n) %>% 
   ggplot(aes(x=reorder(gene, datasets), y=datasets)) +
-  geom_bar(stat='identity', fill="#00BFC4") +
+  geom_bar(stat='identity', fill="#295D8A") +
   # labs(title=paste("Distribution of", nrow(neg_genes_noBias) ,"neg. correlated genes in no-bias datasets"), 
        # subtitle=paste0("Datasets selection (n=", length(dataids.list), "): bias\u2264", bias.low.cutoff," and samples\u2265", samples.cutoff), 
        # x="genes") +
@@ -530,11 +530,10 @@ a <- pos_genes_highBias %>%
   arrange(desc(datasets)) %>% 
   slice_head(n=25) %>% 
   ggplot(aes(x=reorder(gene, datasets), y=datasets)) +
-  geom_bar(stat='identity', fill="#00BFC4") +
+  geom_bar(stat='identity', fill="#295D8A") +
   # labs(title="Top pos. correlated genes in high-bias datasets",
        # subtitle=paste0("Datasets selection (n=", length(dataids.list), "): bias>", bias.high.cutoff," and samples\u2265", samples.cutoff), 
        # x="genes") +
-  
   labs(title="Low-quality markers in high-bias datasets",
        subtitle=paste0(
          "Datasets selection (n=", 
@@ -545,8 +544,7 @@ a <- pos_genes_highBias %>%
          ifelse(QI_SIGNIFICANCE_TEST, paste0(", QI.pval<", QI_SIGNIFICANCE_TEST_CUTOFF), ""),
          " and samples\u2265", 
          samples.cutoff), 
-       x="genes") +
-  
+         x="genes") +
   coord_flip() +
   theme_minimal()
 # a
@@ -556,7 +554,7 @@ path <- file.path(out.dir.path, paste0("pos.cor.all.genes.highBias.png"))
 a <- pos_genes_highBias %>% 
   rename(gene=genes, datasets=n) %>% 
   ggplot(aes(x=reorder(gene, datasets), y=datasets)) +
-  geom_bar(stat="identity", fill="#00BFC4") +
+  geom_bar(stat="identity", fill="#295D8A") +
   # labs(title=paste("Distribution of", nrow(pos_genes_highBias) ,"pos. correlated genes in high-bias datasets"), 
        # subtitle=paste0("Datasets selection (n=", length(dataids.list), "): bias>", bias.high.cutoff," and samples\u2265", samples.cutoff), 
        # x="genes") +
@@ -605,7 +603,7 @@ b <- neg_genes_highBias %>%
   slice_head(n=25) %>% 
   arrange(datasets) %>% 
   ggplot(aes(x=reorder(gene, datasets), y=datasets)) +
-  geom_bar(stat='identity', fill="#00BFC4") +
+  geom_bar(stat='identity', fill="#295D8A") +
   # labs(title="Top neg. correlated genes in high-bias datasets", 
        # subtitle=paste0("Datasets selection (n=", length(dataids.list), "): bias>", bias.high.cutoff," and samples\u2265", samples.cutoff), 
        # x="genes") +
@@ -630,7 +628,7 @@ path <- file.path(out.dir.path, paste0("neg.cor.all.genes.highBias.png"))
 b <- neg_genes_highBias %>% 
   rename(gene=genes, datasets=n) %>% 
   ggplot(aes(x=reorder(gene, datasets), y=datasets)) +
-  geom_bar(stat='identity', fill="#00BFC4") +
+  geom_bar(stat='identity', fill="#295D8A") +
   # labs(title=paste("Distribution of", nrow(neg_genes_highBias) ,"neg. correlated genes in high-bias datasets"), 
        # subtitle=paste0("Datasets selection (n=", length(dataids.list), "): bias>", bias.high.cutoff," and samples\u2265", samples.cutoff), 
        # x="genes") +
@@ -652,7 +650,16 @@ b <- neg_genes_highBias %>%
   theme(axis.text.y=element_blank(), axis.ticks.y=element_blank())
 ggsave(filename=path, plot=b, device='png', width=12, height=10)
 
-
+# figure 4 manuscript
+figure <- ggarrange(
+  pos.cor.genes.noBias,
+  neg.cor.genes.noBias,
+  labels = c("A", "B"),
+  font.label = list(size = 20, color = "black", face = "bold", family = NULL),
+  common.legend = TRUE, legend = "bottom",
+  ncol = 2, nrow = 1)
+path <- file.path(out.dir.path, "figure-4.pdf")
+ggsave(filename=path, plot=figure, width=10, height=5)
 # ______________________________________________________________________________
 # GENE SET ENRICHMENT ANALYSIS
 # ______________________________________________________________________________
@@ -998,7 +1005,30 @@ figure <- ggarrange(
 path <- file.path(out.dir.path, "fgsea.gs2d.png")
 ggsave(filename=path, plot=figure, width=figure.width, height=figure.height)
 
+# figure 5 of the manuscript
+figure <- ggarrange(
+  gsea.pos.noBias.regu.plot + ggtitle(NULL),
+  gsea.neg.noBias.regu.plot + ggtitle(NULL),
+  gsea.pos.noBias.cure.plot + ggtitle(NULL),
+  gsea.neg.noBias.cure.plot + ggtitle(NULL),
+  labels = c("A", "B", "C", "D"),
+  font.label = list(size = 20, color = "black", face = "bold", family = NULL),
+  common.legend = TRUE, legend = "bottom",
+  ncol = 2, nrow = 2)
+path <- file.path(out.dir.path, "figure-5.noBias.pdf")
+ggsave(filename=path, plot=figure, width=14, height=14)
 
+figure <- ggarrange(
+  gsea.pos.lowBias.regu.plot + ggtitle(NULL),
+  gsea.neg.lowBias.regu.plot + ggtitle(NULL),
+  gsea.pos.lowBias.cure.plot + ggtitle(NULL),
+  gsea.neg.lowBias.cure.plot + ggtitle(NULL),
+  labels = c("A", "B", "C", "D"),
+  font.label = list(size = 20, color = "black", face = "bold", family = NULL),
+  common.legend = TRUE, legend = "bottom",
+  ncol = 2, nrow = 2)
+path <- file.path(out.dir.path, "figure-5.lowBias.pdf")
+ggsave(filename=path, plot=figure, width=14, height=14)
 
 
 
@@ -1074,6 +1104,7 @@ write_tsv(pathways.comparison, file.path(out.dir.path, "pathways.comparison.tsv"
 # ______________________________________________________________________________
 # d <- datasets.stats %>% filter(selected==TRUE)
 d <- ""
+datasets.stats <- datasets.stats %>% mutate(`Exceeds Threshold`=ifelse(p_group_cor >= 0.3, T, F)) 
 # Quality vs genes' FDR
 # ------------------------------------------------------------------------------
 path <- file.path(out.dir.path, "cor.q.fdr.png")
@@ -1172,8 +1203,6 @@ plot <- datasets.stats %>%
   mutate(group=if_else(no.bias.group==1, "no or low bias", "-")) %>%  
   mutate(group=if_else(no.bias.group==0 & low.bias.group==1, "low bias", group)) %>%  
   mutate(group=if_else(high.bias.group==1, "high bias", group)) %>%  
-    
-  
   #   mutate(group=if_else(
   #   no.bias.group==1, 
   #   "no bias", 
@@ -1793,7 +1822,7 @@ ymin <- if_else(ymin<0, ymin-0.25, ymin)
 plot <- dtmp %>% 
   # filter(n_degs>dataset_n_deg_cutoff) %>%
   ggplot(aes(x=reorder(dataset, diff_dunn), y=diff_dunn)) +
-#  geom_bar(stat='identity', fill="#00BFC4") +
+#  geom_bar(stat='identity', fill="#295D8A") +
   geom_bar(aes(fill=quality_bias), stat='identity') +
   ylim(c(ymin, ymax)) +
   geom_text(aes(label=paste(round(dunn_noout, 2), "-", round(dunn_all, 2))), hjust=ifelse(dtmp$diff_dunn>=0, -0.25, 1.25), size=6) +
@@ -1817,7 +1846,7 @@ ymax <- if_else(ymax<0, ymax-0.25, ymax)
 ymin <- if_else(ymin<0, ymin-0.25, ymin)
 plot <- dtmp %>% 
   ggplot(aes(x=reorder(dataset, diff_wbrat), y=diff_wbrat)) +
-#  geom_bar(stat='identity', fill="#00BFC4") +
+#  geom_bar(stat='identity', fill="#295D8A") +
   geom_bar(aes(fill=quality_bias), stat='identity') +
   ylim(c(ymin, ymax)) +
 #  geom_text(aes(label=paste(round(wbrat_noout, 2), "-", round(wbrat_all, 2))), hjust=-0.25, size=7) +
@@ -1840,7 +1869,7 @@ ymax <- if_else(ymax<0, ymax-0.25, ymax)
 ymin <- if_else(ymin<0, ymin-0.25, ymin)
 plot <- dtmp %>% 
   ggplot(aes(x=reorder(dataset, diff_pgamma), y=diff_pgamma)) +
-#  geom_bar(stat='identity', fill="#00BFC4") +
+#  geom_bar(stat='identity', fill="#295D8A") +
   geom_bar(aes(fill=quality_bias), stat='identity') +
   ylim(c(ymin, ymax)) +
   geom_text(aes(label=paste(round(pgamma_noout, 2), "-", round(pgamma_all, 2))), hjust=ifelse(dtmp$diff_pgamma>=0, -0.25, 1.25), size=6) +
@@ -2002,7 +2031,7 @@ ymax <- round(max(dtmp$diff_pgamma_nogenes) * 1.8, 1)
 ymin <- round(min(dtmp$diff_pgamma_nogenes) * 1.8, 1)
 plot <- dtmp %>% 
   ggplot(aes(x=reorder(dataset, diff_pgamma_nogenes), y=diff_pgamma_nogenes)) +
-#  geom_bar(stat='identity', fill="#00BFC4") +
+#  geom_bar(stat='identity', fill="#295D8A") +
   geom_bar(aes(fill=quality_bias), stat='identity') +
   ylim(c(ymin, ymax)) +
   geom_text(aes(label=paste(round(pgamma_noout_nocor, 2), "-", round(pgamma_noout_norand, 2))), hjust=ifelse(dtmp$diff_pgamma_nogenes>=0, -0.25, 1.25), size=6) +
@@ -2028,7 +2057,7 @@ ggsave(filename=path, plot=plot, width=15, height=15)
 #  select(dataset, diff_dunn, diff_wbrat, diff_pgamma, quality_bias) %>%
 #  gather(diff_dunn, diff_wbrat, diff_pgamma, key = "feature", value = "value") %>%
 #  ggplot(aes(x = reorder(dataset, value), y = value)) +
-##  geom_bar(stat='identity', fill="#00BFC4") +
+##  geom_bar(stat='identity', fill="#295D8A") +
 #  geom_bar(aes(fill=quality_bias), stat='identity') +
 #  geom_text(aes(label=paste(round(value, 2))), hjust=-0.25, size=7) +
 #  labs(title=paste("PCA Clustering Evaluation Boost"),
@@ -2117,7 +2146,7 @@ ggsave(filename=path, plot=plot, width=20, height=25)
 #   select(dataset, entropy_all, entropy_noout) %>% 
 #   mutate(diff_entropy=entropy_noout-entropy_all) %>% 
 #   ggplot(aes(x=reorder(dataset, diff_entropy), y=diff_entropy)) +
-#   geom_bar(stat='identity', fill="#00BFC4") +
+#   geom_bar(stat='identity', fill="#295D8A") +
 #   ylim(c(ymin, ymax)) +
 #   geom_text(aes(label=paste(round(entropy_noout, 2), "-", round(entropy_all, 2))), hjust=-0.25) +
 #   labs(y="Difference in Entropy (dataset without outliers vs with all samples)",
@@ -2139,7 +2168,7 @@ ggsave(filename=path, plot=plot, width=20, height=25)
 #   select(dataset, diff_dunn, diff_pgamma, diff_entropy) %>%
 #   gather(diff_dunn, diff_pgamma, diff_entropy, key = "feature", value = "value") %>%
 #   ggplot(aes(x = reorder(dataset, value), y = value)) +
-#   geom_bar(stat = "identity", fill="#00BFC4") +
+#   geom_bar(stat = "identity", fill="#295D8A") +
 #   coord_flip() +
 #   facet_wrap( ~ feature) +
 #   theme_minimal() +
