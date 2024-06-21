@@ -16,6 +16,18 @@ args = commandArgs(trailingOnly=TRUE)
 #   "output/main/scores",
 #   "output/main/metrics"
 # )
+# args <- c(
+#   "output/Folders_3M/main_P1/scores",
+#   "output/Folders_3M/main_P1/metrics"
+# )
+# args <- c(
+#   "../qcGenes/big_runs_2024/main_P2_default_DESEQ/scores",
+#   "../qcGenes/big_runs_2024/main_P2_default_DESEQ/metrics_new"
+# )
+# args <- c(
+#   "../qcGenes/big_runs_2024/main_S1_default_DESEQ/scores",
+#   "../qcGenes/big_runs_2024/main_S1_default_DESEQ/metrics_new"
+# )
 
 config.path <- file.path(".", "config", "config.yaml")
 config <- yaml.load_file(config.path)
@@ -50,7 +62,7 @@ gmd <- function(x){
 
 ctdiff <- function(x, y){  # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7514071/
   (median(x)-median(y)) / 
-    sqrt( (gmd(x)^2 + gmd(x)^2) /  2 )
+    sqrt( (gmd(x)^2 + gmd(y)^2) /  2 )
 }
 
 ctdiff_value_class <- function(x, binary_class){  # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7514071/
@@ -83,6 +95,14 @@ ctdiff.permut.test <- function(x, binary_class, permutations=1000){
 # ctdiff.permut.test(scores.table$p, scores.table$group_numeric)
 # ctdiff.permut.test(scores.table$p, scores.table$group_numeric)
 
+permut_value_class <- function(x, binary_class, myfunc=mean){  
+  # x <- sample(20)
+  # binary_class <- c(rep(1, 10), rep(2,10))
+  classes <- levels(factor(binary_class))
+  difference <- abs(myfunc(x[binary_class==classes[1]])-myfunc(x[binary_class==classes[2]]))
+  return(difference)
+}
+
 permut.test.myfunc <- function(x, binary_class, permutations=1000, myfunc=mean){
   # x <- sample(20)
   # binary_class <- c(rep(1, 10), rep(2,10))
@@ -102,6 +122,26 @@ permut.test.myfunc <- function(x, binary_class, permutations=1000, myfunc=mean){
 }
 # # permut.test.myfunc(scores.table$p, scores.table$group_numeric, myfunc=mean)
 # # permut.test.myfunc(scores.table$p, scores.table$group_numeric, myfunc=median)
+
+permut.test.corfunc <- function(x, binary_class, permutations=1000, mymethod="pearson"){
+  # x <- sample(20)
+  # binary_class <- c(rep(1, 10), rep(2,10))
+  classes <- levels(factor(binary_class))
+  cor.coef <- abs(cor(x, binary_class, method=mymethod))
+  random.cors <- c()
+  for (i in 1:permutations) {
+    binary_class <- sample(binary_class)
+    random.cors <- c(
+      random.cors,
+      abs(cor(x, binary_class, method=mymethod))
+    )
+  }
+  n.better.values <-length(random.cors[random.cors>cor.coef])
+  pvalue <- n.better.values / permutations
+  return(pvalue)
+}
+# permut.test.corfunc(scores.table$p, scores.table$group_numeric, myfunc=mean)
+# permut.test.corfunc(scores.table$p, scores.table$group_numeric, myfunc=median)
 
 # ______________________________________________________________________________
 # ______________________________________________________________________________
@@ -215,35 +255,32 @@ metrics <- bind_rows(metrics, cor.spearman.res.noutliers)
 # ______________________________________________________________________________
 ## npsigtest with and without outliers ====
 
-# regr.np.res <- npreg(prob ~ is_control, regtype = "ll", bwmethod = "cv.aic", gradients = TRUE, data = analysis.data)
-# test.res <- npsigtest(regr.np.res)
-npsigtest.tidy <- function(np_object){
-  return(data.frame(p=np_object$P, IN=np_object$In))
-}
-# test_npregression_tidy(test.res)
-
-npsigtest.res <- analysis.data %>% 
-  nest(data=-dataset) %>% 
-  mutate(fit = map(data, ~ npsigtest(npreg(prob ~ is_control, regtype = "ll", bwmethod = "cv.aic", gradients = TRUE, data = .))),
-         results = map(fit, npsigtest.tidy)) %>% 
-  unnest(results) %>% 
-  rename(value=IN) %>% # bw R2 MSE
-  mutate(method="npsigtest") %>%
-  mutate(no_outlier=FALSE) %>% 
-  select(dataset, value, p, no_outlier, method)
-metrics <- bind_rows(metrics, npsigtest.res)
-
-npsigtest.res.nooutliers <- analysis.data %>% 
-  filter(!outlier) %>% 
-  nest(data=-dataset) %>% 
-  mutate(fit = map(data, ~ npsigtest(npreg(prob ~ is_control, regtype = "ll", bwmethod = "cv.aic", gradients = TRUE, data = .))),
-         results = map(fit, npsigtest.tidy)) %>% 
-  unnest(results) %>% 
-  rename(value=IN) %>% # bw R2 MSE
-  mutate(method="npsigtest") %>%
-  mutate(no_outlier=TRUE) %>% 
-  select(dataset, value, p, no_outlier, method)
-metrics <- bind_rows(metrics, npsigtest.res.nooutliers)
+# npsigtest.tidy <- function(np_object){
+#   return(data.frame(p=np_object$P, IN=np_object$In))
+# }
+# 
+# npsigtest.res <- analysis.data %>% 
+#   nest(data=-dataset) %>% 
+#   mutate(fit = map(data, ~ npsigtest(npreg(prob ~ is_control, regtype = "ll", bwmethod = "cv.aic", gradients = TRUE, data = .))),
+#          results = map(fit, npsigtest.tidy)) %>% 
+#   unnest(results) %>% 
+#   rename(value=IN) %>% # bw R2 MSE
+#   mutate(method="npsigtest") %>%
+#   mutate(no_outlier=FALSE) %>% 
+#   select(dataset, value, p, no_outlier, method)
+# metrics <- bind_rows(metrics, npsigtest.res)
+# 
+# npsigtest.res.nooutliers <- analysis.data %>% 
+#   filter(!outlier) %>% 
+#   nest(data=-dataset) %>% 
+#   mutate(fit = map(data, ~ npsigtest(npreg(prob ~ is_control, regtype = "ll", bwmethod = "cv.aic", gradients = TRUE, data = .))),
+#          results = map(fit, npsigtest.tidy)) %>% 
+#   unnest(results) %>% 
+#   rename(value=IN) %>% # bw R2 MSE
+#   mutate(method="npsigtest") %>%
+#   mutate(no_outlier=TRUE) %>% 
+#   select(dataset, value, p, no_outlier, method)
+# metrics <- bind_rows(metrics, npsigtest.res.nooutliers)
 
 
 
@@ -272,6 +309,108 @@ ctdiff.res.nooutliers <- analysis.data %>%
 metrics <- bind_rows(metrics, ctdiff.res.nooutliers)
 
 
+# ______________________________________________________________________________
+## Permut Pearson Test with and without outliers ====
+  
+permut.res <- analysis.data %>% 
+  group_by(dataset) %>% 
+  summarise(
+    value=cor(prob, is_control, method="pearson"),
+    # p=permut.test.myfunc(prob, is_control, permutations=N_PERMUTATIONS, myfunc=median),
+    p=permut.test.corfunc(prob, is_control, permutations=N_PERMUTATIONS, mymethod="pearson"),
+    no_outlier=FALSE,
+    method="permut_pearson"
+  )
+metrics <- bind_rows(metrics, permut.res)
+
+permut.res.nooutliers <- analysis.data %>% 
+  filter(!outlier) %>% 
+  group_by(dataset) %>% 
+  summarise(
+    value=cor(prob, is_control, method="pearson"),
+    # p=permut.test.myfunc(prob, is_control, permutations=N_PERMUTATIONS, myfunc=median),
+    p=permut.test.corfunc(prob, is_control, permutations=N_PERMUTATIONS, mymethod="pearson"),
+    no_outlier=TRUE,
+    method="permut_pearson"
+  )
+metrics <- bind_rows(metrics, permut.res.nooutliers)
+
+
+# ______________________________________________________________________________
+## Permut Spearman Test with and without outliers ====
+
+permut.res <- analysis.data %>% 
+  group_by(dataset) %>% 
+  summarise(
+    value=cor(prob, is_control, method="spearman"),
+    # p=permut.test.myfunc(prob, is_control, permutations=N_PERMUTATIONS, myfunc=median),
+    p=permut.test.corfunc(prob, is_control, permutations=N_PERMUTATIONS, mymethod="spearman"),
+    no_outlier=FALSE,
+    method="permut_spearman"
+  )
+metrics <- bind_rows(metrics, permut.res)
+
+permut.res.nooutliers <- analysis.data %>% 
+  filter(!outlier) %>% 
+  group_by(dataset) %>% 
+  summarise(
+    value=cor(prob, is_control, method="spearman"),
+    # p=permut.test.myfunc(prob, is_control, permutations=N_PERMUTATIONS, myfunc=median),
+    p=permut.test.corfunc(prob, is_control, permutations=N_PERMUTATIONS, mymethod="spearman"),
+    no_outlier=TRUE,
+    method="permut_spearman"
+  )
+metrics <- bind_rows(metrics, permut.res.nooutliers)
+
+
+# ______________________________________________________________________________
+## Permut Means Test with and without outliers ====
+  
+permut.res <- analysis.data %>% 
+  group_by(dataset) %>% 
+  summarise(
+    value=permut_value_class(prob, is_control, myfunc=mean),
+    p=permut.test.myfunc(prob, is_control, permutations=N_PERMUTATIONS, myfunc=mean),
+    no_outlier=FALSE,
+    method="permut_means"
+  )
+metrics <- bind_rows(metrics, permut.res)
+
+permut.res.nooutliers <- analysis.data %>% 
+  filter(!outlier) %>% 
+  group_by(dataset) %>% 
+  summarise(
+    value=permut_value_class(prob, is_control, myfunc=mean),
+    p=permut.test.myfunc(prob, is_control, permutations=N_PERMUTATIONS, myfunc=mean),
+    no_outlier=TRUE,
+    method="permut_means"
+  )
+metrics <- bind_rows(metrics, permut.res.nooutliers)
+
+
+# ______________________________________________________________________________
+## Permut Medians Test with and without outliers ====
+  
+permut.res <- analysis.data %>% 
+  group_by(dataset) %>% 
+  summarise(
+    value=permut_value_class(prob, is_control, myfunc=median),
+    p=permut.test.myfunc(prob, is_control, permutations=N_PERMUTATIONS, myfunc=median),
+    no_outlier=FALSE,
+    method="permut_medians"
+  )
+metrics <- bind_rows(metrics, permut.res)
+
+permut.res.nooutliers <- analysis.data %>% 
+  filter(!outlier) %>% 
+  group_by(dataset) %>% 
+  summarise(
+    value=permut_value_class(prob, is_control, myfunc=median),
+    p=permut.test.myfunc(prob, is_control, permutations=N_PERMUTATIONS, myfunc=median),
+    no_outlier=TRUE,
+    method="permut_medians"
+  )
+metrics <- bind_rows(metrics, permut.res.nooutliers)
 
 
 # ______________________________________________________________________________
@@ -415,6 +554,7 @@ ggsave(file.path(out.dir, "outliers.png"), outliers.plot, height = 3, width=3)
 
 # P-values
 p.plot <- metrics %>% 
+  filter(method %in% c("Pearson", "Spearman", "ctdiff", "permut_medians", "permut_means")) %>%
   mutate(no_outlier_label = if_else(no_outlier, "No.Out.", "Normal")) %>% 
   select(-no_outlier, -value) %>%
   group_by(method) %>% 
@@ -426,14 +566,13 @@ p.plot <- metrics %>%
   ggtitle("Outliers impact on test p-values") + 
   xlab("P-value before outlier removal") +
   ylab("P-value after outlier removal")
-  
 # p.plot
 ggsave(file.path(out.dir, "pvalues.png"), p.plot, height = 4, width=6)
 
 
 # Values
 val.plot <- metrics %>% 
-  filter(method %in% c("Pearson", "Spearman", "ctdiff", "npsigtest")) %>%
+  filter(method %in% c("Pearson", "Spearman", "ctdiff", "permut_medians", "permut_means")) %>%
   mutate(value = abs(value)) %>% 
   mutate(no_outlier_label = if_else(no_outlier, "No.Out.", "Normal")) %>% 
   select(-no_outlier, -p) %>%
@@ -633,4 +772,3 @@ metrics.percent.lowQI <- read_tsv(file.path(out.dir, "metrics.percent.lowQI.tsv"
 # metrics.percent.lowQI %>% 
 #   filter(method=="Spearman" & no_outlier==TRUE) %>% 
 #   select(pears_n_pos_val, spear_n_pos_inter, spear_n_ref_inter)
-

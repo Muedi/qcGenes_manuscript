@@ -76,7 +76,7 @@ rule overlap:
         gs2d=config["GS2D_ENSEMBL_PATH"],
         files=get_deseq2_output_files
     output:
-        "output/{analysis}/overlap/figure.6.png",
+        "output/{analysis}/overlap/figure-6.pdf",
         "output/{analysis}/overlap/masterplot.degsVmarkers.small.datasets.png",
         "output/{analysis}/overlap/masterplot.degsVgs2d.small.datasets.png"
     log:
@@ -134,7 +134,7 @@ rule draft:
         "output/{analysis}/qualityCorGenes/figure.deg.vs.samples.png",
         "output/{analysis}/overlap/masterplot.degsVmarkers.small.datasets.png",
         "output/{analysis}/overlap/masterplot.degsVgs2d.small.datasets.png",
-        "output/{analysis}/overlap/figure.6.png",
+        "output/{analysis}/overlap/figure-6.pdf",
         "output/{analysis}/metrics/outliers.png",
         "output/{analysis}/metrics/pvalues.png",
         "output/{analysis}/metrics/values.png",

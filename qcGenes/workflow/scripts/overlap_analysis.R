@@ -62,7 +62,7 @@ gene.list.dir.paths <- args[6:length(args)]
 dir.create(output.dir, showWarnings = F, recursive = T)
 output.table.path <- file.path(output.dir, "disease_deg_cor.tsv")
 n_dis_genes.table.path <- file.path(output.dir, "n_dis_genes.tsv")
-dis.genes.fdr.vs.quality.plot.path <- file.path(output.dir, "figure-7-dis.genes.fdr.vs.quality.plot.png")
+dis.genes.fdr.vs.quality.plot.path <- file.path(output.dir, "suppl-figure-S3-dis.genes.fdr.vs.quality.plot.pdf")
 
 dis_pos_neg_intersections.path <- file.path(output.dir, "dis_pos_neg_intersections.tsv")
 datasets.vs.overlap.path <- file.path(output.dir, "datasets.vs.overlap.png")
@@ -248,8 +248,8 @@ write_tsv(dis_pos_neg_intersections, dis_pos_neg_intersections.path)
 # DEGS VS QUALITY MARKERS
 # ______________________________________________________________________________
 
-N_DEGS_LIST <- c(50, 100, 250, 500)
-N_DIS_GENES_LIST <- c(50, 100, 250)
+N_DEGS_LIST <- c(50, 100, 250, 500, 1000)
+N_DIS_GENES_LIST <- c(50, 100, 250, 300)
 
 print("DEGS VS QUALITY MARKERS")
 degs_pos_neg_intersections <- data.frame()
@@ -493,7 +493,7 @@ ggsave(my.path, masterplot.degsVgs2d.box, width=8, height=6)
 # MIN_GENES
 # MIN_N_DEGS <- 500
 # names(merged.tables)
-my.variable.1 <- "deg_both_inter_perc_1000"
+my.variable.1 <- "deg_both_inter_perc_1000_0"
 my.variable.2 <- "deg_dis_inter_perc_1000"
 if(MIN_N_DEGS<1000){my.variable.1 <- "deg_both_inter_perc_500_0"; my.variable.2 <-"deg_dis_inter_perc_500"}
 if(MIN_N_DEGS<500) {my.variable.1 <- "deg_both_inter_perc_250_0"; my.variable.2 <-"deg_dis_inter_perc_250"}
@@ -559,7 +559,7 @@ datasets.vs.overlap.2.plot <- merged.tables %>%
   xlab("Quality Imbalance Index") + 
   ylab("Percent Quality Markes in DEGs") +
   ggtitle("Differential Genes vs Quality in Datasets") +
-  labs(subtitle = paste0("by Design; Samples<", MAX_SAMPLES_FIG6)) +
+  # labs(subtitle = paste0("by Design; Samples<", MAX_SAMPLES_FIG6)) +
   stat_poly_eq(formula = y~x, 
                aes(label = paste(after_stat(eq.label), after_stat(rr.label), after_stat(p.value.label), sep = "~~~")),
                # aes(label = after_stat(rr.label)), 
@@ -649,7 +649,7 @@ datasets.vs.overlap.dis.2.plot <- merged.tables %>%
   ylab("Percent Known Disease Genes in DEGs") +
   ggtitle("Differential vs Known Genes in Datasets") +
   # labs(subtitle = "by Design; Samples<50") +
-  labs(subtitle = paste0("by Design; Samples<", MAX_SAMPLES_FIG6)) +
+  # labs(subtitle = paste0("by Design; Samples<", MAX_SAMPLES_FIG6)) +
   stat_poly_eq(formula = y~x, 
                aes(label = paste(after_stat(eq.label), after_stat(rr.label), after_stat(p.value.label), sep = "~~~")),
                # aes(label = after_stat(rr.label)), 
@@ -697,33 +697,33 @@ figure <- ggarrange(
   font.label = list(size = 20, color = "black", face = "bold", family = NULL),
   common.legend = TRUE, legend = "bottom",
   ncol = 2, nrow = 1)
-path <- file.path(output.dir, "figure.6.png")
+path <- file.path(output.dir, "figure-6.pdf")
 # figure
 ggsave(filename=path, plot=figure, width=10, height=7)
 
 
-# figure 6_ALT manuscript
-figure <- ggarrange(
-  datasets.vs.overlap.plot,
-  datasets.vs.overlap.dis.plot,
-  labels = c("A", "B"),
-  font.label = list(size = 20, color = "black", face = "bold", family = NULL),
-  common.legend = TRUE, legend = "bottom",
-  ncol = 2, nrow = 1)
-path <- file.path(output.dir, "figure.6.size.and.design.png")
-# figure
-ggsave(filename=path, plot=figure, width=10, height=7)
+# # figure 6_ALT manuscript
+# figure <- ggarrange(
+#   datasets.vs.overlap.plot,
+#   datasets.vs.overlap.dis.plot,
+#   labels = c("A", "B"),
+#   font.label = list(size = 20, color = "black", face = "bold", family = NULL),
+#   common.legend = TRUE, legend = "bottom",
+#   ncol = 2, nrow = 1)
+# path <- file.path(output.dir, "figure.6.size.and.design.png")
+# # figure
+# ggsave(filename=path, plot=figure, width=10, height=7)
 
 
-# figure 6_ALT manuscript
-figure <- ggarrange(
-  datasets.vs.overlap.3.plot,
-  datasets.vs.overlap.dis.3.plot,
-  labels = c("A", "B"),
-  font.label = list(size = 20, color = "black", face = "bold", family = NULL),
-  common.legend = TRUE, legend = "bottom",
-  ncol = 2, nrow = 1)
-path <- file.path(output.dir, "figure.6.by.size.png")
-# figure
-ggsave(filename=path, plot=figure, width=10, height=7)
+# # figure 6_ALT manuscript
+# figure <- ggarrange(
+#   datasets.vs.overlap.3.plot,
+#   datasets.vs.overlap.dis.3.plot,
+#   labels = c("A", "B"),
+#   font.label = list(size = 20, color = "black", face = "bold", family = NULL),
+#   common.legend = TRUE, legend = "bottom",
+#   ncol = 2, nrow = 1)
+# path <- file.path(output.dir, "figure.6.by.size.png")
+# # figure
+# ggsave(filename=path, plot=figure, width=10, height=7)
 

@@ -46,6 +46,7 @@ config.path <- file.path(".", "config", "config.yaml")
 config.data <- yaml.load_file(config.path)
 
 QI_SIGNIFICANCE_TEST        <- config.data$QI_SIGNIFICANCE_TEST
+QI_TEST_WITH_PERMUTATIONS        <- config.data$QI_TEST_WITH_PERMUTATIONS
 QI_SIGNIFICANCE_TEST_CUTOFF <- config.data$QI_SIGNIFICANCE_TEST_CUTOFF
 
 #msigdb.kegg.path <- config.data$MSIGDB_PATH
@@ -138,18 +139,18 @@ datasets.stats <- datasets.stats0 %>%
   mutate(selected=n_degs>=dataset_n_deg_cutoff & p_group_cor<dataset_p_group_cor_cutoff) %>% 
   left_join(datasets.table %>% rename(dataset=GEO_Series) %>% select(dataset, mesh_terms, balanced_groups, SamplesPairing, samples_homogeneity), by = "dataset")
 
-if(!QI_SIGNIFICANCE_TEST){
+if(!QI_SIGNIFICANCE_TEST & !QI_TEST_WITH_PERMUTATIONS  ){
   datasets.stats <- datasets.stats %>% 
     mutate(no.bias.group=if_else(p_group_cor<=bias.low.cutoff & n_samples>=samples.cutoff, 1, 0)) %>% 
     mutate(low.bias.group=if_else(p_group_cor<=bias.high.cutoff & n_samples>=samples.cutoff, 1, 0)) %>% 
-    mutate(high.bias.group=if_else(p_group_cor>bias.low.cutoff & n_samples>=samples.cutoff, 1, 0)) #%>% 
+    mutate(high.bias.group=if_else(p_group_cor>bias.high.cutoff & n_samples>=samples.cutoff, 1, 0)) #%>% 
   # select(matches("bias"), everything())
 } else{
   # mutate(no.bias.group=if_else(p_group_test>QI_SIGNIFICANCE_TEST_CUTOFF, 1, 0)) %>% 
   datasets.stats <- datasets.stats %>% 
     mutate(no.bias.group=if_else(p_group_cor<=bias.low.cutoff & n_samples>=samples.cutoff & p_group_test>QI_SIGNIFICANCE_TEST_CUTOFF, 1, 0)) %>% 
     mutate(low.bias.group=if_else(p_group_cor<=bias.high.cutoff & n_samples>=samples.cutoff & p_group_test>QI_SIGNIFICANCE_TEST_CUTOFF, 1, 0)) %>% 
-    mutate(high.bias.group=if_else(p_group_cor>bias.low.cutoff & n_samples>=samples.cutoff & p_group_test<=QI_SIGNIFICANCE_TEST_CUTOFF, 1, 0)) #%>% 
+    mutate(high.bias.group=if_else(p_group_cor>bias.high.cutoff & n_samples>=samples.cutoff & p_group_test<=QI_SIGNIFICANCE_TEST_CUTOFF, 1, 0)) #%>% 
   # select(matches("bias"), everything())
 }
 # sort(datasets.stats$p_group_cor)
@@ -369,16 +370,16 @@ pos.cor.genes.noBias <- pos_genes_noBias %>%
   # labs(title="Top pos. correlated genes in no-bias datasets",
        # subtitle=paste0("Datasets selection (n=", length(dataids.list), "): bias\u2264", bias.low.cutoff," and samples\u2265", samples.cutoff), 
        # x="genes") +
-  labs(title="Low-quality markers in no-bias datasets",
-       subtitle=paste0(
-         "Datasets selection (n=", 
-         length(dataids.list), 
-         "): QI\u2264", 
-         config.data$BIAS_LOW_CUTOFF,
-         # ifelse(QI_SIGNIFICANCE_TEST, paste0(" (p-val<", QI_SIGNIFICANCE_TEST_CUTOFF, ")"), ""),
-         ifelse(QI_SIGNIFICANCE_TEST, paste0(", QI.pval\u2265", QI_SIGNIFICANCE_TEST_CUTOFF), ""),
-         " and samples\u2265", 
-         samples.cutoff), 
+  labs(title="Top low quality markler genes",
+      #  subtitle=paste0(
+      #    "Datasets selection (n=", 
+      #    length(dataids.list), 
+      #    "): QI\u2264", 
+      #    config.data$BIAS_LOW_CUTOFF,
+      #    # ifelse(QI_SIGNIFICANCE_TEST, paste0(" (p-val<", QI_SIGNIFICANCE_TEST_CUTOFF, ")"), ""),
+      #    ifelse(QI_SIGNIFICANCE_TEST, paste0(", QI.pval\u2265", QI_SIGNIFICANCE_TEST_CUTOFF), ""),
+      #    " and samples\u2265", 
+      #    samples.cutoff), 
        x="genes") +
   
   coord_flip() +
@@ -446,16 +447,16 @@ neg.cor.genes.noBias <- neg_genes_noBias %>%
        # subtitle=paste0("Datasets selection (n=", length(dataids.list), "): bias\u2264", bias.low.cutoff," and samples\u2265", samples.cutoff), 
        # x="genes") +
   
-  labs(title="High-quality markers in no-bias datasets",
-       subtitle=paste0(
-         "Datasets selection (n=", 
-         length(dataids.list), 
-         "): QI\u2264", 
-         config.data$BIAS_LOW_CUTOFF,
-         # ifelse(QI_SIGNIFICANCE_TEST, paste0(" (p-val<", QI_SIGNIFICANCE_TEST_CUTOFF, ")"), ""),
-         ifelse(QI_SIGNIFICANCE_TEST, paste0(", QI.pval\u2265", QI_SIGNIFICANCE_TEST_CUTOFF), ""),
-         " and samples\u2265", 
-         samples.cutoff), 
+  labs(title="Top high-quality marker genes",
+      #  subtitle=paste0(
+      #    "Datasets selection (n=", 
+      #    length(dataids.list), 
+      #    "): QI\u2264", 
+      #    config.data$BIAS_LOW_CUTOFF,
+      #    # ifelse(QI_SIGNIFICANCE_TEST, paste0(" (p-val<", QI_SIGNIFICANCE_TEST_CUTOFF, ")"), ""),
+      #    ifelse(QI_SIGNIFICANCE_TEST, paste0(", QI.pval\u2265", QI_SIGNIFICANCE_TEST_CUTOFF), ""),
+      #    " and samples\u2265", 
+      #    samples.cutoff), 
        x="genes") +
   
   coord_flip() +
@@ -789,7 +790,7 @@ ora_analysis <- function(plot.title="Gene Set Enrichment Analysis",
   pathways_tibble <- pathways_tibble[ pathways_tibble$value %in% universe, ]
   pathways_tibble <- pathways_tibble %>%
     group_by(name) %>%
-    filter(n()>=5)
+    dplyr::filter(n()>=5)
   pathways2 <- deframe(pathways_tibble %>% nest(data=c(value)))
   pathways2 <- lapply(pathways2, function(x) x$value )
 
@@ -798,9 +799,9 @@ ora_analysis <- function(plot.title="Gene Set Enrichment Analysis",
     as_tibble() %>%
     mutate(input_genes=length(genes)) %>%
     mutate(universe_genes=length(universe)) %>%
-    filter(padj<table.cutoff) %>%
-    filter((overlap/input_genes)>genes.enrich.cutoff) %>%
-    filter((overlap/size)>path.enrich.cutoff) %>%
+    dplyr::filter(padj<table.cutoff) %>%
+    dplyr::filter((overlap/input_genes)>genes.enrich.cutoff) %>%
+    dplyr::filter((overlap/size)>path.enrich.cutoff) %>%
     mutate(significant=padj<plot.cutoff) %>%
     mutate(fold_change= round((overlap/input_genes) / (size/universe_genes), 2)) %>%
     arrange(desc(fold_change))
@@ -815,7 +816,7 @@ ora_analysis <- function(plot.title="Gene Set Enrichment Analysis",
     write_tsv(foraResTidy, path0)
 
     gsea.plot <- foraResTidy %>% 
-      filter(padj<plot.cutoff) %>%
+      dplyr::filter(padj<plot.cutoff) %>%
       slice_max(fold_change, n=top_n_to_plot) %>%
       # ggplot(aes(reorder(pathway, fold_change), fold_change)) +
       mutate(pathway=str_to_lower(str_wrap(str_replace_all(str_trunc(pathway, 60), "_", " "), 60))) %>% 
@@ -834,7 +835,7 @@ ora_analysis <- function(plot.title="Gene Set Enrichment Analysis",
       enframe("pathway", "SYMBOL") %>%
       unnest(cols = c(SYMBOL)) %>%
       inner_join(data.frame(genes=genes), by=c("SYMBOL"="genes"))  %>%
-      filter(pathway %in% foraResTidy$pathway)
+      dplyr::filter(pathway %in% foraResTidy$pathway)
     write_tsv(fgseaGenesAnnot, path2)
     } else{
       if(create.default.files==TRUE){
@@ -858,16 +859,16 @@ top_neg_genes_noBias <- neg_genes_noBias$genes[1:gsea.input_genes]
 gsea.pos.noBias.hall.plot <- ora_analysis("Hallmark pathways enrichment", "Top low-quality markers | no-bias datasets", top_pos_genes_noBias, pos_genes_noBias$genes, "fgsea.pos.hall.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.hallmark.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
 gsea.pos.noBias.posi.plot <- ora_analysis("Chromosomes enrichment", "Top low-quality markers | no-bias datasets", top_pos_genes_noBias, pos_genes_noBias$genes, "fgsea.pos.posi.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.posi.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff, create.default.files=F)
 gsea.pos.noBias.cure.plot <- ora_analysis("Curated pathways enrichment", "Top low-quality markers | no-bias datasets", top_pos_genes_noBias, pos_genes_noBias$genes, "fgsea.pos.cure.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.curated.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff, create.default.files=T)
-gsea.pos.noBias.path.plot <- ora_analysis("Canonical pathways enrichment", "Top low-quality markers | no-bias datasets", top_pos_genes_noBias, pos_genes_noBias$genes, "fgsea.pos.path.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.curated.cp.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff, create.default.files=F)
-gsea.pos.noBias.regu.plot <- ora_analysis("Regulatory target genes enrichment", "Top low-quality markers | no-bias datasets", top_pos_genes_noBias, pos_genes_noBias$genes, "fgsea.pos.regu.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.regulatory.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
+gsea.pos.noBias.path.plot <- ora_analysis("Canonical pathways enrichment", "Pathways of low-quality marker genes", top_pos_genes_noBias, pos_genes_noBias$genes, "fgsea.pos.path.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.curated.cp.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff, create.default.files=F)
+gsea.pos.noBias.regu.plot <- ora_analysis("Regulatory target genes enrichment", "Regulators of low-quality marker genes", top_pos_genes_noBias, pos_genes_noBias$genes, "fgsea.pos.regu.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.regulatory.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
 gsea.pos.noBias.cell.plot <- ora_analysis("Cell type signature genes enrichment", "Top low-quality markers | no-bias datasets", top_pos_genes_noBias, pos_genes_noBias$genes, "fgsea.pos.cell.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.cells.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
 gsea.pos.noBias.gs2d.plot <- ora_analysis("Disease genes enrichment", "Top low-quality markers | no-bias datasets", top_pos_genes_noBias, pos_genes_noBias$genes, "fgsea.pos.gs2d.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.gs2d.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
 
 gsea.neg.noBias.hall.plot <- ora_analysis("Hallmark pathways enrichment", "Top high-quality markers | no-bias datasets", top_neg_genes_noBias, neg_genes_noBias$genes, "fgsea.neg.hall.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.hallmark.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
 gsea.neg.noBias.posi.plot <- ora_analysis("Chromosomes enrichment", "Top high-quality markers | no-bias datasets", top_neg_genes_noBias, neg_genes_noBias$genes, "fgsea.neg.posi.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.posi.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff, create.default.files=F)
 gsea.neg.noBias.cure.plot <- ora_analysis("Curated pathways enrichment", "Top high-quality markers | no-bias datasets", top_neg_genes_noBias, neg_genes_noBias$genes, "fgsea.neg.cure.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.curated.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff, create.default.files=T)
-gsea.neg.noBias.path.plot <- ora_analysis("Canonical pathways enrichment", "Top high-quality markers | no-bias datasets", top_neg_genes_noBias, neg_genes_noBias$genes, "fgsea.neg.path.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.curated.cp.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff, create.default.files=F)
-gsea.neg.noBias.regu.plot <- ora_analysis("Regulatory target genes enrichment", "Top high-quality markers | no-bias datasets", top_neg_genes_noBias, neg_genes_noBias$genes, "fgsea.neg.regu.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.regulatory.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
+gsea.neg.noBias.path.plot <- ora_analysis("Canonical pathways enrichment", "Pathways of high-quality marker genes", top_neg_genes_noBias, neg_genes_noBias$genes, "fgsea.neg.path.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.curated.cp.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff, create.default.files=F)
+gsea.neg.noBias.regu.plot <- ora_analysis("Regulatory target genes enrichment", "Regulators of high-quality marker genes", top_neg_genes_noBias, neg_genes_noBias$genes, "fgsea.neg.regu.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.regulatory.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
 gsea.neg.noBias.cell.plot <- ora_analysis("Cell type signature genes enrichment", "Top high-quality markers | no-bias datasets", top_neg_genes_noBias, neg_genes_noBias$genes, "fgsea.neg.cell.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.cells.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
 gsea.neg.noBias.gs2d.plot <- ora_analysis("Disease genes enrichment", "Top high-quality markers | no-bias datasets", top_neg_genes_noBias, neg_genes_noBias$genes, "fgsea.neg.gs2d.noBias", fgsea.dir.path, 40, gsea.table.cutoff, gsea.plot.cutoff, msigdb.gs2d.path, gsea.pathway.perc.cutoff, gsea.input.perc.cutoff)
 
@@ -1368,23 +1369,25 @@ plot.deg.vs.samples.paired.unpaired.fdr.lfc <-  datasets.stats %>%
   select(dataset, p_group_cor, selected, n_degs, n_samples, low.bias.group, high.bias.group, no.bias.group) %>% 
   rename(bias=p_group_cor) %>% 
   # mutate(data=as.factor(if_else(bias>bias.high.cutoff, "high bias", "low bias"))) %>% 
-  mutate(group=as.factor(if_else(high.bias.group==1, "high bias", "no bias"))) %>% 
-  ggplot(aes(y=n_degs, x=n_samples, size=bias, color=group)) +
+  mutate(QI=as.factor(if_else(high.bias.group==1, "true", "false"))) %>% 
+  ggplot(aes(y=n_degs, x=n_samples, size=bias, color=QI)) +
   geom_point() +
   geom_smooth(method="glm", formula=my.formula) +
   stat_poly_eq(formula = my.formula,
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")),
                size = rel(6),
                parse = TRUE) +
-  labs(title=paste("Paired and Unpaired"), 
-       subtitle = paste0(
+  labs(# title=paste("Paired and Unpaired"), 
+       title = paste0(
          "FDR and fold change"#,
          # "\nDatasets selection: diff genes\u2265", dataset_n_deg_cutoff,
          # " and samples\u2265", samples.cutoff#,
          # "\nDataset bias: low \u2264 ", bias.high.cutoff, "< high bias"
        ),
        y="Differential genes", 
-       x="Samples") +
+       x="Samples",
+       size="QI Index", 
+       color="High QI") +
   theme_minimal(base_size = 20)
 # plot.deg.vs.samples.paired.unpaired.fdr.lfc
 ggsave(filename=path, plot=plot.deg.vs.samples.paired.unpaired.fdr.lfc, width=12, height=10)
@@ -1405,15 +1408,15 @@ plot.deg.vs.samples.paired.fdr.lfc <-  datasets.stats %>%
   select(dataset, p_group_cor, selected, n_degs, n_samples, low.bias.group, high.bias.group, no.bias.group) %>% 
   rename(bias=p_group_cor) %>% 
   # mutate(data=as.factor(if_else(bias>bias.high.cutoff, "high bias", "low bias"))) %>% 
-  mutate(group=as.factor(if_else(high.bias.group==1, "high bias", "no bias"))) %>% 
-  ggplot(aes(y=n_degs, x=n_samples, size=bias, color=group)) +
+  mutate(QI=as.factor(if_else(high.bias.group==1, "true", "false"))) %>% 
+  ggplot(aes(y=n_degs, x=n_samples, size=bias, color=QI)) +
   geom_point() +
   geom_smooth(method="glm", formula=my.formula) +
   stat_poly_eq(formula = my.formula, 
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                size = rel(6),
                parse = TRUE) +  
-  labs(title=paste("Paired"), 
+  labs(title=paste("Paired Samples"), 
        subtitle = paste0(
          "FDR and fold change"#,
          # "\nDatasets selection: diff genes\u2265", dataset_n_deg_cutoff,
@@ -1421,7 +1424,9 @@ plot.deg.vs.samples.paired.fdr.lfc <-  datasets.stats %>%
          # "\nDataset bias: low \u2264 ", bias.high.cutoff, "< high bias"
        ),
        y="Differential genes", 
-       x="Samples") +
+       x="Samples",
+       size="QI Index", 
+       color="High QI") +
   theme_minimal(base_size = 20)
 # plot.deg.vs.samples.paired.fdr.lfc
 ggsave(filename=path, plot=plot.deg.vs.samples.paired.fdr.lfc, width=12, height=10)
@@ -1440,15 +1445,15 @@ plot.deg.vs.samples.unpaired.fdr.lfc <-  datasets.stats %>%
   select(dataset, p_group_cor, selected, n_degs, n_samples, low.bias.group, high.bias.group, no.bias.group) %>% 
   rename(bias=p_group_cor) %>% 
   # mutate(data=as.factor(if_else(bias>bias.high.cutoff, "high bias", "low bias"))) %>% 
-  mutate(group=as.factor(if_else(high.bias.group==1, "high bias", "no bias"))) %>% 
-  ggplot(aes(y=n_degs, x=n_samples, size=bias, color=group)) +
+  mutate(QI=as.factor(if_else(high.bias.group==1, "true", "false"))) %>% 
+  ggplot(aes(y=n_degs, x=n_samples, size=bias, color=QI)) +
   geom_point() +
   geom_smooth(method="glm", formula=my.formula <- y ~ x) +
   stat_poly_eq(formula = my.formula, 
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                size = rel(6),
                parse = TRUE) +  
-  labs(title=paste("Unpaired"), 
+  labs(title=paste("No paired samples"), 
        subtitle = paste0(
          "FDR and fold change" #,
          # "\nDatasets selection: diff genes\u2265", dataset_n_deg_cutoff,
@@ -1456,7 +1461,9 @@ plot.deg.vs.samples.unpaired.fdr.lfc <-  datasets.stats %>%
          # "\nDataset bias: low \u2264 ", bias.high.cutoff, "< high bias"
        ),
        y="Differential genes", 
-       x="Samples") +
+       x="Samples",
+       size="QI Index", 
+       color="High QI") +
   theme_minimal(base_size = 20)
 # plot.deg.vs.samples.unpaired.fdr.lfc
 ggsave(filename=path, plot=plot.deg.vs.samples.unpaired.fdr.lfc, width=12, height=10)
@@ -1475,16 +1482,16 @@ plot.deg.vs.samples.paired.unpaired.fdr <-  datasets.stats %>%
   select(dataset, p_group_cor, selected, n_degs, n_degs_fdr_only, n_samples, low.bias.group, high.bias.group, no.bias.group) %>% 
   rename(bias=p_group_cor) %>% 
   # mutate(data=as.factor(if_else(bias>bias.high.cutoff, "high bias", "low bias"))) %>% 
-  mutate(group=as.factor(if_else(high.bias.group==1, "high bias", "no bias"))) %>% 
-  ggplot(aes(y=n_degs_fdr_only, x=n_samples, size=bias, color=group)) +
+  mutate(QI=as.factor(if_else(high.bias.group==1, "true", "false"))) %>% 
+  ggplot(aes(y=n_degs_fdr_only, x=n_samples, size=bias, color=QI)) +
   geom_point() +
   geom_smooth(method="glm", formula=my.formula <- y ~ x) +
   stat_poly_eq(formula = my.formula, 
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                size = rel(6),
                parse = TRUE) +  
-  labs(title=paste("Paired and Unpaired"), 
-       subtitle = paste0(
+  labs(# title=paste("Paired and Unpaired"), 
+       title = paste0(
          #"Max correlation coeff.:", dataset_p_group_cor_cutoff, 
          "FDR only"#,
          # "\nDatasets selection: diff genes\u2265", dataset_n_deg_cutoff,
@@ -1492,7 +1499,9 @@ plot.deg.vs.samples.paired.unpaired.fdr <-  datasets.stats %>%
           # "\nDataset bias: low \u2264 ", bias.high.cutoff, "< high bias"
        ),
        y="Differential genes", 
-       x="Samples") +
+       x="Samples",
+       size="QI Index", 
+       color="High QI") +
   theme_minimal(base_size = 20)
 # plot.deg.vs.samples.paired.unpaired.fdr
 ggsave(filename=path, plot=plot.deg.vs.samples.paired.unpaired.fdr, width=12, height=10)
@@ -1512,16 +1521,16 @@ plot.deg.vs.samples.paired.fdr <-  datasets.stats %>%
   select(dataset, p_group_cor, selected, n_degs, n_degs_fdr_only, n_samples, low.bias.group, high.bias.group, no.bias.group, SamplesPairing) %>% 
   rename(bias=p_group_cor) %>% 
   # mutate(data=as.factor(if_else(bias>bias.high.cutoff, "high bias", "low bias"))) %>% 
-  mutate(group=as.factor(if_else(high.bias.group==1, "high bias", "no bias"))) %>% 
+  mutate(QI=as.factor(if_else(high.bias.group==1, "true", "false"))) %>% 
   mutate(SamplesPairing=as.factor(SamplesPairing)) %>% 
-  ggplot(aes(y=n_degs_fdr_only, x=n_samples, size=bias, color=group)) +
+  ggplot(aes(y=n_degs_fdr_only, x=n_samples, size=bias, color=QI)) +
   geom_point() +
   geom_smooth(method="glm", formula=my.formula <- y ~ x) +
   stat_poly_eq(formula = my.formula, 
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                size = rel(6),
                parse = TRUE) +  
-  labs(title=paste("Paired"), 
+  labs(title=paste("Paired Samples"), 
        subtitle = paste0(
          #"Max correlation coeff.:", dataset_p_group_cor_cutoff, 
          "FDR only" #,
@@ -1530,7 +1539,9 @@ plot.deg.vs.samples.paired.fdr <-  datasets.stats %>%
           # "\nDataset bias: low \u2264 ", bias.high.cutoff, "< high bias"
        ),
        y="Differential genes", 
-       x="Samples") +
+       x="Samples",
+       size="QI Index", 
+       color="High QI") +
   theme_minimal(base_size = 20)
 # plot.deg.vs.samples.paired.fdr
 ggsave(filename=path, plot=plot.deg.vs.samples.paired.fdr, width=12, height=10)
@@ -1551,16 +1562,16 @@ plot.deg.vs.samples.unpaired.fdr <-  datasets.stats %>%
   select(dataset, p_group_cor, selected, n_degs, n_degs_fdr_only, n_samples, low.bias.group, high.bias.group, no.bias.group, SamplesPairing) %>% 
   rename(bias=p_group_cor) %>% 
   # mutate(data=as.factor(if_else(bias>bias.high.cutoff, "high bias", "low bias"))) %>% 
-  mutate(group=as.factor(if_else(high.bias.group==1, "high bias", "no bias"))) %>% 
+  mutate(QI=as.factor(if_else(high.bias.group==1, "true", "false"))) %>% 
   mutate(SamplesPairing=as.factor(SamplesPairing)) %>% 
-  ggplot(aes(y=n_degs_fdr_only, x=n_samples, size=bias, color=group)) +
+  ggplot(aes(y=n_degs_fdr_only, x=n_samples, size=bias, color=QI)) +
   geom_point() +
   geom_smooth(method="glm", formula=my.formula <- y ~ x) +
   stat_poly_eq(formula = my.formula, 
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                size = rel(6),
                parse = TRUE) +  
-  labs(title=paste("Unpaired"), 
+  labs(title=paste("No paired samples"), 
        subtitle = paste0(
          #"Max correlation coeff.:", dataset_p_group_cor_cutoff, 
          "FDR only" #,
@@ -1569,7 +1580,9 @@ plot.deg.vs.samples.unpaired.fdr <-  datasets.stats %>%
           # "\nDataset bias: low \u2264 ", bias.high.cutoff, "< high bias"
        ),
        y="Differential genes", 
-       x="Samples") +
+       x="Samples",
+       size="QI Index", 
+       color="High QI") +
   theme_minimal(base_size = 20)
 # plot.deg.vs.samples.unpaired.fdr
 ggsave(filename=path, plot=plot.deg.vs.samples.unpaired.fdr, width=12, height=10)
@@ -1600,8 +1613,8 @@ path <- file.path(out.dir.path, "figure.deg.vs.samples.png")
 ggsave(filename=path, plot=plot.deg.vs.samples.composition, width=18, height=12)
 # Figure 3
 figure <- ggarrange(
-  plot.deg.vs.samples.paired.unpaired.fdr,
-  plot.deg.vs.samples.paired.unpaired.fdr.lfc,
+  plot.deg.vs.samples.paired.unpaired.fdr + scale_color_manual(values=list("false"="#295D8A", "true"="#A41720")),
+  plot.deg.vs.samples.paired.unpaired.fdr.lfc + scale_color_manual(values=list("false"="#295D8A", "true"="#A41720")),
   labels = c("A", "B"),
   font.label = list(size = 20, color = "black", face = "bold", family = NULL),
   common.legend = TRUE, legend = "bottom",
@@ -1611,10 +1624,10 @@ ggsave(filename=path, plot=figure, width=13, height=6.5)
 
 # suppl figure S2
 figure <- ggarrange(
-  plot.deg.vs.samples.unpaired.fdr,
-  plot.deg.vs.samples.unpaired.fdr.lfc,
-  plot.deg.vs.samples.paired.fdr,
-  plot.deg.vs.samples.paired.fdr.lfc,
+  plot.deg.vs.samples.unpaired.fdr + scale_color_manual(values=list("false"="#295D8A", "true"="#A41720")),
+  plot.deg.vs.samples.unpaired.fdr.lfc + scale_color_manual(values=list("false"="#295D8A", "true"="#A41720")),
+  plot.deg.vs.samples.paired.fdr + scale_color_manual(values=list("false"="#295D8A", "true"="#A41720")),
+  plot.deg.vs.samples.paired.fdr.lfc + scale_color_manual(values=list("false"="#295D8A", "true"="#A41720")),
   labels = c("A", "B", "C", "D"),
   font.label = list(size = 20, color = "black", face = "bold", family = NULL),
   common.legend = TRUE, legend = "bottom",

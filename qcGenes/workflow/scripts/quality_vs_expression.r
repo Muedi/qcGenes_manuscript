@@ -213,7 +213,7 @@ gmd <- function(x){
 
 ctdiff <- function(x, y){  # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7514071/
   (median(x)-median(y)) / 
-    sqrt( (gmd(x)^2 + gmd(x)^2) /  2 )
+    sqrt( (gmd(x)^2 + gmd(y)^2) /  2 )
 }
 # ctdiff(10:20, 12:22)
 
@@ -257,6 +257,24 @@ permut.test.myfunc <- function(x, binary_class, permutations=1000, myfunc=mean){
 # # permut.test.myfunc(scores.table$p, scores.table$group_numeric, myfunc=mean)
 # # permut.test.myfunc(scores.table$p, scores.table$group_numeric, myfunc=median)
 
+permut.test.corfunc <- function(x, binary_class, permutations=1000, mymethod="pearson"){
+  # x <- sample(20)
+  # binary_class <- c(rep(1, 10), rep(2,10))
+  classes <- levels(factor(binary_class))
+  cor.coef <- abs(cor(x, binary_class, method=mymethod))
+  random.cors <- c()
+  for (i in 1:permutations) {
+    binary_class <- sample(binary_class)
+    random.cors <- c(
+      random.cors,
+      abs(cor(x, binary_class, method=mymethod))
+    )
+  }
+  n.better.values <-length(random.cors[random.cors>cor.coef])
+  pvalue <- n.better.values / permutations
+  return(pvalue)
+}
+
 # ______________________________________________________________________________
 # ______________________________________________________________________________
 
@@ -295,8 +313,12 @@ if(QI_METHOD %in% c("pearson", "spearman")){
 if(QI_TEST_WITH_PERMUTATIONS){
   if(QI_METHOD == "ctdiff"){
     dataset.p.group.test <- ctdiff.permut.test(scores.table$p, scores.table$group_numeric, permutations=N_PERMUTATIONS)    
-  } else if(QI_METHOD %in% c("pearson", "cohen")){
+  } else if(QI_METHOD %in% c("cohen")){
     dataset.p.group.test <- permut.test.myfunc(scores.table$p, scores.table$group_numeric, permutations=N_PERMUTATIONS, myfunc=mean)
+  } else if(QI_METHOD %in% c("pearson")){
+    dataset.p.group.test <- permut.test.corfunc(scores.table$p, scores.table$group_numeric, permutations=N_PERMUTATIONS, mymethod="pearson")
+  } else if(QI_METHOD %in% c("spearman")){
+    dataset.p.group.test <- permut.test.corfunc(scores.table$p, scores.table$group_numeric, permutations=N_PERMUTATIONS, mymethod="spearman")
   } else{
     dataset.p.group.test <- permut.test.myfunc(scores.table$p, scores.table$group_numeric, permutations=N_PERMUTATIONS, myfunc=median)
   }

@@ -89,7 +89,8 @@ scores.metadata <- read_tsv(scores.path, col_names=c("Run", "P_low", "note"), sh
   ungroup()
 
 samples <- samples %>% 
-  left_join(scores.metadata %>% select(Run, P_low, outlier), by="Run")
+  left_join(scores.metadata %>% select(Run, P_low, outlier), by="Run") %>% 
+  mutate(plow_conf = 1 - P_low)
 
 # FILTER OUT QUALITY OUTLIERS
 no.outlier.samples <- samples$Run
@@ -130,7 +131,7 @@ if(PAIRING==0 & P_LOW_AS_CONFOUNDER){
   ddsTxi <- DESeqDataSetFromTximport(
     txi,
     colData = samples ,
-    design = ~ P_low + group)
+    design = ~ plow_conf + group)
 } else if(PAIRING==1 & !P_LOW_AS_CONFOUNDER){
   # # design(ddsTxi) <- formula(~ group + subject) # ~batch + condition
   # design(ddsTxi) <- formula(~ subject + group)
@@ -167,7 +168,15 @@ if(PAIRING==0 & P_LOW_AS_CONFOUNDER){
 # ______________________________________________________________________________
 # ddsTxi <- DESeq(ddsTxi)
 # ddsTxi <- DESeq(ddsTxi, sfType = "iterate")
-ddsTxi <- DESeq(ddsTxi, test = "Wald", fitType = "parametric", sfType = "poscounts")
+
+# if (P_LOW_AS_CONFOUNDER){
+#   ddsTxi <- estimateSizeFactors(ddsTxi)
+#   print(samples$plow_conf)
+#   print(sizeFactors(ddsTxi))
+#   sizeFactors(ddsTxi) <- sizeFactors(ddsTxi) * samples$plow_conf
+# }
+
+ddsTxi <- DESeq(ddsTxi) #, test = "Wald", fitType = "parametric", sfType = "poscounts")
 rlog.table <- as.data.frame(assay(rlog(ddsTxi, blind=TRUE))) %>%
   rownames_to_column(var = "geneid")
 
