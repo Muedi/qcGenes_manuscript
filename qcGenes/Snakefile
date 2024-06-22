@@ -20,16 +20,16 @@ SAMPLES_MAIN_TABLE   = SAMPLES[SAMPLES.select.eq(1) & SAMPLES.Selected.eq(1)][["
 SAMPLES_MAIN_RUN_COL = SAMPLES[SAMPLES.select.eq(1) & SAMPLES.Selected.eq(1)]["Run"]
 SAMPLES_MAIN_GEO_COL = SAMPLES[SAMPLES.select.eq(1) & SAMPLES.Selected.eq(1)]["GEO_Series"]
 
-SAMPLES_BATCH_TABLE   = SAMPLES[SAMPLES.batches.eq(1) & SAMPLES.BatchAnalysisSelection.eq(1)][["GEO_Series", "Run"]]
-SAMPLES_BATCH_RUN_COL = SAMPLES[SAMPLES.batches.eq(1) & SAMPLES.BatchAnalysisSelection.eq(1)]["Run"]
-SAMPLES_BATCH_GEO_COL = SAMPLES[SAMPLES.batches.eq(1) & SAMPLES.BatchAnalysisSelection.eq(1)]["GEO_Series"]
+# SAMPLES_BATCH_TABLE   = SAMPLES[SAMPLES.batches.eq(1) & SAMPLES.BatchAnalysisSelection.eq(1)][["GEO_Series", "Run"]]
+# SAMPLES_BATCH_RUN_COL = SAMPLES[SAMPLES.batches.eq(1) & SAMPLES.BatchAnalysisSelection.eq(1)]["Run"]
+# SAMPLES_BATCH_GEO_COL = SAMPLES[SAMPLES.batches.eq(1) & SAMPLES.BatchAnalysisSelection.eq(1)]["GEO_Series"]
 
 DATAIDS_MAIN  = DATASETS[DATASETS.select.eq(1)]["GEO_Series"]
-DATAIDS_BATCH = DATASETS[DATASETS.batches.eq(1)]["GEO_Series"]
+# DATAIDS_BATCH = DATASETS[DATASETS.batches.eq(1)]["GEO_Series"]
 
-SAMPLES_ALL_TABLE   = SAMPLES[ (SAMPLES.select.eq(1)|SAMPLES.batches.eq(1)) & (SAMPLES.Selected.eq(1)|SAMPLES.BatchAnalysisSelection.eq(1))][["GEO_Series", "Run"]]
-SAMPLES_ALL_RUN_COL = SAMPLES[ (SAMPLES.select.eq(1)|SAMPLES.batches.eq(1)) & (SAMPLES.Selected.eq(1)|SAMPLES.BatchAnalysisSelection.eq(1))]["Run"]
-SAMPLES_ALL_GEO_COL = SAMPLES[ (SAMPLES.select.eq(1)|SAMPLES.batches.eq(1)) & (SAMPLES.Selected.eq(1)|SAMPLES.BatchAnalysisSelection.eq(1))]["GEO_Series"]
+# SAMPLES_ALL_TABLE   = SAMPLES[ (SAMPLES.select.eq(1)|SAMPLES.batches.eq(1)) & (SAMPLES.Selected.eq(1)|SAMPLES.BatchAnalysisSelection.eq(1))][["GEO_Series", "Run"]]
+# SAMPLES_ALL_RUN_COL = SAMPLES[ (SAMPLES.select.eq(1)|SAMPLES.batches.eq(1)) & (SAMPLES.Selected.eq(1)|SAMPLES.BatchAnalysisSelection.eq(1))]["Run"]
+# SAMPLES_ALL_GEO_COL = SAMPLES[ (SAMPLES.select.eq(1)|SAMPLES.batches.eq(1)) & (SAMPLES.Selected.eq(1)|SAMPLES.BatchAnalysisSelection.eq(1))]["GEO_Series"]
 
 
 # ------------------------------------------------------------------------------
@@ -39,7 +39,28 @@ SAMPLES_ALL_GEO_COL = SAMPLES[ (SAMPLES.select.eq(1)|SAMPLES.batches.eq(1)) & (S
 rule all:
     input:
 #        "output/summary.html", 
-        "output/draft.html"
+        "output/main/draft.html",
+        "output/main/config/config.yaml",
+        "output/main/config/Datasets.csv",
+        "output/main/config/Mega_SraRunTable.csv"
+
+rule config_backup:
+    input:
+        cfg_in_path="config/config.yaml",
+        dts_in_path=config["DATASETS_FILE"],
+        smp_in_path=config["SAMPLES_FILE"]
+    output:
+        cfg_out_path="output/{analysis}/config/config.yaml",
+        dts_out_path="output/{analysis}/config/Datasets.csv",
+        smp_out_path="output/{analysis}/config/Mega_SraRunTable.csv"
+    log:
+        "output/logs/{analysis}/config_backup.log"
+    shell:
+        """
+        cp {input.cfg_in_path} {output.cfg_out_path}
+        cp {input.dts_in_path} {output.dts_out_path}
+        cp {input.smp_in_path} {output.smp_out_path}
+        """
 
 
 # ------------------------------------------------------------------------------
@@ -52,4 +73,3 @@ include: "workflow/rules/downloadDatasets.smk"
 include: "workflow/rules/qualityFeatures.smk"
 include: "workflow/rules/expressionAnalysis.smk"
 include: "workflow/rules/qualityAnalysis.smk"
-

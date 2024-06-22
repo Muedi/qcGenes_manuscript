@@ -155,7 +155,7 @@ quality_matrix <- as.matrix(merged_data$p_low)
 column_annotation <- data.frame(Mapping_Rate = merged_data$accession, Quality_Score = merged_data$p_low)
 
 # Create separate heatmaps
-heatmap_fastqc <- Heatmap(fastqc_matrix, name = "FastQC", col = c("0"="red", "1"="yellow", "2"="green"), column_names_gp=gpar(fontsize=10))
+heatmap_fastqc <- Heatmap(fastqc_matrix, name = "FastQC", col = c("0"="#A41720", "1"="darkorange", "2"="#295D8A"), column_names_gp=gpar(fontsize=10))
 heatmap_mapping <- Heatmap(mapping_matrix, name = "Mapping Rate", column_names_gp=gpar(fontsize=10))
 heatmap_quality <- Heatmap(quality_matrix, name = "P_low", col = colorRamp2(c(0, 1), c("white", "darkorange")), column_names_gp=gpar(fontsize=10))
 
@@ -174,6 +174,8 @@ hm_oall <- grid.grabExpr(draw(heatmap_quality + heatmap_fastqc + heatmap_mapping
 
 merged_data["p_low_binned"] = cut(merged_data$p_low, breaks=4, lables=F)
 
+
+options(ggplot2.discrete.fill= c("#295D8A", "#A41720", "#4E4459", "darkorange"))
 dense_plot_a = ggplot(merged_data, aes(x = BowtieMI_uniquely, fill = factor(p_low_binned))) +
   geom_histogram(binwidth = 10, color = "black", alpha = 0.7, position = "stack") +
   # geom_density(alpha = 0.5) +
@@ -212,15 +214,15 @@ figure <- ggarrange(
     dense_plot_a,
     dense_plot_b,
     labels = c("B", "C"),
-    # title = "Quality features against binned P_low", 
     font.label = list(size = 18, color = "black", face = "bold", family = NULL),
     common.legend = TRUE, legend = "bottom", 
     ncol = 2, nrow = 1),
   ncol = 1, nrow = 2,
   heights = c(2, 1),
+  # title = "Supplementary Figure S7. \nQuality Features used by seqQscorer in comparison to P_low", 
   labels = c("A", ""),
   font.label = list(size = 18, color = "black", face = "bold", family = NULL)
 )
 path <- file.path("review", "figure-S4-quality_histos_combi.pdf")
-ggsave(filename=path, plot=figure, width=10, height=15)
+ggsave(filename=path, plot=figure, width=210, height=287, unit="mm")
 
