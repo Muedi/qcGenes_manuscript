@@ -4,107 +4,14 @@ Several RNA-seq datasets and selected samples are described in a metadata table
 that is processed by several Snakemake workflows to download, process and 
 analyse the data. This is a beta version (not stable). 
 
----
-
-## Changes
-
-### Current to do list
-
-* Major
-  * Data
-    * add more datasets
-  * Analysis
-    * Top quality-correlated genes: show additional stats (e.g. # of datasets where differential and biased)
-    * compare with batch corrected data (https://www.bioconductor.org/packages/release/bioc/html/sva.html)
-    * PCA after correction (incl. or not outliers removal), predicted batch vs quality, ...
-  * Snakemake
-    * post_pipeline rule for batched datasets
-    * !! create and publish docker image
-    * compare bowtie results (% mapping) on different fastq file sizes (1M, 2M, 10M ...)
-  * RASflow:
-    * create index with decoy sequence, see: https://combine-lab.github.io/alevin-tutorial/2019/selective-alignment/
-    * should raise error if failed (exit code)
-* Minor
-* Low-priority
-  * Summary in PDF (may be difficult to have a single md file for both html and pdf output)
-  * limit parallelization of dataset downloads (gnu-parallel?)
-
-### Changes log
-  * 2021-12-09
-    * DONE Dataset Quality vs Size plot (cor.size.png): include dataset with minimal number of samples
-    * DONE Plot Dataset Quality vs AvgSpotLength
-    * DONE Use a Salmon index that already exists (avoid creation for each dataset)
-    * DISCARDED call directly sub workflows instead of main.py (https://snakemake.readthedocs.io/en/v5.16.0/snakefiles/modularization.html#snakefiles-sub-workflows)
-    * DONE by choosing generic model => tune seqQscorer parameters using Dataset description (assay type and run type)
-    * DISCARDED: Linear regressions: add plot showing substration of DIF from ALL, and DIS from ALL
-    * DISCARDED: define config files to have data input and output dir under same user defined root directory (merge data and output dirs)
-
-  * 2020-10-23 (and earlier)
-    * support paired designs (PAIR: FALSE by default in config/config.yaml)
-    * set package versions in conda envs yaml files (tidyverse and readsAnno)
-    * include human and mouse Biomart examples + do not use them anymore
-  * 2020-07-13
-    * Declined (overkill + not better than clustering evaluation on many datasets): compare outlier removal to random removal of same number of samples (n times) (aggregate results only for datasets with many samples)
-  * 2020-06-09
-    * Batched-datasets analysis: rules and new column in Mega metadata for file selection
-    * Reorganising output dir (main and batched subdirs); moving pipelines dir to output dir
-    * Declined (not practical if other features have to be computed): rename features files with raw.txt, map.txt, loc.txt and tss.txt extensions
-  * 2020-06-05
-    * Finalise report (figure captions)
-    * P vs Batch plot: geom_jitter() instead?
-    * add column in Datasets.tsv to easily include/exclude a dataset from the analysis (only for final aggregation analysis)
-    * More datasets with batch annotation
-    * Batch vs P_low: plots + correlation
-    * Bowtie memory benchmarks
-  * 2020-05-30
-    * Optimize Bowtie2 run time and memoty imprint (manual benchmark)
-    * replace ack files by real output files
-  * 2020-05-29
-    * add support of paired-end datasets (see Wrappers)
-    * write input function to replace dependency to Mega Metadata file
-    * SeqQscorer could compute Bowtie stats on 1M reads only
-    * Bigger text size in figures
-  * 2020-05-15
-    * Rmarkdown Summary
-  * 2020-05-13
-    * Collect and plot correlation coefficients (e.g. quality vs deg FDR) (rule qualityCorGenes)
-  * 2020-05-12
-    * Compute enrichment of disease (and also differentially-expressed) genes in 2 gene sets: quality-correlated and non-quality-correlated (will summarise the related plots .cor001.png) => use scatter plots and correlation coefficients
-  * 2020-05-11
-    * Fix bug on plot Quality vs Diff genes top 10% that shows genes in extreme categories where no differential genes should be (see plots above) (qualityVsExp e.g. GSE108643) 
-    * 2020-05-06
-    * Draft report
-    * conda env with gnu-linux tools (wget, tar, ...)
-  * 2020-05-05
-    * set groups for rules
-    * Rule createPipelineDir: use quiet version (progression in log file)
-  * 2020-05-04
-    * rename rules files with .smk extension
-    * commands to run on the Mogon cluster
-    * revise download options (see https://edwards.sdsu.edu/research/fastq-dump/) => added --skip-technical
-  * 2020-04-30
-    * correlation calculated with or without outliers? => Keep all samples
-    * make conda env with linux tools for rules without specific env (linux.yaml wget). => Done but not all tools available.
-  * 2020-04-29
-    * implement log files in RASflow's rules to reduce scatter on terminal (e.g. ChIPseeker summary on stdout, and RASflow)
-    * use correlation of sample's group and sample's quality to enable dataset selection/filtering
-    * (Failed) Change getReads rule to use original data path or symbolic links instead of scp
-  * 2020-04-27
-    * Analysis / Analyse aggregated quality vs expression statistics (e.g. correlation, dunn, entropy)
-    * RASflow / generate expression table with all samples and all genes (or transcripts)
-    * delete or save plot produced by ChIPpeakAnno.binOverFeature function to appropriate directory (e.g. use functions pdf / dev.off)
-  * 2020-04-18: revise usage of ack files for acknowledging steps of the pipeline (use real output files in rules' input/output)
-    * see directory() and touch() directives at https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#log-files
-
----
-
 ## Requirements
 
 ### Software
 
-* Linux OS (e.g. Ubuntu 16.04)
-* Anaconda or Miniconda installed (e.g. conda 4.8.3)
-* git (e.g. 2.7.4)
+* Linux OS (e.g. Ubuntu 18.04)
+* mamba installed
+* snakemake 5.12.
+
 
 ### Storage
 
